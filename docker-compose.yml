@@ -1,0 +1,28 @@
+services:
+  mongo:
+    image: mongo:8
+    container_name: ${MONGO_CONTAINER_NAME}
+    ports:
+      - ${MONGO_HOST_PORT}:${MONGO_CONTAINER_PORT}
+    volumes:
+      - data:/data/db
+
+  app:
+    container_name: ${APP_CONTAINER_NAME}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - ${APP_HOST_PORT}:${APP_CONTAINER_PORT}
+    volumes:
+      - data:/data/app
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      APP_PORT: ${APP_CONTAINER_PORT}
+      MONGO_URL: mongodb://mongo:${MONGO_CONTAINER_PORT}/${MONGO_DB_NAME}
+    depends_on:
+      - mongo
+
+volumes:
+  data:
+    name: ${VOLUME_NAME}
