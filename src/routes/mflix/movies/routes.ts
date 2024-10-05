@@ -10,6 +10,7 @@ import {
   GetMovieResponseBodySchema,
   PartialMovieRequestBodySchema
 } from '../../../schemas/movie';
+import { HttpMethods } from '../../../utils/enums';
 
 const tags = ['Movies'];
 
@@ -26,7 +27,7 @@ module.exports = async function movieRoutes(fastify: FastifyInstance) {
   });
 
   fastify.route({
-    method: 'OPTIONS',
+    method: HttpMethods.OPTIONS,
     url: '/:id',
     schema: {
       tags: tags
@@ -37,7 +38,7 @@ module.exports = async function movieRoutes(fastify: FastifyInstance) {
   });
 
   fastify.route({
-    method: 'GET',
+    method: HttpMethods.GET,
     url: '',
     schema: {
       tags: tags,
@@ -55,7 +56,7 @@ module.exports = async function movieRoutes(fastify: FastifyInstance) {
   });
 
   fastify.route({
-    method: 'POST',
+    method: HttpMethods.POST,
     url: '',
     schema: {
       tags: tags,
@@ -72,7 +73,7 @@ module.exports = async function movieRoutes(fastify: FastifyInstance) {
   });
 
   fastify.route({
-    method: 'GET',
+    method: HttpMethods.GET,
     url: '/:id',
     schema: {
       tags: tags,
@@ -95,7 +96,7 @@ module.exports = async function movieRoutes(fastify: FastifyInstance) {
   });
 
   fastify.route({
-    method: 'PUT',
+    method: HttpMethods.PUT,
     url: '/:id',
     schema: {
       tags: tags,
@@ -116,7 +117,7 @@ module.exports = async function movieRoutes(fastify: FastifyInstance) {
   });
 
   fastify.route({
-    method: 'PATCH',
+    method: HttpMethods.PATCH,
     url: '/:id',
     schema: {
       tags: tags,
@@ -137,7 +138,7 @@ module.exports = async function movieRoutes(fastify: FastifyInstance) {
   });
 
   fastify.route({
-    method: 'DELETE',
+    method: HttpMethods.DELETE,
     url: '/:id',
     schema: {
       tags: tags,

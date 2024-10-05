@@ -1,8 +1,9 @@
 import { FastifyInstance, FastifyReply, FastifyRequest, RouteOptions } from 'fastify';
+import { HttpMethods } from '../../utils/enums';
 
 const routes: Array<RouteOptions> = [
   {
-    method: 'GET',
+    method: HttpMethods.GET,
     url: '',
     schema: {
       tags: ['Diagnostics'],
