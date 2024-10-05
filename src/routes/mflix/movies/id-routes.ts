@@ -1,82 +1,23 @@
-import { FastifyInstance, FastifyRequest } from 'fastify';
+import { FastifyInstance, FastifyReply, FastifyRequest, RouteOptions } from 'fastify';
 import {
   CompleteMovieRequestBodySchema,
-  CreateMovieResponseBodySchema,
   MovieByIdParamsSchema,
-  GetMoviesQuerySchema,
-  MovieListResponseSchema,
-  MovieListResponseSchemaType,
   MovieByIdParamsSchemaType,
   GetMovieResponseBodySchema,
   PartialMovieRequestBodySchema
 } from '../../../schemas/movie';
 import { HttpMethods } from '../../../utils/enums';
+import { genOptionsRoute } from '../../../utils/routing-utils';
 
+const url = '/:id';
 const tags = ['Movies'];
 
-module.exports = async function movieRoutes(fastify: FastifyInstance) {
-  fastify.route({
-    method: 'OPTIONS',
-    url: '',
-    schema: {
-      tags: tags
-    },
-    handler: async function options(request, reply) {
-      reply.header('Allow', 'OPTIONS, GET, POST').code(204);
-    }
-  });
-
-  fastify.route({
-    method: HttpMethods.OPTIONS,
-    url: '/:id',
-    schema: {
-      tags: tags
-    },
-    handler: async function options(request, reply) {
-      reply.header('Allow', 'OPTIONS, GET, POST, PUT, PATCH, DELETE').code(204);
-    }
-  });
-
-  fastify.route({
+const routes: Array<RouteOptions | any> = [
+  {
     method: HttpMethods.GET,
-    url: '',
+    url,
     schema: {
-      tags: tags,
-      querystring: GetMoviesQuerySchema,
-      response: {
-        200: MovieListResponseSchema
-      }
-    },
-    handler: async function listMovies(request: FastifyRequest, reply) {
-      const movies = await this.mongoDataSource.listMovies(request.query);
-      const totalCount = await this.mongoDataSource.countMovies();
-      const body: MovieListResponseSchemaType = { movies, total: totalCount };
-      return body;
-    }
-  });
-
-  fastify.route({
-    method: HttpMethods.POST,
-    url: '',
-    schema: {
-      tags: tags,
-      body: CompleteMovieRequestBodySchema,
-      response: {
-        201: CreateMovieResponseBodySchema
-      }
-    },
-    handler: async function createMovie(request, reply) {
-      const insertedId = await this.mongoDataSource.createMovie(request.body);
-      reply.code(201);
-      return { id: insertedId };
-    }
-  });
-
-  fastify.route({
-    method: HttpMethods.GET,
-    url: '/:id',
-    schema: {
-      tags: tags,
+      tags,
       params: MovieByIdParamsSchema,
       response: {
         200: GetMovieResponseBodySchema
@@ -84,7 +25,7 @@ module.exports = async function movieRoutes(fastify: FastifyInstance) {
     },
     handler: async function fetchMovie(
       request: FastifyRequest<{ Params: MovieByIdParamsSchemaType }>,
-      reply
+      reply: FastifyReply
     ) {
       const movie = await this.mongoDataSource.fetchMovie(request.params.id);
       if (!movie) {
@@ -93,11 +34,10 @@ module.exports = async function movieRoutes(fastify: FastifyInstance) {
       }
       return movie;
     }
-  });
-
-  fastify.route({
+  },
+  {
     method: HttpMethods.PUT,
-    url: '/:id',
+    url,
     schema: {
       tags: tags,
       params: MovieByIdParamsSchema,
@@ -105,7 +45,7 @@ module.exports = async function movieRoutes(fastify: FastifyInstance) {
     },
     handler: async function updateMovie(
       request: FastifyRequest<{ Params: MovieByIdParamsSchemaType }>,
-      reply
+      reply: FastifyReply
     ) {
       const res = await this.mongoDataSource.replaceMovie(request.params.id, request.body);
       if (res.modifiedCount === 0) {
@@ -114,19 +54,18 @@ module.exports = async function movieRoutes(fastify: FastifyInstance) {
       }
       reply.code(204);
     }
-  });
-
-  fastify.route({
+  },
+  {
     method: HttpMethods.PATCH,
-    url: '/:id',
+    url,
     schema: {
-      tags: tags,
+      tags,
       params: MovieByIdParamsSchema,
       body: PartialMovieRequestBodySchema
     },
     handler: async function updateMovie(
       request: FastifyRequest<{ Params: MovieByIdParamsSchemaType }>,
-      reply
+      reply: FastifyReply
     ) {
       const res = await this.mongoDataSource.updateMovie(request.params.id, request.body);
       if (res.modifiedCount === 0) {
@@ -135,18 +74,17 @@ module.exports = async function movieRoutes(fastify: FastifyInstance) {
       }
       reply.code(204);
     }
-  });
-
-  fastify.route({
+  },
+  {
     method: HttpMethods.DELETE,
-    url: '/:id',
+    url,
     schema: {
-      tags: tags,
+      tags,
       params: MovieByIdParamsSchema
     },
     handler: async function deleteMovie(
       request: FastifyRequest<{ Params: MovieByIdParamsSchemaType }>,
-      reply
+      reply: FastifyReply
     ) {
       const res = await this.mongoDataSource.deleteMovie(request.params.id);
       if (res.deletedCount === 0) {
@@ -155,5 +93,16 @@ module.exports = async function movieRoutes(fastify: FastifyInstance) {
       }
       reply.code(204);
     }
+  }
+];
+
+module.exports = async function movieRoutes(fastify: FastifyInstance) {
+  const methods = routes.map((route) => route.method);
+  const allowString = [HttpMethods.OPTIONS, ...methods].join(', ');
+
+  genOptionsRoute(fastify, url, tags, allowString);
+
+  routes.forEach((route) => {
+    fastify.route(route);
   });
 };

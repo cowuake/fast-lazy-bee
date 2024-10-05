@@ -18,4 +18,9 @@ declare module 'fastify' {
     mongo: FastifyMongoObject;
     mongoDataSource: FastifyMongoDataSource;
   }
+  type AugmentedFastifyRequest = FastifyRequest<{
+    Params: any;
+    Querystring: any;
+    Body: any;
+  }>;
 }
