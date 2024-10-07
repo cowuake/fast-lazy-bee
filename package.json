@@ -4,15 +4,16 @@
   "description": "",
   "main": "dist/server.js",
   "scripts": {
-    "dev": "tsx watch src/server.ts",
+    "dev": "npx tsx watch src/server.ts",
+    "format": "npx prettier --write src/**/*.ts .vscode/*.json ./**/*.json",
+    "lint": "npx eslint . --fix",
     "clean": "rimraf dist",
-    "build": "tsc -p tsconfig.json",
-    "start": "node dist/src/server.js",
-    "format": "npx prettier --write src/**/*.ts .vscode/*.json ./**/*.json"
+    "build": "npm run clean && npx tsc -p tsconfig.json",
+    "start": "node dist/src/server.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["fastify", "typescript", "mongodb", "restful-api"],
+  "author": "Riccardo Mura",
+  "license": "MIT",
   "dependencies": {
     "@fastify/autoload": "^6.0.1",
     "@fastify/env": "^5.0.1",
@@ -24,7 +25,13 @@
   },
   "devDependencies": {
     "@types/node": "^22.7.4",
-    "eslint-config-standard-with-typescript": "^43.0.1",
+    "@typescript-eslint/eslint-plugin": "^8.8.0",
+    "@typescript-eslint/parser": "^8.8.0",
+    "eslint": "^8.57.1",
+    "eslint-config-love": "^84.1.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
     "fastify-tsconfig": "^2.0.0",
     "pino-pretty": "^11.2.2",
     "prettier": "^3.3.3",

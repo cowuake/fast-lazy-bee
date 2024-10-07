@@ -1,18 +1,15 @@
-import { FastifyInstance } from 'fastify';
+import type { FastifyInstance } from 'fastify';
 import fp from 'fastify-plugin';
-import { Collection } from 'mongodb';
-import {
+import type {
   CreateMovieBodySchemaType,
   ReplaceMovieBodySchemaType,
   UpdateMovieBodySchemaType,
-  GetMoviesQuerySchemaType,
-  MovieSchemaType
+  GetMoviesQuerySchemaType
 } from '../../../schemas/movie';
 
 module.exports = fp(
   async function movieAutoHooks(fastify: FastifyInstance) {
-    const movies = fastify.mongo.db?.collection('movies') as Collection<MovieSchemaType>;
-    // fastify.register(MovieSchemaType);
+    const movies = fastify.mongo.db?.collection('movies')!;
 
     fastify.decorate('mongoDataSource', {
       async countMovies(filter = {}) {
@@ -42,7 +39,7 @@ module.exports = fp(
         return movie;
       },
       async replaceMovie(id: string, replacement: ReplaceMovieBodySchemaType) {
-        return movies.updateOne(
+        return await movies.updateOne(
           { _id: new fastify.mongo.ObjectId(id) },
           {
             $set: {
@@ -53,7 +50,7 @@ module.exports = fp(
         );
       },
       async updateMovie(id: string, update: UpdateMovieBodySchemaType) {
-        return movies.updateOne(
+        return await movies.updateOne(
           { _id: new fastify.mongo.ObjectId(id) },
           {
             $set: {
@@ -64,7 +61,7 @@ module.exports = fp(
         );
       },
       async deleteMovie(id: string) {
-        return movies.deleteOne({ _id: new fastify.mongo.ObjectId(id) });
+        return await movies.deleteOne({ _id: new fastify.mongo.ObjectId(id) });
       }
     });
   },

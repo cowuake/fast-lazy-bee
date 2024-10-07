@@ -1,7 +1,7 @@
-import { FastifyInstance, FastifyReply, FastifyRequest, RouteOptions } from 'fastify';
+import type { FastifyInstance, FastifyReply, FastifyRequest, RouteOptions } from 'fastify';
 import { HttpMethods } from '../../utils/enums';
 
-const routes: Array<RouteOptions> = [
+const routes: RouteOptions[] = [
   {
     method: HttpMethods.GET,
     url: '',

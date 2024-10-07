@@ -1,6 +1,6 @@
 import fp from 'fastify-plugin';
 import fastifyMongo from '@fastify/mongodb';
-import { FastifyInstance } from 'fastify';
+import type { FastifyInstance } from 'fastify';
 
 module.exports = fp(
   async (fastify: FastifyInstance) => {

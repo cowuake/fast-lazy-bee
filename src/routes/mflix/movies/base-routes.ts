@@ -1,18 +1,19 @@
-import { FastifyInstance, FastifyRequest, RouteOptions } from 'fastify';
+import type { FastifyInstance, FastifyRequest, RouteOptions } from 'fastify';
 import {
   CompleteMovieRequestBodySchema,
   CreateMovieResponseBodySchema,
   GetMoviesQuerySchema,
+  type MovieListSchemaType,
   MovieListResponseSchema,
-  MovieListResponseSchemaType
+  type MovieListResponseSchemaType
 } from '../../../schemas/movie';
-import { HttpMethods } from '../../../utils/enums';
+import { HttpMethods, HttpStatusCodes } from '../../../utils/enums';
 import { genOptionsRoute } from '../../../utils/routing-utils';
 
 const url = '';
 const tags = ['Movies'];
 
-const routes: Array<RouteOptions> = [
+const routes: RouteOptions[] = [
   {
     method: HttpMethods.GET,
     url,
@@ -24,8 +25,8 @@ const routes: Array<RouteOptions> = [
       }
     },
     handler: async function listMovies(request: FastifyRequest, _) {
-      const movies = await this.mongoDataSource.listMovies(request.query);
-      const totalCount = await this.mongoDataSource.countMovies();
+      const movies: MovieListSchemaType = await this.mongoDataSource.listMovies(request.query);
+      const totalCount: number = await this.mongoDataSource.countMovies();
       const body: MovieListResponseSchemaType = { movies, total: totalCount };
       return body;
     }
@@ -42,7 +43,7 @@ const routes: Array<RouteOptions> = [
     },
     handler: async function createMovie(request, reply) {
       const insertedId = await this.mongoDataSource.createMovie(request.body);
-      reply.code(201);
+      reply.code(HttpStatusCodes.Created);
       return { id: insertedId };
     }
   }

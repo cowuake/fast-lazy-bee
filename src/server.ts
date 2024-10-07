@@ -1,6 +1,6 @@
 import { join } from 'node:path';
-import fastify, { FastifyInstance, FastifyServerOptions } from 'fastify';
-import Autoload, { AutoloadPluginOptions } from '@fastify/autoload';
+import fastify, { type FastifyInstance, type FastifyServerOptions } from 'fastify';
+import Autoload, { type AutoloadPluginOptions } from '@fastify/autoload';
 
 const serverOptions: FastifyServerOptions = {
   caseSensitive: false,

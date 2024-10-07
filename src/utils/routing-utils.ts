@@ -1,4 +1,5 @@
-import { FastifyInstance } from 'fastify';
+import type { FastifyInstance } from 'fastify';
+import { HttpMethods, HttpStatusCodes } from './enums';
 
 export const genOptionsRoute = (
   fastify: FastifyInstance,
@@ -7,13 +8,13 @@ export const genOptionsRoute = (
   allowString: string
 ) => {
   fastify.route({
-    method: 'OPTIONS',
+    method: HttpMethods.OPTIONS,
     url,
     schema: {
       tags
     },
     handler: async function options(_, reply) {
-      reply.header('Allow', allowString).code(204);
+      reply.header('Allow', allowString).code(HttpStatusCodes.NotFound);
     }
   });
 };

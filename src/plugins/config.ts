@@ -1,6 +1,6 @@
 import fp from 'fastify-plugin';
-import fastifyEnv, { FastifyEnvOptions } from '@fastify/env';
-import { FastifyInstance } from 'fastify';
+import fastifyEnv, { type FastifyEnvOptions } from '@fastify/env';
+import type { FastifyInstance } from 'fastify';
 import { EnvSchema } from '../schemas/dotenv';
 
 const configOptions: FastifyEnvOptions = {

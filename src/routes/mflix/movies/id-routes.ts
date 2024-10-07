@@ -1,12 +1,12 @@
-import { FastifyInstance, FastifyReply, FastifyRequest, RouteOptions } from 'fastify';
+import type { FastifyInstance, FastifyReply, FastifyRequest, RouteOptions } from 'fastify';
 import {
   CompleteMovieRequestBodySchema,
   MovieByIdParamsSchema,
-  MovieByIdParamsSchemaType,
+  type MovieByIdParamsSchemaType,
   GetMovieResponseBodySchema,
   PartialMovieRequestBodySchema
 } from '../../../schemas/movie';
-import { HttpMethods } from '../../../utils/enums';
+import { HttpMethods, HttpStatusCodes } from '../../../utils/enums';
 import { genOptionsRoute } from '../../../utils/routing-utils';
 
 const url = '/:id';
@@ -29,7 +29,7 @@ const routes: Array<RouteOptions | any> = [
     ) {
       const movie = await this.mongoDataSource.fetchMovie(request.params.id);
       if (!movie) {
-        reply.code(404);
+        reply.code(HttpStatusCodes.NotFound);
         return { error: 'Movie not found.' };
       }
       return movie;
@@ -39,7 +39,7 @@ const routes: Array<RouteOptions | any> = [
     method: HttpMethods.PUT,
     url,
     schema: {
-      tags: tags,
+      tags,
       params: MovieByIdParamsSchema,
       body: CompleteMovieRequestBodySchema
     },
@@ -49,10 +49,10 @@ const routes: Array<RouteOptions | any> = [
     ) {
       const res = await this.mongoDataSource.replaceMovie(request.params.id, request.body);
       if (res.modifiedCount === 0) {
-        reply.code(404);
+        reply.code(HttpStatusCodes.NotFound);
         return { error: 'Movie not found.' };
       }
-      reply.code(204);
+      reply.code(HttpStatusCodes.NoContent);
     }
   },
   {
@@ -69,10 +69,10 @@ const routes: Array<RouteOptions | any> = [
     ) {
       const res = await this.mongoDataSource.updateMovie(request.params.id, request.body);
       if (res.modifiedCount === 0) {
-        reply.code(404);
+        reply.code(HttpStatusCodes.NotFound);
         return { error: 'Movie not found.' };
       }
-      reply.code(204);
+      reply.code(HttpStatusCodes.NoContent);
     }
   },
   {
@@ -88,10 +88,10 @@ const routes: Array<RouteOptions | any> = [
     ) {
       const res = await this.mongoDataSource.deleteMovie(request.params.id);
       if (res.deletedCount === 0) {
-        reply.code(404);
+        reply.code(HttpStatusCodes.NotFound);
         return { error: 'Movie not found.' };
       }
-      reply.code(204);
+      reply.code(HttpStatusCodes.NoContent);
     }
   }
 ];

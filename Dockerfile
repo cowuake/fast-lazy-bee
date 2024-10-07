@@ -3,7 +3,6 @@ RUN apt-get update && apt-get upgrade -y
 WORKDIR /build
 COPY package.json package-lock.json tsconfig.json ./
 COPY src ./src
-RUN npm i -g typescript
 RUN npm ci
 RUN npm run build
 

@@ -1,7 +1,7 @@
 import fp from 'fastify-plugin';
-import fastifySwagger, { FastifyDynamicSwaggerOptions } from '@fastify/swagger';
-import fastifySwaggerUi, { FastifySwaggerUiOptions } from '@fastify/swagger-ui';
-import { FastifyInstance } from 'fastify';
+import fastifySwagger, { type FastifyDynamicSwaggerOptions } from '@fastify/swagger';
+import fastifySwaggerUi, { type FastifySwaggerUiOptions } from '@fastify/swagger-ui';
+import type { FastifyInstance } from 'fastify';
 import pkg from '../../package.json';
 
 const swaggerOptions: FastifyDynamicSwaggerOptions = {

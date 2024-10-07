@@ -1,4 +1,5 @@
 import { type Static, Type } from '@sinclair/typebox';
+import { PaginationDefaults } from '../utils/constants';
 
 export const MovieSchema = Type.Object({
   awards: Type.Optional(
@@ -58,8 +59,15 @@ export const MovieListResponseSchema = Type.Object({
 
 export const GetMoviesQuerySchema = Type.Object({
   title: Type.Optional(Type.String()),
-  page: Type.Integer({ default: 1, minimum: 1 }),
-  size: Type.Integer({ default: 100, minimum: 1, maximum: 100 })
+  page: Type.Integer({
+    default: PaginationDefaults.defaultPageNumber,
+    minimum: PaginationDefaults.minimumPageNumber
+  }),
+  size: Type.Integer({
+    default: PaginationDefaults.maximumPageSize,
+    minimum: PaginationDefaults.minimumPageSize,
+    maximum: PaginationDefaults.maximumPageSize
+  })
 });
 
 export const CompleteMovieRequestBodySchema = MovieSchema;
@@ -74,6 +82,7 @@ export const MovieByIdParamsSchema = Type.Object({
 export const GetMovieResponseBodySchema = MovieSchema;
 
 export type MovieSchemaType = Static<typeof MovieSchema>;
+export type MovieListSchemaType = Static<typeof MovieListSchema>;
 export type MovieListResponseSchemaType = Static<typeof MovieListResponseSchema>;
 
 export type GetMoviesQuerySchemaType = Static<typeof GetMoviesQuerySchema>;

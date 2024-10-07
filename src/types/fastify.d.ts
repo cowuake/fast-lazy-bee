@@ -1,11 +1,11 @@
-import { FastifyMongoObject } from '@fastify/mongodb';
+import type { FastifyMongoObject } from '@fastify/mongodb';
 import fastify from 'fastify';
-import { EnvSchemaType } from '../schemas/dotenv';
+import type { EnvSchemaType } from '../schemas/dotenv';
 
 interface FastifyMongoDataSource {
-  countMovies(filter?: any): Promise<number>;
-  listMovies(query): Promise<any[]>;
-  createMovie(newMovie: any): Promise<string>;
+  countMovies: (filter?: any) => Promise<number>;
+  listMovies: (query) => Promise<any[]>;
+  createMovie: (newMovie: any) => Promise<string>;
   fetchMovie: (id: string, projection?: any) => Promise<any>;
   replaceMovie: (id: string, replacement: any) => Promise<any>;
   updateMovie: (id: string, update: any) => Promise<any>;
