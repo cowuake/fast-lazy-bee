@@ -25,8 +25,8 @@ const routes: RouteOptions[] = [
       }
     },
     handler: async function listMovies(request: FastifyRequest, _) {
-      const movies: MovieListSchemaType = await this.mongoDataSource.listMovies(request.query);
-      const totalCount: number = await this.mongoDataSource.countMovies();
+      const movies: MovieListSchemaType = await this.movieDataSource.listMovies(request.query);
+      const totalCount: number = await this.movieDataSource.countMovies();
       const body: MovieListResponseSchemaType = { movies, total: totalCount };
       return body;
     }
@@ -42,7 +42,7 @@ const routes: RouteOptions[] = [
       }
     },
     handler: async function createMovie(request, reply) {
-      const insertedId = await this.mongoDataSource.createMovie(request.body);
+      const insertedId = await this.movieDataSource.createMovie(request.body);
       reply.code(HttpStatusCodes.Created);
       return { id: insertedId };
     }

@@ -16,7 +16,7 @@ declare module 'fastify' {
   interface FastifyInstance {
     config: EnvSchemaType;
     mongo: FastifyMongoObject;
-    mongoDataSource: FastifyMongoDataSource;
+    movieDataSource: FastifyMongoDataSource;
   }
   type AugmentedFastifyRequest = FastifyRequest<{
     Params: any;

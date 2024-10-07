@@ -64,7 +64,7 @@ export const GetMoviesQuerySchema = Type.Object({
     minimum: PaginationDefaults.minimumPageNumber
   }),
   size: Type.Integer({
-    default: PaginationDefaults.maximumPageSize,
+    default: PaginationDefaults.defaultPageSize,
     minimum: PaginationDefaults.minimumPageSize,
     maximum: PaginationDefaults.maximumPageSize
   })

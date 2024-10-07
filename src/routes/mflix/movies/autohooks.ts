@@ -11,7 +11,7 @@ module.exports = fp(
   async function movieAutoHooks(fastify: FastifyInstance) {
     const movies = fastify.mongo.db?.collection('movies')!;
 
-    fastify.decorate('mongoDataSource', {
+    fastify.decorate('movieDataSource', {
       async countMovies(filter = {}) {
         const totalCount = await movies.countDocuments(filter);
         return totalCount;
