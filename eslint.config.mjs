@@ -9,7 +9,7 @@ import prettierPlugin from 'eslint-plugin-prettier';
 const languageOptions = {
   parser: typescriptParser,
   parserOptions: {
-    ecmaVerion: '6',
+    ecmaVersion: 'latest',
     project: './tsconfig.json'
   }
 };
