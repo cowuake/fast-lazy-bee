@@ -1,14 +1,14 @@
-import type { FastifyInstance, FastifyRequest, RouteOptions } from 'fastify';
+import type { FastifyInstance, RouteOptions } from 'fastify';
 import {
-  CompleteMovieRequestBodySchema,
-  CreateMovieResponseBodySchema,
-  GetMoviesQuerySchema,
-  type MovieListSchemaType,
-  MovieListResponseSchema,
-  type MovieListResponseSchemaType
-} from '../../../schemas/movie';
+  ListMoviesResponseSchema,
+  ListMoviesRequestSchema,
+  CreateMovieRequestSchema,
+  CreateMovieResponseSchema,
+  type ListMoviesQuerySchemaType
+} from '../../../schemas/movies/http';
 import { HttpMethods, HttpStatusCodes } from '../../../utils/enums';
 import { genOptionsRoute } from '../../../utils/routing-utils';
+import type { MovieSchemaType } from '../../../schemas/movies/data';
 
 const url = '';
 const tags = ['Movies'];
@@ -19,15 +19,21 @@ const routes: RouteOptions[] = [
     url,
     schema: {
       tags,
-      querystring: GetMoviesQuerySchema,
+      querystring: ListMoviesRequestSchema.properties.querystring,
       response: {
-        200: MovieListResponseSchema
+        200: ListMoviesResponseSchema.properties.body
       }
     },
-    handler: async function listMovies(request: FastifyRequest, _) {
-      const movies: MovieListSchemaType = await this.movieDataSource.listMovies(request.query);
+    handler: async function listMovies(request, reply) {
+      const query = request.query as ListMoviesQuerySchemaType;
+      const movies = await this.movieDataSource.listMovies(
+        query.title ?? '',
+        query.page,
+        query.size
+      );
       const totalCount: number = await this.movieDataSource.countMovies();
-      const body: MovieListResponseSchemaType = { movies, total: totalCount };
+      const body = { movies, total: totalCount };
+      reply.code(HttpStatusCodes.OK);
       return body;
     }
   },
@@ -36,13 +42,16 @@ const routes: RouteOptions[] = [
     url,
     schema: {
       tags,
-      body: CompleteMovieRequestBodySchema,
+      body: CreateMovieRequestSchema.properties.body,
       response: {
-        201: CreateMovieResponseBodySchema
+        201: CreateMovieResponseSchema.properties.body
       }
     },
+    // Generic interface FastifyRequest has generic parameter RequestType extending FastifyRequestType
+    // FastifyRequestType has generic parameter Body which is unknown by default
     handler: async function createMovie(request, reply) {
-      const insertedId = await this.movieDataSource.createMovie(request.body);
+      const body = request.body as MovieSchemaType;
+      const insertedId = await this.movieDataSource.createMovie(body);
       reply.code(HttpStatusCodes.Created);
       return { id: insertedId };
     }

@@ -1,45 +1,50 @@
 import type { FastifyInstance } from 'fastify';
 import fp from 'fastify-plugin';
-import type {
-  CreateMovieBodySchemaType,
-  ReplaceMovieBodySchemaType,
-  UpdateMovieBodySchemaType,
-  GetMoviesQuerySchemaType
-} from '../../../schemas/movie';
+import type { MovieSchemaType } from '../../../schemas/movies/data';
+import type { Collection, Db } from 'mongodb';
 
 module.exports = fp(
   async function movieAutoHooks(fastify: FastifyInstance) {
-    const movies = fastify.mongo.db?.collection('movies')!;
+    const db: Db | undefined = fastify.mongo.db;
+    if (db === undefined) {
+      throw new Error('MongoDB database is not available');
+    }
+    const movies: Collection<MovieSchemaType> = db.collection('movies');
 
     fastify.decorate('movieDataSource', {
-      async countMovies(filter = {}) {
-        const totalCount = await movies.countDocuments(filter);
+      async countMovies() {
+        const totalCount = await movies.countDocuments();
         return totalCount;
       },
-      async listMovies(query: GetMoviesQuerySchemaType) {
-        const skip = (query.page - 1) * query.size;
-        const filter = query.title ? { title: new RegExp(query.title, 'i') } : {};
-        const docs = await movies.find(filter, { limit: query.size, skip }).toArray();
-        return docs;
+      async listMovies(title, pageNumber, pageSize) {
+        const skip = --pageNumber * pageSize;
+        const filter = title !== '' ? { title: new RegExp(title, 'i') } : {};
+        const docs = await movies.find(filter, { limit: pageSize, skip }).toArray();
+        const output = docs.map((doc) => ({ ...doc, _id: doc._id.toString() }));
+        return output;
       },
-      async createMovie(newMovie: CreateMovieBodySchemaType) {
+      async createMovie(movie) {
         const now = new Date();
-        const newMovieDoc: CreateMovieBodySchemaType = {
-          ...newMovie,
+        const movieDoc = {
+          ...movie,
           lastupdated: now.toISOString()
         };
-        const { insertedId } = await movies.insertOne(newMovieDoc);
+        const { insertedId } = await movies.insertOne(movieDoc);
         return insertedId.toString();
       },
-      async fetchMovie(id: string, projection = {}) {
+      async fetchMovie(id: string) {
         const movie = await movies.findOne(
           { _id: new fastify.mongo.ObjectId(id) },
-          { projection: { ...projection, _id: 0 } }
+          { projection: { _id: 0 } }
         );
-        return movie;
+        if (movie === null) {
+          throw new Error('Movie not found');
+        }
+        const output = { ...movie, _id: id };
+        return output;
       },
-      async replaceMovie(id: string, replacement: ReplaceMovieBodySchemaType) {
-        return await movies.updateOne(
+      async replaceMovie(id, replacement) {
+        const updated = await movies.updateOne(
           { _id: new fastify.mongo.ObjectId(id) },
           {
             $set: {
@@ -48,9 +53,13 @@ module.exports = fp(
             }
           }
         );
+        if (updated.modifiedCount === 0) {
+          throw new Error('Movie not found');
+        }
+        return replacement;
       },
-      async updateMovie(id: string, update: UpdateMovieBodySchemaType) {
-        return await movies.updateOne(
+      async updateMovie(id, update) {
+        const updated = await movies.updateOne(
           { _id: new fastify.mongo.ObjectId(id) },
           {
             $set: {
@@ -59,9 +68,13 @@ module.exports = fp(
             }
           }
         );
+        if (updated.matchedCount === 0) {
+          throw new Error('Movie not found');
+        }
+        return update;
       },
       async deleteMovie(id: string) {
-        return await movies.deleteOne({ _id: new fastify.mongo.ObjectId(id) });
+        await movies.deleteOne({ _id: new fastify.mongo.ObjectId(id) });
       }
     });
   },

@@ -6,8 +6,8 @@ export const genOptionsRoute = (
   url: string,
   tags: string[],
   allowString: string
-) => {
-  fastify.route({
+): FastifyInstance => {
+  return fastify.route({
     method: HttpMethods.OPTIONS,
     url,
     schema: {

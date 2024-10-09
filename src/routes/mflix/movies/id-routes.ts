@@ -1,37 +1,34 @@
-import type { FastifyInstance, FastifyReply, FastifyRequest, RouteOptions } from 'fastify';
+import type { FastifyInstance, RouteOptions } from 'fastify';
 import {
-  CompleteMovieRequestBodySchema,
-  MovieByIdParamsSchema,
+  FetchMovieRequestSchema,
+  FetchMovieResponseSchema,
   type MovieByIdParamsSchemaType,
-  GetMovieResponseBodySchema,
-  PartialMovieRequestBodySchema
-} from '../../../schemas/movie';
+  UpdateMovieRequestSchema,
+  ReplaceMovieRequestSchema,
+  DeleteMovieRequestSchema
+} from '../../../schemas/movies/http';
 import { HttpMethods, HttpStatusCodes } from '../../../utils/enums';
 import { genOptionsRoute } from '../../../utils/routing-utils';
+import type { MovieSchemaType } from '../../../schemas/movies/data';
 
 const url = '/:id';
 const tags = ['Movies'];
 
-const routes: Array<RouteOptions | any> = [
+const routes: RouteOptions[] = [
   {
     method: HttpMethods.GET,
     url,
     schema: {
       tags,
-      params: MovieByIdParamsSchema,
+      params: FetchMovieRequestSchema.properties.params,
       response: {
-        200: GetMovieResponseBodySchema
+        200: FetchMovieResponseSchema.properties.body
       }
     },
-    handler: async function fetchMovie(
-      request: FastifyRequest<{ Params: MovieByIdParamsSchemaType }>,
-      reply: FastifyReply
-    ) {
-      const movie = await this.movieDataSource.fetchMovie(request.params.id);
-      if (!movie) {
-        reply.code(HttpStatusCodes.NotFound);
-        return { error: 'Movie not found.' };
-      }
+    handler: async function fetchMovie(request, reply) {
+      const params = request.params as MovieByIdParamsSchemaType;
+      const movie = await this.movieDataSource.fetchMovie(params.id);
+      reply.code(HttpStatusCodes.OK);
       return movie;
     }
   },
@@ -40,18 +37,13 @@ const routes: Array<RouteOptions | any> = [
     url,
     schema: {
       tags,
-      params: MovieByIdParamsSchema,
-      body: CompleteMovieRequestBodySchema
+      params: ReplaceMovieRequestSchema.properties.params,
+      body: ReplaceMovieRequestSchema.properties.body
     },
-    handler: async function updateMovie(
-      request: FastifyRequest<{ Params: MovieByIdParamsSchemaType }>,
-      reply: FastifyReply
-    ) {
-      const res = await this.movieDataSource.replaceMovie(request.params.id, request.body);
-      if (res.modifiedCount === 0) {
-        reply.code(HttpStatusCodes.NotFound);
-        return { error: 'Movie not found.' };
-      }
+    handler: async function updateMovie(request, reply) {
+      const params = request.params as MovieByIdParamsSchemaType;
+      const body = request.body as MovieSchemaType;
+      await this.movieDataSource.replaceMovie(params.id, body);
       reply.code(HttpStatusCodes.NoContent);
     }
   },
@@ -60,18 +52,13 @@ const routes: Array<RouteOptions | any> = [
     url,
     schema: {
       tags,
-      params: MovieByIdParamsSchema,
-      body: PartialMovieRequestBodySchema
+      params: UpdateMovieRequestSchema.properties.params,
+      body: UpdateMovieRequestSchema.properties.body
     },
-    handler: async function updateMovie(
-      request: FastifyRequest<{ Params: MovieByIdParamsSchemaType }>,
-      reply: FastifyReply
-    ) {
-      const res = await this.movieDataSource.updateMovie(request.params.id, request.body);
-      if (res.modifiedCount === 0) {
-        reply.code(HttpStatusCodes.NotFound);
-        return { error: 'Movie not found.' };
-      }
+    handler: async function updateMovie(request, reply) {
+      const params = request.params as MovieByIdParamsSchemaType;
+      const body = request.body as MovieSchemaType;
+      await this.movieDataSource.updateMovie(params.id, body);
       reply.code(HttpStatusCodes.NoContent);
     }
   },
@@ -80,17 +67,11 @@ const routes: Array<RouteOptions | any> = [
     url,
     schema: {
       tags,
-      params: MovieByIdParamsSchema
+      params: DeleteMovieRequestSchema.properties.params
     },
-    handler: async function deleteMovie(
-      request: FastifyRequest<{ Params: MovieByIdParamsSchemaType }>,
-      reply: FastifyReply
-    ) {
-      const res = await this.movieDataSource.deleteMovie(request.params.id);
-      if (res.deletedCount === 0) {
-        reply.code(HttpStatusCodes.NotFound);
-        return { error: 'Movie not found.' };
-      }
+    handler: async function deleteMovie(request, reply) {
+      const params = request.params as MovieByIdParamsSchemaType;
+      await this.movieDataSource.deleteMovie(params.id);
       reply.code(HttpStatusCodes.NoContent);
     }
   }

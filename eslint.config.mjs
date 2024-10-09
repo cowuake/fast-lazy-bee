@@ -39,5 +39,11 @@ export default [
     rules: {
       '@typescript-eslint/no-magic-numbers': 'off'
     }
+  },
+  {
+    files: ['src/schemas/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-unnecessary-type-parameters': 'off'
+    }
   }
 ];
