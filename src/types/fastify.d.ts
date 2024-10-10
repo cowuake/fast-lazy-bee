@@ -1,5 +1,4 @@
 import type { FastifyMongoObject } from '@fastify/mongodb';
-import fastify from 'fastify';
 import type { EnvSchemaType } from '../schemas/dotenv';
 import type {
   MovieListSchemaType,
