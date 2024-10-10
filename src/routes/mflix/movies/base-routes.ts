@@ -47,8 +47,6 @@ const routes: RouteOptions[] = [
         201: CreateMovieResponseSchema.properties.body
       }
     },
-    // Generic interface FastifyRequest has generic parameter RequestType extending FastifyRequestType
-    // FastifyRequestType has generic parameter Body which is unknown by default
     handler: async function createMovie(request, reply) {
       const body = request.body as MovieSchemaType;
       const insertedId = await this.movieDataSource.createMovie(body);
