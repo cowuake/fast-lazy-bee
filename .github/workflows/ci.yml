@@ -2,11 +2,12 @@ name: CI
 
 on:
   push:
-    branches:
-      - main
   pull_request:
     branches:
       - main
+    paths:
+      - '.github/workflows/ci.yml'
+      - 'src/**'
 
 env:
   APP_NAME: ${{ vars.APP_NAME }}
@@ -17,6 +18,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Set up build and runtime deps
+        run: |
+          sudo apt-get update && sudo apt-get upgrade -y
+          sudo apt-get install -y curl docker docker-compose
+
       - name: Checkout code
         uses: actions/checkout@v4
 
