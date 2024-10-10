@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  APP_NAME: ${{ vars.APP_NAME }}
+  TEST_ENDPOINT: 'http://localhost:${{ vars.APP_HOST_PORT }}/${{ vars.TEST_ROUTE }}'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build and run ${{ env.APP_NAME }} with Docker Compose
+        run: |
+          chmod +x run.sh
+          ./run.sh
+
+      - name: Wait for ${{ env.APP_NAME }} to be ready
+        run: |
+          while ! curl -s ${{ env.TEST_ENDPOINT }}; do
+            echo "Waiting for ${{ env.APP_NAME }}..."
+            sleep 1
+          done
+          echo "${{ env.APP_NAME }} is up and running!"
+
+      - name: Run basic tests
+        run: |
+          RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" ${{ env.TEST_ENDPOINT }})
+          if [ $RESPONSE_CODE -eq 200 ]; then
+            echo "Basic health check PASSED!"
+          else
+            echo " Basic health check FAILED!"
+            exit 1
+          fi
+
+      - name: Tear down Docker Compose
+        run: |
+          docker-compose -f docker-compose.yml down
