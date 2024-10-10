@@ -7,7 +7,7 @@ export class AppConfigDefaults {
 export class PaginationDefaults {
   static readonly defaultPageNumber = 1;
   static readonly minimumPageNumber = 1;
-  static readonly defaultPageSize: 100;
-  static readonly maximumPageSize: 100;
-  static readonly minimumPageSize: 1;
+  static readonly defaultPageSize = 100;
+  static readonly maximumPageSize = 500;
+  static readonly minimumPageSize = 1;
 }
