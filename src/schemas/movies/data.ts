@@ -51,7 +51,7 @@ export const MovieSchema = Type.Object({
 
 export const MovieWithIdSchema = Type.Object({
   ...MovieSchema.properties,
-  _id: Type.String()
+  id: Type.String()
 });
 
 export const MovieListSchema = Type.Array(MovieWithIdSchema);

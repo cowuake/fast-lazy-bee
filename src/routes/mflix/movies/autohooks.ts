@@ -20,7 +20,7 @@ module.exports = fp(
         const skip = --pageNumber * pageSize;
         const filter = title !== '' ? { title: new RegExp(title, 'i') } : {};
         const docs = await movies.find(filter, { limit: pageSize, skip }).toArray();
-        const output = docs.map((doc) => ({ ...doc, _id: doc._id.toString() }));
+        const output = docs.map((doc) => ({ ...doc, id: doc._id.toString() }));
         return output;
       },
       async createMovie(movie) {
@@ -40,7 +40,7 @@ module.exports = fp(
         if (movie === null) {
           throw new Error('Movie not found');
         }
-        const output = { ...movie, _id: id };
+        const output = { ...movie, id };
         return output;
       },
       async replaceMovie(id, replacement) {
