@@ -37,7 +37,6 @@ jobs:
             echo "Waiting for ${{ env.APP_NAME }}..."
             sleep 1
           done
-          echo "${{ env.APP_NAME }} is up and running!"
 
       - name: Run basic tests
         run: |
