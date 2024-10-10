@@ -11,7 +11,7 @@ on:
 
 env:
   APP_NAME: ${{ vars.APP_NAME }}
-  TEST_ENDPOINT: 'http://localhost:${{ vars.APP_HOST_PORT }}/${{ vars.TEST_ROUTE }}'
+  TEST_ENDPOINT: 'http://localhost:${{ vars.APP_HOST_PORT }}${{ vars.TEST_ROUTE }}'
 
 jobs:
   build-and-test:
