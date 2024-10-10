@@ -11,10 +11,12 @@ const ListMoviesResponseBodySchema = Type.Object({
 const ListMoviesQuerySchema = Type.Object({
   title: Type.Optional(Type.String()),
   page: Type.Integer({
+    description: 'The page number to retrieve',
     default: PaginationDefaults.defaultPageNumber,
     minimum: PaginationDefaults.minimumPageNumber
   }),
   size: Type.Integer({
+    description: 'The number of items to retrieve per page',
     default: PaginationDefaults.defaultPageSize,
     minimum: PaginationDefaults.minimumPageSize,
     maximum: PaginationDefaults.maximumPageSize
@@ -22,11 +24,11 @@ const ListMoviesQuerySchema = Type.Object({
 });
 
 const CreateMovieResponseBodySchema = Type.Object({
-  id: Type.String()
+  id: Type.String({ description: 'The unique identifier of the movie' })
 });
 
 const MovieByIdParamsSchema = Type.Object({
-  id: Type.String()
+  id: Type.String({ description: 'The unique identifier of the movie' })
 });
 
 const CompleteMovieRequestBodySchema = MovieSchema;
