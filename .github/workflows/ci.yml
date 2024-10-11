@@ -8,6 +8,7 @@ on:
     paths:
       - '.github/workflows/ci.yml'
       - 'src/**'
+      - 'run.sh'
 
 env:
   APP_NAME: ${{ vars.APP_NAME }}
