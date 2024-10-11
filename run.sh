@@ -2,7 +2,7 @@
 
 # Load environment variables
 cp .env.sample .env
-. .env
+. ./.env
 
 SAMPLE_DATA_ARCHIVE_LOCATION=/tmp/sampledata.archive
 
