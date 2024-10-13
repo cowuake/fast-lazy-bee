@@ -1,6 +1,7 @@
 import { join } from 'node:path';
 import fastify, { type FastifyInstance, type FastifyServerOptions } from 'fastify';
 import Autoload, { type AutoloadPluginOptions } from '@fastify/autoload';
+import fastifyCaching from '@fastify/caching';
 
 const serverOptions: FastifyServerOptions = {
   caseSensitive: false,
@@ -23,7 +24,8 @@ const fastifyApp: FastifyInstance = fastify(serverOptions);
 
 Promise.all([
   fastifyApp.register(Autoload, autoloadPluginsOptions),
-  fastifyApp.register(Autoload, autoloadRoutesOptions)
+  fastifyApp.register(Autoload, autoloadRoutesOptions),
+  fastifyApp.register(fastifyCaching, {})
 ])
   .then(() => {
     fastifyApp.listen({ host: '0.0.0.0', port: fastifyApp.config.APP_PORT }).catch((err) => {

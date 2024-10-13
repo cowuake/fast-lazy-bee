@@ -19,7 +19,7 @@ const routes: RouteOptions[] = [
     method: HttpMethods.GET,
     url,
     schema: {
-      tags,
+      tags: [...tags, 'Cache'],
       params: FetchMovieRequestSchema.properties.params,
       response: {
         200: FetchMovieResponseSchema.properties.body

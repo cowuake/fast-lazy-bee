@@ -18,7 +18,7 @@ const routes: RouteOptions[] = [
     method: HttpMethods.GET,
     url,
     schema: {
-      tags,
+      tags: [...tags, 'Cache'],
       querystring: ListMoviesRequestSchema.properties.querystring,
       response: {
         200: ListMoviesResponseSchema.properties.body

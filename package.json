@@ -12,11 +12,17 @@
     "build": "npm run clean && npx tsc -p tsconfig.json",
     "start": "node dist/src/server.js"
   },
-  "keywords": ["fastify", "typescript", "mongodb", "restful-api"],
+  "keywords": [
+    "fastify",
+    "typescript",
+    "mongodb",
+    "restful-api"
+  ],
   "author": "Riccardo Mura",
   "license": "MIT",
   "dependencies": {
     "@fastify/autoload": "^6.0.2",
+    "@fastify/caching": "^9.0.1",
     "@fastify/env": "^5.0.1",
     "@fastify/mongodb": "^9.0.1",
     "@fastify/swagger": "^9.1.0",
