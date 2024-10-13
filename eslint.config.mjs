@@ -17,14 +17,14 @@ const languageOptions = {
 const plugins = {
   import: importPlugin,
   node: nodePlugin,
-  prettier: prettierPlugin,
-  '@typescript-eslint': typescriptPlugin
+  prettier: prettierPlugin
+  // '@typescript-eslint': typescriptPlugin
 };
 
 export default [
   loveConfig,
   {
-    ignores: ['node_modules/*', 'dist/*']
+    ignores: ['node_modules/*', 'dist/*', 'coverage/*']
   },
   {
     files: ['src/**/*.ts'],

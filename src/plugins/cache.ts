@@ -1,4 +1,4 @@
-import { FastifyInstance, RouteOptions } from 'fastify';
+import type { FastifyInstance, RouteOptions } from 'fastify';
 import fp from 'fastify-plugin';
 import * as CacheUtils from '../utils/cache-utils';
 
@@ -11,13 +11,13 @@ module.exports = fp(async (fastify: FastifyInstance) => {
 
     const cacheKey = CacheUtils.genCacheKey(request);
     fastify.cache.get(cacheKey, (err, value) => {
-      if (err) {
+      if (err != null) {
         fastify.log.error(err);
         return;
       }
-      if (!!value) {
-        const payload = JSON.parse(value.item as string);
+      if (value != null) {
         fastify.log.info(`Cache hit for key: ${cacheKey}`);
+        const payload = JSON.parse(value.item as string);
         reply.send(payload);
       }
     });
@@ -31,21 +31,17 @@ module.exports = fp(async (fastify: FastifyInstance) => {
 
     const cacheKey = CacheUtils.genCacheKey(request);
     fastify.cache.get(cacheKey, (err, value) => {
-      if (err) {
+      if (err != null) {
         fastify.log.error(err);
         return;
       }
-      if (!value) {
+      if (value == null) {
         fastify.cache.set(cacheKey, payload, 10000, (err) => {
-          if (err) {
+          if (err != null) {
             fastify.log.error(err);
           }
         });
       }
     });
-  });
-
-  fastify.addHook('onResponse', async (request, reply) => {
-    fastify.cache;
   });
 });
