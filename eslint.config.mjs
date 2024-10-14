@@ -35,7 +35,7 @@ export default [
     }
   },
   {
-    files: ['**/constants.ts', '**/enums.ts', '**/constants.ts'],
+    files: ['**/constants.ts', '**/enums.ts', 'src/schemas/**/*.ts'],
     rules: {
       '@typescript-eslint/no-magic-numbers': 'off'
     }

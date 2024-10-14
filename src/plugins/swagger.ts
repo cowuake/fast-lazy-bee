@@ -3,6 +3,7 @@ import fastifySwagger, { type FastifyDynamicSwaggerOptions } from '@fastify/swag
 import fastifySwaggerUi, { type FastifySwaggerUiOptions } from '@fastify/swagger-ui';
 import type { FastifyInstance } from 'fastify';
 import pkg from '../../package.json';
+import { RouteTags } from '../utils/constants';
 
 const swaggerOptions: FastifyDynamicSwaggerOptions = {
   swagger: {
@@ -14,21 +15,26 @@ const swaggerOptions: FastifyDynamicSwaggerOptions = {
     consumes: ['application/json'],
     produces: ['application/json'],
     tags: [
-      {
-        name: 'Diagnostics'
-      },
-      {
-        name: 'Movies'
-      }
+      { name: RouteTags.movies, description: 'Movie operations' },
+      { name: RouteTags.diagnostics, description: 'Health check operations' },
+      { name: RouteTags.cache, description: 'Cacheable operations' }
     ]
   }
 };
 
 const swaggerUIOptions: FastifySwaggerUiOptions = {
-  routePrefix: '/docs'
+  routePrefix: '/docs',
+  uiConfig: {
+    deepLinking: true,
+    defaultModelExpandDepth: 10,
+    syntaxHighlight: {
+      activate: true,
+      theme: 'nord'
+    }
+  }
 };
 
-module.exports = fp(
+const swaggerPlugin = fp(
   async (fastify: FastifyInstance) => {
     fastify.get('/', async (request, reply) => {
       reply.redirect('/docs');
@@ -38,3 +44,5 @@ module.exports = fp(
   },
   { dependencies: ['server-config'] }
 );
+
+export default swaggerPlugin;

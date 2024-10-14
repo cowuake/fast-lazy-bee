@@ -1,47 +1,35 @@
 import type { FastifyInstance, RouteOptions } from 'fastify';
 import {
-  FetchMovieRequestSchema,
-  FetchMovieResponseSchema,
-  type MovieByIdParamsSchemaType,
-  UpdateMovieRequestSchema,
-  ReplaceMovieRequestSchema,
-  DeleteMovieRequestSchema
+  type MovieIdObjectSchemaType,
+  FetchMovieSchema,
+  ReplaceMovieSchema,
+  UpdateMovieSchema,
+  DeleteMovieSchema
 } from '../../../schemas/movies/http';
 import { HttpMethods, HttpStatusCodes } from '../../../utils/enums';
 import { genOptionsRoute } from '../../../utils/routing-utils';
 import type { MovieSchemaType } from '../../../schemas/movies/data';
+import { RouteTags } from '../../../utils/constants';
 
 const url = '/:id';
-const tags = ['Movies'];
 
 const routes: RouteOptions[] = [
   {
     method: HttpMethods.GET,
     url,
-    schema: {
-      tags: [...tags, 'Cache'],
-      params: FetchMovieRequestSchema.properties.params,
-      response: {
-        200: FetchMovieResponseSchema.properties.body
-      }
-    },
+    schema: FetchMovieSchema,
     handler: async function fetchMovie(request, reply) {
-      const params = request.params as MovieByIdParamsSchemaType;
+      const params = request.params as MovieIdObjectSchemaType;
       const movie = await this.movieDataSource.fetchMovie(params.id);
-      reply.code(HttpStatusCodes.OK);
-      return movie;
+      reply.code(HttpStatusCodes.OK).send(movie);
     }
   },
   {
     method: HttpMethods.PUT,
     url,
-    schema: {
-      tags,
-      params: ReplaceMovieRequestSchema.properties.params,
-      body: ReplaceMovieRequestSchema.properties.body
-    },
+    schema: ReplaceMovieSchema,
     handler: async function updateMovie(request, reply) {
-      const params = request.params as MovieByIdParamsSchemaType;
+      const params = request.params as MovieIdObjectSchemaType;
       const body = request.body as MovieSchemaType;
       await this.movieDataSource.replaceMovie(params.id, body);
       reply.code(HttpStatusCodes.NoContent);
@@ -50,13 +38,9 @@ const routes: RouteOptions[] = [
   {
     method: HttpMethods.PATCH,
     url,
-    schema: {
-      tags,
-      params: UpdateMovieRequestSchema.properties.params,
-      body: UpdateMovieRequestSchema.properties.body
-    },
+    schema: UpdateMovieSchema,
     handler: async function updateMovie(request, reply) {
-      const params = request.params as MovieByIdParamsSchemaType;
+      const params = request.params as MovieIdObjectSchemaType;
       const body = request.body as MovieSchemaType;
       await this.movieDataSource.updateMovie(params.id, body);
       reply.code(HttpStatusCodes.NoContent);
@@ -65,25 +49,23 @@ const routes: RouteOptions[] = [
   {
     method: HttpMethods.DELETE,
     url,
-    schema: {
-      tags,
-      params: DeleteMovieRequestSchema.properties.params
-    },
+    schema: DeleteMovieSchema,
     handler: async function deleteMovie(request, reply) {
-      const params = request.params as MovieByIdParamsSchemaType;
+      const params = request.params as MovieIdObjectSchemaType;
       await this.movieDataSource.deleteMovie(params.id);
       reply.code(HttpStatusCodes.NoContent);
     }
   }
 ];
 
-module.exports = async function movieRoutes(fastify: FastifyInstance) {
+const idMovieRoutes = async (fastify: FastifyInstance): Promise<void> => {
   const methods = routes.map((route) => route.method);
   const allowString = [HttpMethods.OPTIONS, ...methods].join(', ');
+  const optionsRoute: RouteOptions = genOptionsRoute(url, [RouteTags.movies], allowString);
 
-  genOptionsRoute(fastify, url, tags, allowString);
-
-  routes.forEach((route) => {
+  [optionsRoute, ...routes].forEach((route) => {
     fastify.route(route);
   });
 };
+
+export default idMovieRoutes;

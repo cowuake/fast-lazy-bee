@@ -10,9 +10,11 @@ const configOptions: FastifyEnvOptions = {
   data: process.env
 };
 
-module.exports = fp(
+const configPlugin = fp(
   async (fastify: FastifyInstance) => {
     await fastify.register(fastifyEnv, configOptions);
   },
   { name: 'server-config' }
 );
+
+export default configPlugin;

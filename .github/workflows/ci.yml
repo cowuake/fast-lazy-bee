@@ -16,13 +16,14 @@ env:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Set up build and runtime deps
         run: |
           sudo apt-get update
-          sudo apt-get install -y curl docker docker-compose
+          sudo apt-get install -y curl
+          sudo apt-get install -y docker-compose
 
       - name: Checkout code
         uses: actions/checkout@v4

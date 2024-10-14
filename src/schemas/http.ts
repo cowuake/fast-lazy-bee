@@ -1,6 +1,6 @@
 import { type TNull, type TObject, type TSchema, Type } from '@sinclair/typebox';
 
-export const HttpRequestSchema = <
+const HttpRequestSchema = <
   TBody extends TSchema | TNull,
   THeader extends TSchema | TNull,
   TParam extends TSchema | TNull,
@@ -11,14 +11,16 @@ export const HttpRequestSchema = <
   paramsSchema: TParam,
   querySchema: TQuery
 ): TObject =>
-  Type.Object({
-    body: bodySchema,
-    headers: headerSchema,
-    params: paramsSchema,
-    querystring: querySchema
-  });
+  Type.Partial(
+    Type.Object({
+      body: bodySchema,
+      headers: headerSchema,
+      params: paramsSchema,
+      querystring: querySchema
+    })
+  );
 
-export const HttpResponseSchema = <TBody extends TSchema, THeader extends TSchema>(
+const HttpResponseSchema = <TBody extends TSchema, THeader extends TSchema>(
   bodySchema: TBody,
   headerSchema: THeader
 ): TObject =>
@@ -26,3 +28,7 @@ export const HttpResponseSchema = <TBody extends TSchema, THeader extends TSchem
     body: bodySchema,
     headers: headerSchema
   });
+
+const NoContentSchema = Type.Object({});
+
+export { HttpRequestSchema, HttpResponseSchema, NoContentSchema };
