@@ -1,16 +1,18 @@
-import Fastify from 'fastify';
-import fp from 'fastify-plugin';
-import App from '../src/server';
+import type { FastifyInstance } from 'fastify';
+import { buildInstance } from '../app';
+import { serverOptions } from '../options/server-options';
+import autoloadOptions from '../options/autoload-options';
 
-export function build() {
-  const app = Fastify();
+export function buildTestInstance(): FastifyInstance {
+  const fastifyApp: FastifyInstance = buildInstance(serverOptions, autoloadOptions, {});
 
   beforeAll(async () => {
-    void app.register(fp(App));
-    await app.ready();
+    await fastifyApp.ready();
   });
 
-  afterAll(() => app.close());
+  afterAll(async () => {
+    await fastifyApp.close();
+  });
 
-  return app;
+  return fastifyApp;
 }

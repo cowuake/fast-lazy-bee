@@ -8,9 +8,10 @@ export const buildInstance = (
   cachingOptions: FastifyCachingPluginOptions
 ): FastifyInstance => {
   const fastifyApp: FastifyInstance = fastify(serverOptions);
-  autoloadPluginsOptions.forEach((pluginOptions) => {
+
+  for (const pluginOptions of autoloadPluginsOptions) {
     fastifyApp.register(Autoload, pluginOptions);
-  });
+  }
   fastifyApp.register(fastifyCaching, cachingOptions);
 
   return fastifyApp;
