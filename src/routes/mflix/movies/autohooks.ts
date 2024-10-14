@@ -3,7 +3,7 @@ import fp from 'fastify-plugin';
 import type { MovieSchemaType } from '../../../schemas/movies/data';
 import type { Collection, Db } from 'mongodb';
 
-module.exports = fp(
+const movieAutoHooks = fp(
   async function movieAutoHooks(fastify: FastifyInstance) {
     const db: Db | undefined = fastify.mongo.db;
     if (db === undefined) {
@@ -84,3 +84,5 @@ module.exports = fp(
     name: 'movie-store'
   }
 );
+
+export default movieAutoHooks;
