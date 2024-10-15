@@ -1,4 +1,5 @@
 FROM node:20-bookworm-slim AS builder
+RUN apt-get update && apt-get upgrade -y
 WORKDIR /build
 COPY package.json package-lock.json tsconfig.json ./
 COPY src ./src
@@ -6,7 +7,7 @@ RUN npm ci
 RUN npm run build
 
 FROM node:20-bookworm-slim
-RUN apt-get update && apt-get install -y dumb-init
+RUN apt-get update && apt-get upgrade -y && apt-get install -y dumb-init
 ENV HOME=/home/app
 ENV APP_HOME=$HOME/node/
 WORKDIR $APP_HOME
