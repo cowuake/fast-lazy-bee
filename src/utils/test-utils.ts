@@ -8,11 +8,11 @@ export function buildTestInstance(): FastifyInstance {
 
   beforeAll(async () => {
     await fastifyApp.ready();
-    await fastifyApp.mongo.client.connect();
+    // await fastifyApp.mongo.client.connect();
   });
 
   afterAll(async () => {
-    await fastifyApp.mongo.client.close();
+    // await fastifyApp.mongo.client.close();
     await fastifyApp.close();
   });
 
