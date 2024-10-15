@@ -10,10 +10,15 @@ import { HttpMethods, HttpStatusCodes } from '../utils/enums';
 
 describe('movieApi', () => {
   const fastifyInstance: FastifyInstance = buildTestInstance();
-  const movieId = '573a1390f29313caabcd50e5';
+  const movieIdString = '573a1390f29313caabcd50e5';
   const baseUrl = '/mflix/movies';
   const idUrl = '/mflix/movies/:id';
   const allUrls = [baseUrl, idUrl];
+  const testMovieProps = {
+    title: 'Test Movie',
+    type: 'movie',
+    year: 2024
+  };
 
   it('should be defined', () => {
     expect(fastifyInstance).toBeDefined();
@@ -67,11 +72,7 @@ describe('movieApi', () => {
       {
         method: HttpMethods.POST,
         url: baseUrl,
-        payload: {
-          title: 'Test Movie',
-          type: 'movie',
-          year: 2024
-        }
+        payload: testMovieProps
       },
       (err, response) => {
         expect(err).toBeNull();
@@ -85,7 +86,7 @@ describe('movieApi', () => {
     fastifyInstance.inject(
       {
         method: HttpMethods.GET,
-        url: `/mflix/movies/${movieId}`
+        url: `/mflix/movies/${movieIdString}`
       },
       (err, response) => {
         expect(err).toBeNull();
@@ -95,14 +96,43 @@ describe('movieApi', () => {
     );
   });
 
+  it('should replace a movie', () => {
+    fastifyInstance.inject(
+      {
+        method: HttpMethods.PUT,
+        url: `/mflix/movies/${movieIdString}`,
+        payload: testMovieProps
+      },
+      (err, response) => {
+        expect(err).toBeNull();
+        expect(response).toBeDefined();
+        expect(response?.statusCode).toBe(HttpStatusCodes.NoContent);
+      }
+    );
+  });
+
   it('should update a movie', () => {
     fastifyInstance.inject(
       {
         method: HttpMethods.PATCH,
-        url: `/mflix/movies/${movieId}`,
+        url: `/mflix/movies/${movieIdString}`,
         payload: {
           type: 'movie'
         }
+      },
+      (err, response) => {
+        expect(err).toBeNull();
+        expect(response).toBeDefined();
+        expect(response?.statusCode).toBe(HttpStatusCodes.NoContent);
+      }
+    );
+  });
+
+  it('should delete a movie', () => {
+    fastifyInstance.inject(
+      {
+        method: HttpMethods.DELETE,
+        url: `/mflix/movies/${movieIdString}`
       },
       (err, response) => {
         expect(err).toBeNull();
