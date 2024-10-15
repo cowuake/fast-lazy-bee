@@ -6,10 +6,17 @@ export const genOptionsRoute = (url: string, tags: string[], allowString: string
     method: HttpMethods.OPTIONS,
     url,
     schema: {
-      tags
+      tags,
+      response: {
+        [HttpStatusCodes.NoContent]: {
+          description: 'No Content'
+        }
+      }
     },
     handler: async function options(_, reply) {
       reply.header('Allow', allowString).code(HttpStatusCodes.NoContent);
+      reply.send(HttpStatusCodes.NoContent);
+      return null;
     }
   };
 };

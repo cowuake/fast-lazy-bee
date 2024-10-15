@@ -1,5 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 import { buildTestInstance } from '../utils/test-utils';
+import { HttpStatusCodes } from '../utils/enums';
 
 describe(' diagnosticsApi', () => {
   const fastifyInstance: FastifyInstance = buildTestInstance();
@@ -17,7 +18,7 @@ describe(' diagnosticsApi', () => {
       (err, response) => {
         expect(err).toBeNull();
         expect(response).toBeDefined();
-        expect(response?.statusCode).toBe(200);
+        expect(response?.statusCode).toBe(HttpStatusCodes.OK);
       }
     );
   });

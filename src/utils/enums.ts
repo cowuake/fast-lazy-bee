@@ -12,7 +12,9 @@ enum HttpStatusCodes {
   OK = 200,
   Created = 201,
   NoContent = 204,
-  NotFound = 404
+  BadRequest = 400,
+  NotFound = 404,
+  InternalServerError = 500
 }
 
 export { HttpMethods, HttpStatusCodes };

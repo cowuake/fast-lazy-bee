@@ -28,7 +28,7 @@ const TomatoesSchema = Type.Object({
 });
 
 const MovieMandatoryFieldsSchema = Type.Object({
-  title: StringSchema,
+  title: { ...StringSchema, examples: ['Beautiful Movie Title'] },
   type: StringSchema,
   year: NaturalSchema
 });

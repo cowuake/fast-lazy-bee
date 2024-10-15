@@ -22,14 +22,13 @@ const routes: RouteOptions[] = [
       tags: [...tags, 'Cache'],
       params: FetchMovieRequestSchema.properties.params,
       response: {
-        200: FetchMovieResponseSchema.properties.body
+        [HttpStatusCodes.OK]: FetchMovieResponseSchema.properties.body
       }
     },
     handler: async function fetchMovie(request, reply) {
       const params = request.params as MovieByIdParamsSchemaType;
       const movie = await this.movieDataSource.fetchMovie(params.id);
-      reply.code(HttpStatusCodes.OK);
-      return movie;
+      reply.code(HttpStatusCodes.OK).send(movie);
     }
   },
   {
