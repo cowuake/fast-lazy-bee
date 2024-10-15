@@ -12,12 +12,12 @@ describe(' diagnosticsApi', () => {
     fastifyInstance.inject(
       {
         method: 'GET',
-        url: '/diagnostics/health'
+        url: '/health'
       },
       (err, response) => {
         expect(err).toBeNull();
         expect(response).toBeDefined();
-        expect(response.statusCode).toBe(200);
+        expect(response?.statusCode).toBe(200);
       }
     );
   });

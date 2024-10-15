@@ -4,6 +4,7 @@ import type { FastifyInstance } from 'fastify';
 // import type { MovieSchemaType } from '../../../schemas/movies/data';
 // import fastify from 'fastify';
 import { buildTestInstance } from '../utils/test-utils';
+import { HttpMethods } from '../utils/enums';
 
 // const mongod: MongoMemoryServer = await MongoMemoryServer.create();
 // const uri = mongod.getUri();
@@ -33,7 +34,37 @@ describe('movieApi', () => {
     expect(fastifyInstance).toBeDefined();
   });
 
-  test('should be defined', () => {
+  it('should include all expected endpoints', () => {
+    const baseUrl = '/mflix/movies';
+    const idUrl = '/mflix/movies/:id';
+    const allUrls = [baseUrl, idUrl];
+
+    allUrls.forEach((url) => {
+      expect(fastifyInstance.hasRoute({ method: HttpMethods.GET, url })).toBeTruthy();
+      expect(fastifyInstance.hasRoute({ method: HttpMethods.OPTIONS, url })).toBeTruthy();
+    });
+
+    expect(fastifyInstance.hasRoute({ method: HttpMethods.POST, url: baseUrl })).toBeTruthy();
+    expect(fastifyInstance.hasRoute({ method: HttpMethods.PUT, url: idUrl })).toBeTruthy();
+    expect(fastifyInstance.hasRoute({ method: HttpMethods.PATCH, url: idUrl })).toBeTruthy();
+    expect(fastifyInstance.hasRoute({ method: HttpMethods.DELETE, url: idUrl })).toBeTruthy();
+  });
+
+  it('should return the available HTTP methods', () => {
+    fastifyInstance.inject(
+      {
+        method: 'OPTIONS',
+        url: '/mflix/movies'
+      },
+      (err, response) => {
+        expect(err).toBeNull();
+        expect(response).toBeDefined();
+        expect(response?.statusCode).toBe(204);
+      }
+    );
+  });
+
+  it('should fetch movies', () => {
     fastifyInstance.inject(
       {
         method: 'GET',
@@ -42,8 +73,41 @@ describe('movieApi', () => {
       (err, response) => {
         expect(err).toBeNull();
         expect(response).toBeDefined();
-        expect(response.statusCode).toBe(200);
+        expect(response?.statusCode).toBe(200);
       }
     );
   });
+
+  it('should create a movie', () => {
+    fastifyInstance.inject(
+      {
+        method: 'POST',
+        url: '/mflix/movies',
+        payload: {
+          title: 'Test Movie',
+          type: 'movie',
+          year: 2021
+        }
+      },
+      (err, response) => {
+        expect(err).toBeNull();
+        expect(response).toBeDefined();
+        expect(response?.statusCode).toBe(201);
+      }
+    );
+  });
+
+  // it('should fetch a movie by id', () => {
+  //   fastifyInstance.inject(
+  //     {
+  //       method: 'GET',
+  //       url: '/mflix/movies/1'
+  //     },
+  //     (err, response) => {
+  //       expect(err).toBeNull();
+  //       expect(response).toBeDefined();
+  //       expect(response?.statusCode).toBe(200);
+  //     }
+  //   );
+  // });
 });

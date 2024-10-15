@@ -59,10 +59,9 @@ const routes: RouteOptions[] = [
 module.exports = async function movieRoutes(fastify: FastifyInstance) {
   const methods = routes.map((route) => route.method);
   const allowString = [HttpMethods.OPTIONS, ...methods].join(', ');
+  const optionsRoute: RouteOptions = genOptionsRoute(url, tags, allowString);
 
-  genOptionsRoute(fastify, url, tags, allowString);
-
-  routes.forEach((route) => {
+  [optionsRoute, ...routes].forEach((route) => {
     fastify.route(route);
   });
 };
