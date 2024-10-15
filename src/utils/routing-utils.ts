@@ -16,7 +16,6 @@ export const genOptionsRoute = (url: string, tags: string[], allowString: string
     handler: async function options(_, reply) {
       reply.header('Allow', allowString).code(HttpStatusCodes.NoContent);
       reply.send(HttpStatusCodes.NoContent);
-      return null;
     }
   };
 };
