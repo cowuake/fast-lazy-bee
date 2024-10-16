@@ -1,6 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import { buildTestInstance } from '../utils/test-utils';
 import { HttpMethods, HttpStatusCodes } from '../utils/enums';
+import { TestConstants } from '../utils/constants';
 
 // const mongod: MongoMemoryServer = await MongoMemoryServer.create();
 // const uri = mongod.getUri();
@@ -10,15 +11,12 @@ import { HttpMethods, HttpStatusCodes } from '../utils/enums';
 
 describe('movieApi', () => {
   const fastifyInstance: FastifyInstance = buildTestInstance();
-  const movieIdString = '573a1390f29313caabcd50e5';
   const baseUrl = '/mflix/movies';
   const idUrl = '/mflix/movies/:id';
   const allUrls = [baseUrl, idUrl];
-  const testMovieProps = {
-    title: 'Test Movie',
-    type: 'movie',
-    year: 2024
-  };
+
+  const testMovieId = TestConstants.magicId;
+  const testMovie = TestConstants.testMovie;
 
   it('should be defined', () => {
     expect(fastifyInstance).toBeDefined();
@@ -36,109 +34,67 @@ describe('movieApi', () => {
     expect(fastifyInstance.hasRoute({ method: HttpMethods.DELETE, url: idUrl })).toBeTruthy();
   });
 
-  it('should return the available HTTP methods', () => {
-    allUrls.forEach((url) => {
-      fastifyInstance
-        .inject({
-          method: HttpMethods.OPTIONS,
-          url
-        })
-        .then((response) => {
-          expect(response.statusCode).toBe(HttpStatusCodes.NoContent);
-          expect(response.headers).toHaveProperty('allow');
-        })
-        .catch((err) => {
-          console.error(err);
-        });
+  it('should return the available HTTP methods', async () => {
+    for (const url of allUrls) {
+      const response = await fastifyInstance.inject({
+        method: HttpMethods.OPTIONS,
+        url
+      });
+      expect(response.statusCode).toBe(HttpStatusCodes.NoContent);
+      expect(response.headers).toHaveProperty('allow');
+    }
+  });
+
+  it('should fetch movies', async () => {
+    const response = await fastifyInstance.inject({
+      method: HttpMethods.GET,
+      url: `${baseUrl}?page=1&size=10`
     });
+    expect(response.statusCode).toBe(HttpStatusCodes.OK);
   });
 
-  it('should fetch movies', () => {
-    fastifyInstance
-      .inject({
-        method: HttpMethods.GET,
-        url: `${baseUrl}?page=1&size=10`
-      })
-      .then((response) => {
-        expect(response.statusCode).toBe(HttpStatusCodes.OK);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+  it('should create a movie', async () => {
+    const response = await fastifyInstance.inject({
+      method: HttpMethods.POST,
+      url: baseUrl,
+      payload: testMovie
+    });
+    expect(response.statusCode).toBe(HttpStatusCodes.Created);
   });
 
-  it('should create a movie', () => {
-    fastifyInstance
-      .inject({
-        method: HttpMethods.POST,
-        url: baseUrl,
-        payload: testMovieProps
-      })
-      .then((response) => {
-        expect(response.statusCode).toBe(HttpStatusCodes.Created);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+  it('should fetch a movie by id', async () => {
+    const response = await fastifyInstance.inject({
+      method: HttpMethods.GET,
+      url: `${baseUrl}/${testMovieId}`
+    });
+    expect(response.statusCode).toBe(HttpStatusCodes.OK);
   });
 
-  it('should fetch a movie by id', () => {
-    fastifyInstance
-      .inject({
-        method: HttpMethods.GET,
-        url: `${baseUrl}/${movieIdString}`
-      })
-      .then((response) => {
-        expect(response.statusCode).toBe(HttpStatusCodes.OK);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+  it('should replace a movie', async () => {
+    const response = await fastifyInstance.inject({
+      method: HttpMethods.PUT,
+      url: `${baseUrl}/${testMovieId}`,
+      payload: testMovie
+    });
+    expect(response.statusCode).toBe(HttpStatusCodes.NoContent);
   });
 
-  it('should replace a movie', () => {
-    fastifyInstance
-      .inject({
-        method: HttpMethods.PUT,
-        url: `${baseUrl}/${movieIdString}`,
-        payload: testMovieProps
-      })
-      .then((response) => {
-        expect(response.statusCode).toBe(HttpStatusCodes.NoContent);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+  it('should update a movie', async () => {
+    const response = await fastifyInstance.inject({
+      method: HttpMethods.PATCH,
+      url: `${baseUrl}/${testMovieId}`,
+      payload: {
+        type: 'movie'
+      }
+    });
+    expect(response.statusCode).toBe(HttpStatusCodes.NoContent);
   });
 
-  it('should update a movie', () => {
-    fastifyInstance
-      .inject({
-        method: HttpMethods.PATCH,
-        url: `${baseUrl}/${movieIdString}`,
-        payload: {
-          type: 'movie'
-        }
-      })
-      .then((response) => {
-        expect(response.statusCode).toBe(HttpStatusCodes.NoContent);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  });
-
-  it('should delete a movie', () => {
-    fastifyInstance
-      .inject({
-        method: HttpMethods.DELETE,
-        url: `${baseUrl}/${movieIdString}`
-      })
-      .then((response) => {
-        expect(response.statusCode).toBe(HttpStatusCodes.NoContent);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+  it('should delete a movie', async () => {
+    const response = await fastifyInstance.inject({
+      method: HttpMethods.DELETE,
+      url: `${baseUrl}/${testMovieId}`
+    });
+    expect(response.statusCode).toBe(HttpStatusCodes.NoContent);
   });
 });

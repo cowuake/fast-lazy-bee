@@ -9,17 +9,11 @@ describe(' diagnosticsApi', () => {
     expect(fastifyInstance).toBeDefined();
   });
 
-  test('should be defined', () => {
-    fastifyInstance
-      .inject({
-        method: 'GET',
-        url: '/health'
-      })
-      .then((response) => {
-        expect(response.statusCode).toBe(HttpStatusCodes.OK);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+  test('should be defined', async () => {
+    const response = await fastifyInstance.inject({
+      method: 'GET',
+      url: '/health'
+    });
+    expect(response.statusCode).toBe(HttpStatusCodes.OK);
   });
 });
