@@ -1,13 +1,14 @@
-import type { FastifyMongoObject } from '@fastify/mongodb';
+import type { FastifyMongoNestedObject, FastifyMongoObject } from '@fastify/mongodb';
 import type { EnvSchemaType } from '../schemas/dotenv';
 import type {
   MovieListSchemaType,
   MovieSchemaType,
   MovieWithIdSchemaType
 } from '../schemas/movies/data';
+import type { ErrorSchemaType } from '../schemas/errors';
 
 interface MovieDataSource {
-  countMovies: (filter?) => Promise<number>;
+  countMovies: () => Promise<number>;
   listMovies: (title: string, pageNumber: number, pageSize: number) => Promise<MovieListSchemaType>;
   createMovie: (movie: MovieSchemaType) => Promise<string>;
   fetchMovie: (id: string) => Promise<MovieWithIdSchemaType>;
@@ -19,7 +20,7 @@ interface MovieDataSource {
 declare module 'fastify' {
   interface FastifyInstance {
     config: EnvSchemaType;
-    mongo: FastifyMongoObject;
+    mongo: FastifyMongoObject & FastifyMongoNestedObject;
     movieDataSource: MovieDataSource;
   }
 }

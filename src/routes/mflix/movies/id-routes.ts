@@ -7,9 +7,11 @@ import {
   ReplaceMovieRequestSchema,
   DeleteMovieRequestSchema
 } from '../../../schemas/movies/http';
+import { ErrorSchema } from '../../../schemas/errors';
 import { HttpMethods, HttpStatusCodes } from '../../../utils/enums';
 import { genOptionsRoute } from '../../../utils/routing-utils';
 import type { MovieSchemaType } from '../../../schemas/movies/data';
+import { NoContentSchema } from '../../../schemas/http';
 
 const url = '/:id';
 const tags = ['Movies'];
@@ -22,7 +24,10 @@ const routes: RouteOptions[] = [
       tags: [...tags, 'Cache'],
       params: FetchMovieRequestSchema.properties.params,
       response: {
-        [HttpStatusCodes.OK]: FetchMovieResponseSchema.properties.body
+        [HttpStatusCodes.OK]: FetchMovieResponseSchema.properties.body,
+        [HttpStatusCodes.BadRequest]: ErrorSchema,
+        [HttpStatusCodes.NotFound]: ErrorSchema,
+        [HttpStatusCodes.InternalServerError]: ErrorSchema
       }
     },
     handler: async function fetchMovie(request, reply) {
@@ -37,7 +42,13 @@ const routes: RouteOptions[] = [
     schema: {
       tags,
       params: ReplaceMovieRequestSchema.properties.params,
-      body: ReplaceMovieRequestSchema.properties.body
+      body: ReplaceMovieRequestSchema.properties.body,
+      response: {
+        [HttpStatusCodes.NoContent]: NoContentSchema,
+        [HttpStatusCodes.BadRequest]: ErrorSchema,
+        [HttpStatusCodes.NotFound]: ErrorSchema,
+        [HttpStatusCodes.InternalServerError]: ErrorSchema
+      }
     },
     handler: async function updateMovie(request, reply) {
       const params = request.params as MovieByIdParamsSchemaType;
@@ -52,7 +63,13 @@ const routes: RouteOptions[] = [
     schema: {
       tags,
       params: UpdateMovieRequestSchema.properties.params,
-      body: UpdateMovieRequestSchema.properties.body
+      body: UpdateMovieRequestSchema.properties.body,
+      response: {
+        [HttpStatusCodes.NoContent]: NoContentSchema,
+        [HttpStatusCodes.BadRequest]: ErrorSchema,
+        [HttpStatusCodes.NotFound]: ErrorSchema,
+        [HttpStatusCodes.InternalServerError]: ErrorSchema
+      }
     },
     handler: async function updateMovie(request, reply) {
       const params = request.params as MovieByIdParamsSchemaType;
@@ -66,7 +83,13 @@ const routes: RouteOptions[] = [
     url,
     schema: {
       tags,
-      params: DeleteMovieRequestSchema.properties.params
+      params: DeleteMovieRequestSchema.properties.params,
+      response: {
+        [HttpStatusCodes.NoContent]: NoContentSchema,
+        [HttpStatusCodes.BadRequest]: ErrorSchema,
+        [HttpStatusCodes.NotFound]: ErrorSchema,
+        [HttpStatusCodes.InternalServerError]: ErrorSchema
+      }
     },
     handler: async function deleteMovie(request, reply) {
       const params = request.params as MovieByIdParamsSchemaType;

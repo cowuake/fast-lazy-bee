@@ -9,6 +9,7 @@ import {
 import { HttpMethods, HttpStatusCodes } from '../../../utils/enums';
 import { genOptionsRoute } from '../../../utils/routing-utils';
 import type { MovieSchemaType } from '../../../schemas/movies/data';
+import { ErrorSchema } from '../../../schemas/errors';
 
 const url = '';
 const tags = ['Movies'];
@@ -21,7 +22,9 @@ const routes: RouteOptions[] = [
       tags: [...tags, 'Cache'],
       querystring: ListMoviesRequestSchema.properties.querystring,
       response: {
-        [HttpStatusCodes.OK]: ListMoviesResponseSchema.properties.body
+        [HttpStatusCodes.OK]: ListMoviesResponseSchema.properties.body,
+        [HttpStatusCodes.BadRequest]: ErrorSchema,
+        [HttpStatusCodes.InternalServerError]: ErrorSchema
       }
     },
     handler: async function listMovies(request, reply) {
@@ -43,7 +46,9 @@ const routes: RouteOptions[] = [
       tags,
       body: CreateMovieRequestSchema.properties.body,
       response: {
-        [HttpStatusCodes.Created]: CreateMovieResponseSchema.properties.body
+        [HttpStatusCodes.Created]: CreateMovieResponseSchema.properties.body,
+        [HttpStatusCodes.BadRequest]: ErrorSchema,
+        [HttpStatusCodes.InternalServerError]: ErrorSchema
       }
     },
     handler: async function createMovie(request, reply) {

@@ -3,7 +3,7 @@ import { type Static, Type } from '@sinclair/typebox';
 const StringSchema = Type.String({ minLength: 1 });
 const StringArraySchema = Type.Array(StringSchema, { minItems: 1 });
 const FloatSchema = Type.Number({ format: 'float' });
-const NaturalSchema = Type.Integer({ minimum: 0, default: 0 });
+const NaturalSchema = Type.Integer({ minimum: 0 });
 const UriSchema = Type.String({ format: 'uri' });
 
 const AwardsSchema = Type.Object({
@@ -19,11 +19,13 @@ const ImdbSchema = Type.Object({
 });
 
 const TomatoesSchema = Type.Object({
-  viewer: Type.Object({
-    meter: NaturalSchema,
-    numReviews: NaturalSchema,
-    rating: FloatSchema
-  }),
+  viewer: Type.Partial(
+    Type.Object({
+      meter: NaturalSchema,
+      numReviews: NaturalSchema,
+      rating: FloatSchema
+    })
+  ),
   lastUpdated: StringSchema
 });
 

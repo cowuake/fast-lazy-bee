@@ -26,3 +26,5 @@ export const HttpResponseSchema = <TBody extends TSchema, THeader extends TSchem
     body: bodySchema,
     headers: headerSchema
   });
+
+export const NoContentSchema = Type.Never();

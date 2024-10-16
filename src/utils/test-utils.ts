@@ -10,12 +10,14 @@ export function buildTestInstance(): FastifyInstance {
 
   beforeAll(async () => {
     await fastifyApp.ready();
+  });
 
+  beforeEach(async () => {
     const db = (fastifyApp.mongo.db = fastifyApp.mongo.client.db());
     const movieCollection = db.collection('movies');
-    const testMovieThere =
-      (await movieCollection.findOne({ _id: new ObjectId(TestConstants.magicId) })) !== null;
-    if (!testMovieThere) {
+    const movie = await movieCollection.findOne({ _id: new ObjectId(TestConstants.magicId) });
+
+    if (movie === null) {
       await db.collection('movies').insertOne({
         _id: new ObjectId(TestConstants.magicId),
         ...TestConstants.testMovie

@@ -70,6 +70,14 @@ describe('movieApi', () => {
     expect(response.statusCode).toBe(HttpStatusCodes.OK);
   });
 
+  it('should return a 404 when fetching a non-existent movie', async () => {
+    const response = await fastifyInstance.inject({
+      method: HttpMethods.GET,
+      url: `${baseUrl}/${TestConstants.fakeId}`
+    });
+    expect(response.statusCode).toBe(HttpStatusCodes.NotFound);
+  });
+
   it('should replace a movie', async () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.PUT,
@@ -77,6 +85,15 @@ describe('movieApi', () => {
       payload: testMovie
     });
     expect(response.statusCode).toBe(HttpStatusCodes.NoContent);
+  });
+
+  it('should return a 404 when replacing a non-existent movie', async () => {
+    const response = await fastifyInstance.inject({
+      method: HttpMethods.PUT,
+      url: `${baseUrl}/${TestConstants.fakeId}`,
+      payload: testMovie
+    });
+    expect(response.statusCode).toBe(HttpStatusCodes.NotFound);
   });
 
   it('should update a movie', async () => {
@@ -90,11 +107,30 @@ describe('movieApi', () => {
     expect(response.statusCode).toBe(HttpStatusCodes.NoContent);
   });
 
+  it('should return a 404 when updating a non-existent movie', async () => {
+    const response = await fastifyInstance.inject({
+      method: HttpMethods.PATCH,
+      url: `${baseUrl}/${TestConstants.fakeId}`,
+      payload: {
+        type: 'movie'
+      }
+    });
+    expect(response.statusCode).toBe(HttpStatusCodes.NotFound);
+  });
+
   it('should delete a movie', async () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.DELETE,
       url: `${baseUrl}/${testMovieId}`
     });
     expect(response.statusCode).toBe(HttpStatusCodes.NoContent);
+  });
+
+  it('should return a 404 when deleting a non-existent movie', async () => {
+    const response = await fastifyInstance.inject({
+      method: HttpMethods.DELETE,
+      url: `${baseUrl}/${TestConstants.fakeId}`
+    });
+    expect(response.statusCode).toBe(HttpStatusCodes.NotFound);
   });
 });

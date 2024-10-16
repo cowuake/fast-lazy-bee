@@ -1,14 +1,29 @@
-import type { FastifyInstance } from 'fastify';
+import type { FastifyError, FastifyInstance, FastifyRequest } from 'fastify';
 import fp from 'fastify-plugin';
 import { HttpStatusCodes } from '../utils/enums';
+import type { ErrorSchemaType } from '../schemas/errors';
+
+function mapFastifyErrorToErrorSchemaType(
+  error: FastifyError,
+  request: FastifyRequest
+): ErrorSchemaType {
+  return {
+    status: error.statusCode ?? HttpStatusCodes.InternalServerError,
+    type: error.name,
+    detail: error.message
+    // errors:
+    //   error.validation !== undefined
+    //     ? error.validation.map((validationError) => ({
+    //         detail: validationError.message
+    //       }))
+    //     : undefined
+  };
+}
 
 module.exports = fp(async (fastify: FastifyInstance) => {
-  fastify.setErrorHandler(async (error, request, reply) => {
+  fastify.setErrorHandler(async (error: FastifyError, request, reply) => {
     fastify.log.error(error);
-    reply.code(HttpStatusCodes.InternalServerError).send({
-      code: HttpStatusCodes.InternalServerError,
-      message: 'Internal Server Error',
-      error: error.message
-    });
+    const replyError: ErrorSchemaType = mapFastifyErrorToErrorSchemaType(error, request);
+    reply.code(replyError.status).send(replyError);
   });
 });

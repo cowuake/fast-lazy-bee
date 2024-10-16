@@ -15,6 +15,7 @@ export class PaginationDefaults {
 }
 
 export class TestConstants {
+  static readonly fakeId = '000000000000000000000000';
   static readonly magicId = '670f5e20c286545ba702aade';
   static readonly testMovie: MovieSchemaType = { title: 'Test Movie', type: 'movie', year: 2024 };
 }
