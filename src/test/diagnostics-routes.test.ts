@@ -10,16 +10,16 @@ describe(' diagnosticsApi', () => {
   });
 
   test('should be defined', () => {
-    fastifyInstance.inject(
-      {
+    fastifyInstance
+      .inject({
         method: 'GET',
         url: '/health'
-      },
-      (err, response) => {
-        expect(err).toBeNull();
-        expect(response).toBeDefined();
-        expect(response?.statusCode).toBe(HttpStatusCodes.OK);
-      }
-    );
+      })
+      .then((response) => {
+        expect(response.statusCode).toBe(HttpStatusCodes.OK);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   });
 });

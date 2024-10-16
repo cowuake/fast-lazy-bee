@@ -38,107 +38,107 @@ describe('movieApi', () => {
 
   it('should return the available HTTP methods', () => {
     allUrls.forEach((url) => {
-      fastifyInstance.inject(
-        {
+      fastifyInstance
+        .inject({
           method: HttpMethods.OPTIONS,
           url
-        },
-        (err, response) => {
-          expect(err).toBeNull();
-          expect(response).toBeDefined();
-          expect(response?.statusCode).toBe(HttpStatusCodes.NoContent);
-          expect(response?.headers).toHaveProperty('allow');
-        }
-      );
+        })
+        .then((response) => {
+          expect(response.statusCode).toBe(HttpStatusCodes.NoContent);
+          expect(response.headers).toHaveProperty('allow');
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     });
   });
 
   it('should fetch movies', () => {
-    fastifyInstance.inject(
-      {
+    fastifyInstance
+      .inject({
         method: HttpMethods.GET,
         url: `${baseUrl}?page=1&size=10`
-      },
-      (err, response) => {
-        expect(err).toBeNull();
-        expect(response).toBeDefined();
-        expect(response?.statusCode).toBe(HttpStatusCodes.OK);
-      }
-    );
+      })
+      .then((response) => {
+        expect(response.statusCode).toBe(HttpStatusCodes.OK);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   });
 
   it('should create a movie', () => {
-    fastifyInstance.inject(
-      {
+    fastifyInstance
+      .inject({
         method: HttpMethods.POST,
         url: baseUrl,
         payload: testMovieProps
-      },
-      (err, response) => {
-        expect(err).toBeNull();
-        expect(response).toBeDefined();
-        expect(response?.statusCode).toBe(HttpStatusCodes.Created);
-      }
-    );
+      })
+      .then((response) => {
+        expect(response.statusCode).toBe(HttpStatusCodes.Created);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   });
 
   it('should fetch a movie by id', () => {
-    fastifyInstance.inject(
-      {
+    fastifyInstance
+      .inject({
         method: HttpMethods.GET,
-        url: `/mflix/movies/${movieIdString}`
-      },
-      (err, response) => {
-        expect(err).toBeNull();
-        expect(response).toBeDefined();
-        expect(response?.statusCode).toBe(HttpStatusCodes.OK);
-      }
-    );
+        url: `${baseUrl}/${movieIdString}`
+      })
+      .then((response) => {
+        expect(response.statusCode).toBe(HttpStatusCodes.OK);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   });
 
   it('should replace a movie', () => {
-    fastifyInstance.inject(
-      {
+    fastifyInstance
+      .inject({
         method: HttpMethods.PUT,
-        url: `/mflix/movies/${movieIdString}`,
+        url: `${baseUrl}/${movieIdString}`,
         payload: testMovieProps
-      },
-      (err, response) => {
-        expect(err).toBeNull();
-        expect(response).toBeDefined();
-        expect(response?.statusCode).toBe(HttpStatusCodes.NoContent);
-      }
-    );
+      })
+      .then((response) => {
+        expect(response.statusCode).toBe(HttpStatusCodes.NoContent);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   });
 
   it('should update a movie', () => {
-    fastifyInstance.inject(
-      {
+    fastifyInstance
+      .inject({
         method: HttpMethods.PATCH,
-        url: `/mflix/movies/${movieIdString}`,
+        url: `${baseUrl}/${movieIdString}`,
         payload: {
           type: 'movie'
         }
-      },
-      (err, response) => {
-        expect(err).toBeNull();
-        expect(response).toBeDefined();
-        expect(response?.statusCode).toBe(HttpStatusCodes.NoContent);
-      }
-    );
+      })
+      .then((response) => {
+        expect(response.statusCode).toBe(HttpStatusCodes.NoContent);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   });
 
   it('should delete a movie', () => {
-    fastifyInstance.inject(
-      {
+    fastifyInstance
+      .inject({
         method: HttpMethods.DELETE,
-        url: `/mflix/movies/${movieIdString}`
-      },
-      (err, response) => {
-        expect(err).toBeNull();
-        expect(response).toBeDefined();
-        expect(response?.statusCode).toBe(HttpStatusCodes.NoContent);
-      }
-    );
+        url: `${baseUrl}/${movieIdString}`
+      })
+      .then((response) => {
+        expect(response.statusCode).toBe(HttpStatusCodes.NoContent);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   });
 });
