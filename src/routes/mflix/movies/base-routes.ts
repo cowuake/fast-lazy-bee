@@ -21,7 +21,7 @@ const routes: RouteOptions[] = [
       tags: [...tags, 'Cache'],
       querystring: ListMoviesRequestSchema.properties.querystring,
       response: {
-        200: ListMoviesResponseSchema.properties.body
+        [HttpStatusCodes.OK]: ListMoviesResponseSchema.properties.body
       }
     },
     handler: async function listMovies(request, reply) {
@@ -33,8 +33,7 @@ const routes: RouteOptions[] = [
       );
       const totalCount: number = await this.movieDataSource.countMovies();
       const body = { movies, total: totalCount };
-      reply.code(HttpStatusCodes.OK);
-      return body;
+      reply.code(HttpStatusCodes.OK).send(body);
     }
   },
   {
@@ -44,14 +43,13 @@ const routes: RouteOptions[] = [
       tags,
       body: CreateMovieRequestSchema.properties.body,
       response: {
-        201: CreateMovieResponseSchema.properties.body
+        [HttpStatusCodes.Created]: CreateMovieResponseSchema.properties.body
       }
     },
     handler: async function createMovie(request, reply) {
       const body = request.body as MovieSchemaType;
       const insertedId = await this.movieDataSource.createMovie(body);
-      reply.code(HttpStatusCodes.Created);
-      return { id: insertedId };
+      reply.code(HttpStatusCodes.Created).send({ id: insertedId });
     }
   }
 ];
@@ -59,10 +57,9 @@ const routes: RouteOptions[] = [
 module.exports = async function movieRoutes(fastify: FastifyInstance) {
   const methods = routes.map((route) => route.method);
   const allowString = [HttpMethods.OPTIONS, ...methods].join(', ');
+  const optionsRoute: RouteOptions = genOptionsRoute(url, tags, allowString);
 
-  genOptionsRoute(fastify, url, tags, allowString);
-
-  routes.forEach((route) => {
+  [optionsRoute, ...routes].forEach((route) => {
     fastify.route(route);
   });
 };

@@ -1,39 +1,13 @@
-import { join } from 'node:path';
-import fastify, { type FastifyInstance, type FastifyServerOptions } from 'fastify';
-import Autoload, { type AutoloadPluginOptions } from '@fastify/autoload';
-import fastifyCaching from '@fastify/caching';
+import type { FastifyInstance } from 'fastify';
+import { buildInstance } from './app';
+import { serverOptions } from './options/server-options';
+import autoloadOptions from './options/autoload-options';
 
-const serverOptions: FastifyServerOptions = {
-  caseSensitive: false,
-  logger: {
-    level: 'debug',
-    transport: {
-      target: 'pino-pretty'
-    }
-  }
-};
-const autoloadPluginsOptions: AutoloadPluginOptions = {
-  dir: join(__dirname, 'plugins')
-};
-const autoloadRoutesOptions: AutoloadPluginOptions = {
-  dir: join(__dirname, 'routes'),
-  autoHooks: true
-};
+const fastifyApp: FastifyInstance = buildInstance(serverOptions, autoloadOptions, {});
 
-const fastifyApp: FastifyInstance = fastify(serverOptions);
-
-Promise.all([
-  fastifyApp.register(Autoload, autoloadPluginsOptions),
-  fastifyApp.register(Autoload, autoloadRoutesOptions),
-  fastifyApp.register(fastifyCaching, {})
-])
-  .then(() => {
-    fastifyApp.listen({ host: '0.0.0.0', port: fastifyApp.config.APP_PORT }).catch((err) => {
-      fastifyApp.log.error(err);
-      process.exit(1);
-    });
-  })
-  .catch((err) => {
+fastifyApp.ready().then(() => {
+  fastifyApp.listen({ host: '0.0.0.0', port: fastifyApp.config.APP_PORT }).catch((err) => {
     fastifyApp.log.error(err);
     process.exit(1);
   });
+});

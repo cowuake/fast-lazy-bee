@@ -25,7 +25,14 @@ const swaggerOptions: FastifyDynamicSwaggerOptions = {
 };
 
 const swaggerUIOptions: FastifySwaggerUiOptions = {
-  routePrefix: '/docs'
+  routePrefix: '/docs',
+  uiConfig: {
+    deepLinking: true,
+    syntaxHighlight: {
+      activate: true,
+      theme: 'nord'
+    }
+  }
 };
 
 module.exports = fp(

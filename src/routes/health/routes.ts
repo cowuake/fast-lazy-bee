@@ -1,5 +1,5 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest, RouteOptions } from 'fastify';
-import { HttpMethods } from '../../utils/enums';
+import { HttpMethods, HttpStatusCodes } from '../../utils/enums';
 
 const routes: RouteOptions[] = [
   {
@@ -8,7 +8,7 @@ const routes: RouteOptions[] = [
     schema: {
       tags: ['Diagnostics'],
       response: {
-        200: {
+        [HttpStatusCodes.OK]: {
           type: 'string'
         }
       }
