@@ -58,7 +58,7 @@ const routes: RouteOptions[] = [
   }
 ];
 
-module.exports = async function movieRoutes(fastify: FastifyInstance) {
+const idMovieRoutes = async (fastify: FastifyInstance): Promise<void> => {
   const methods = routes.map((route) => route.method);
   const allowString = [HttpMethods.OPTIONS, ...methods].join(', ');
   const optionsRoute: RouteOptions = genOptionsRoute(url, [RouteTags.movies], allowString);
@@ -67,3 +67,5 @@ module.exports = async function movieRoutes(fastify: FastifyInstance) {
     fastify.route(route);
   });
 };
+
+export default idMovieRoutes;

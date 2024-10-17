@@ -34,7 +34,7 @@ const swaggerUIOptions: FastifySwaggerUiOptions = {
   }
 };
 
-module.exports = fp(
+const swaggerPlugin = fp(
   async (fastify: FastifyInstance) => {
     fastify.get('/', async (request, reply) => {
       reply.redirect('/docs');
@@ -44,3 +44,5 @@ module.exports = fp(
   },
   { dependencies: ['server-config'] }
 );
+
+export default swaggerPlugin;

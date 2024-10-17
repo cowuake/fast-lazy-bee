@@ -4,7 +4,7 @@ import type { MovieSchemaType } from '../../../schemas/movies/data';
 import type { Collection, Db } from 'mongodb';
 import { HttpStatusCodes } from '../../../utils/enums';
 
-module.exports = fp(
+const autoHooks = fp(
   async function movieAutoHooks(fastify: FastifyInstance) {
     const db: Db | undefined = fastify.mongo.db;
     if (db === undefined) {
@@ -111,3 +111,5 @@ module.exports = fp(
     name: 'movie-store'
   }
 );
+
+export default autoHooks;

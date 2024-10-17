@@ -20,10 +20,12 @@ function mapFastifyErrorToErrorSchemaType(
   };
 }
 
-module.exports = fp(async (fastify: FastifyInstance) => {
+const errorHandlingPlugin = fp(async (fastify: FastifyInstance) => {
   fastify.setErrorHandler(async (error: FastifyError, request, reply) => {
     fastify.log.error(error);
     const replyError: ErrorSchemaType = mapFastifyErrorToErrorSchemaType(error, request);
     reply.code(replyError.status).send(replyError);
   });
 });
+
+export default errorHandlingPlugin;

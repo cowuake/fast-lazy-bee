@@ -34,14 +34,13 @@ const routes: RouteOptions[] = [
     schema: CreateMovieSchema,
     handler: async function createMovie(request, reply) {
       const body = request.body as MovieSchemaType;
-      console.log('body', body);
       const insertedId = await this.movieDataSource.createMovie(body);
       reply.code(HttpStatusCodes.Created).send({ id: insertedId });
     }
   }
 ];
 
-module.exports = async function movieRoutes(fastify: FastifyInstance) {
+const baseMovieRoutes = async (fastify: FastifyInstance): Promise<void> => {
   const methods = routes.map((route) => route.method);
   const allowString = [HttpMethods.OPTIONS, ...methods].join(', ');
   const optionsRoute: RouteOptions = genOptionsRoute(url, [RouteTags.movies], allowString);
@@ -50,3 +49,5 @@ module.exports = async function movieRoutes(fastify: FastifyInstance) {
     fastify.route(route);
   });
 };
+
+export default baseMovieRoutes;
