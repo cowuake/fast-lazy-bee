@@ -1,37 +1,25 @@
 import type { FastifyInstance, RouteOptions } from 'fastify';
 import {
-  FetchMovieRequestSchema,
-  FetchMovieResponseSchema,
-  type MovieByIdParamsSchemaType,
-  UpdateMovieRequestSchema,
-  ReplaceMovieRequestSchema,
-  DeleteMovieRequestSchema
+  type MovieIdObjectSchemaType,
+  FetchMovieSchema,
+  ReplaceMovieSchema,
+  UpdateMovieSchema,
+  DeleteMovieSchema
 } from '../../../schemas/movies/http';
-import { ErrorSchema } from '../../../schemas/errors';
 import { HttpMethods, HttpStatusCodes } from '../../../utils/enums';
 import { genOptionsRoute } from '../../../utils/routing-utils';
 import type { MovieSchemaType } from '../../../schemas/movies/data';
-import { NoContentSchema } from '../../../schemas/http';
+import { RouteTags } from '../../../utils/constants';
 
 const url = '/:id';
-const tags = ['Movies'];
 
 const routes: RouteOptions[] = [
   {
     method: HttpMethods.GET,
     url,
-    schema: {
-      tags: [...tags, 'Cache'],
-      params: FetchMovieRequestSchema.properties.params,
-      response: {
-        [HttpStatusCodes.OK]: FetchMovieResponseSchema.properties.body,
-        [HttpStatusCodes.BadRequest]: ErrorSchema,
-        [HttpStatusCodes.NotFound]: ErrorSchema,
-        [HttpStatusCodes.InternalServerError]: ErrorSchema
-      }
-    },
+    schema: FetchMovieSchema,
     handler: async function fetchMovie(request, reply) {
-      const params = request.params as MovieByIdParamsSchemaType;
+      const params = request.params as MovieIdObjectSchemaType;
       const movie = await this.movieDataSource.fetchMovie(params.id);
       reply.code(HttpStatusCodes.OK).send(movie);
     }
@@ -39,19 +27,9 @@ const routes: RouteOptions[] = [
   {
     method: HttpMethods.PUT,
     url,
-    schema: {
-      tags,
-      params: ReplaceMovieRequestSchema.properties.params,
-      body: ReplaceMovieRequestSchema.properties.body,
-      response: {
-        [HttpStatusCodes.NoContent]: NoContentSchema,
-        [HttpStatusCodes.BadRequest]: ErrorSchema,
-        [HttpStatusCodes.NotFound]: ErrorSchema,
-        [HttpStatusCodes.InternalServerError]: ErrorSchema
-      }
-    },
+    schema: ReplaceMovieSchema,
     handler: async function updateMovie(request, reply) {
-      const params = request.params as MovieByIdParamsSchemaType;
+      const params = request.params as MovieIdObjectSchemaType;
       const body = request.body as MovieSchemaType;
       await this.movieDataSource.replaceMovie(params.id, body);
       reply.code(HttpStatusCodes.NoContent);
@@ -60,19 +38,9 @@ const routes: RouteOptions[] = [
   {
     method: HttpMethods.PATCH,
     url,
-    schema: {
-      tags,
-      params: UpdateMovieRequestSchema.properties.params,
-      body: UpdateMovieRequestSchema.properties.body,
-      response: {
-        [HttpStatusCodes.NoContent]: NoContentSchema,
-        [HttpStatusCodes.BadRequest]: ErrorSchema,
-        [HttpStatusCodes.NotFound]: ErrorSchema,
-        [HttpStatusCodes.InternalServerError]: ErrorSchema
-      }
-    },
+    schema: UpdateMovieSchema,
     handler: async function updateMovie(request, reply) {
-      const params = request.params as MovieByIdParamsSchemaType;
+      const params = request.params as MovieIdObjectSchemaType;
       const body = request.body as MovieSchemaType;
       await this.movieDataSource.updateMovie(params.id, body);
       reply.code(HttpStatusCodes.NoContent);
@@ -81,18 +49,9 @@ const routes: RouteOptions[] = [
   {
     method: HttpMethods.DELETE,
     url,
-    schema: {
-      tags,
-      params: DeleteMovieRequestSchema.properties.params,
-      response: {
-        [HttpStatusCodes.NoContent]: NoContentSchema,
-        [HttpStatusCodes.BadRequest]: ErrorSchema,
-        [HttpStatusCodes.NotFound]: ErrorSchema,
-        [HttpStatusCodes.InternalServerError]: ErrorSchema
-      }
-    },
+    schema: DeleteMovieSchema,
     handler: async function deleteMovie(request, reply) {
-      const params = request.params as MovieByIdParamsSchemaType;
+      const params = request.params as MovieIdObjectSchemaType;
       await this.movieDataSource.deleteMovie(params.id);
       reply.code(HttpStatusCodes.NoContent);
     }
@@ -102,7 +61,7 @@ const routes: RouteOptions[] = [
 module.exports = async function movieRoutes(fastify: FastifyInstance) {
   const methods = routes.map((route) => route.method);
   const allowString = [HttpMethods.OPTIONS, ...methods].join(', ');
-  const optionsRoute: RouteOptions = genOptionsRoute(url, tags, allowString);
+  const optionsRoute: RouteOptions = genOptionsRoute(url, [RouteTags.movies], allowString);
 
   [optionsRoute, ...routes].forEach((route) => {
     fastify.route(route);

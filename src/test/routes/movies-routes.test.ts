@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify';
-import { buildTestInstance } from '../utils/test-utils';
-import { HttpMethods, HttpStatusCodes } from '../utils/enums';
-import { TestConstants } from '../utils/constants';
+import { buildTestInstance } from '../../utils/test-utils';
+import { HttpMethods, HttpStatusCodes } from '../../utils/enums';
+import { TestConstants } from '../../utils/constants';
 
 // const mongod: MongoMemoryServer = await MongoMemoryServer.create();
 // const uri = mongod.getUri();

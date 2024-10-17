@@ -11,12 +11,14 @@ export const HttpRequestSchema = <
   paramsSchema: TParam,
   querySchema: TQuery
 ): TObject =>
-  Type.Object({
-    body: bodySchema,
-    headers: headerSchema,
-    params: paramsSchema,
-    querystring: querySchema
-  });
+  Type.Partial(
+    Type.Object({
+      body: bodySchema,
+      headers: headerSchema,
+      params: paramsSchema,
+      querystring: querySchema
+    })
+  );
 
 export const HttpResponseSchema = <TBody extends TSchema, THeader extends TSchema>(
   bodySchema: TBody,
@@ -27,4 +29,4 @@ export const HttpResponseSchema = <TBody extends TSchema, THeader extends TSchem
     headers: headerSchema
   });
 
-export const NoContentSchema = Type.Never();
+export const NoContentSchema = Type.Object({});

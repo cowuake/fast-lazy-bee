@@ -1,4 +1,4 @@
-import { MovieSchema, type MovieSchemaType } from './data';
+import { MovieSchema, type MovieSchemaType } from '../../schemas/movies/data';
 import { TypeCompiler } from '@sinclair/typebox/compiler';
 
 describe('MovieSchema', () => {

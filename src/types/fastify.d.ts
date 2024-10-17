@@ -5,7 +5,6 @@ import type {
   MovieSchemaType,
   MovieWithIdSchemaType
 } from '../schemas/movies/data';
-import type { ErrorSchemaType } from '../schemas/errors';
 
 interface MovieDataSource {
   countMovies: () => Promise<number>;

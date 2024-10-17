@@ -2,7 +2,7 @@ import type { FastifyInstance } from 'fastify';
 import { buildInstance } from '../app';
 import { serverOptions } from '../options/server-options';
 import autoloadOptions from '../options/autoload-options';
-import { TestConstants } from './constants';
+import { TestConstants } from '../utils/constants';
 import { ObjectId } from '@fastify/mongodb';
 
 export function buildTestInstance(): FastifyInstance {

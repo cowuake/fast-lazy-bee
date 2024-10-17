@@ -30,7 +30,7 @@ const TomatoesSchema = Type.Object({
 });
 
 const MovieMandatoryFieldsSchema = Type.Object({
-  title: { ...StringSchema, examples: ['Beautiful Movie Title'] },
+  title: { ...StringSchema },
   type: StringSchema,
   year: NaturalSchema
 });
@@ -65,6 +65,8 @@ export const MovieSchema = Type.Object({
   ...MovieMandatoryFieldsSchema.properties,
   ...MovieOptionalFieldsSchema.properties
 });
+
+export const PartialMovieSchema = Type.Partial(MovieSchema);
 
 export const MovieWithIdSchema = Type.Object({
   ...MovieSchema.properties,

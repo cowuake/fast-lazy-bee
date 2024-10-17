@@ -1,13 +1,16 @@
 import { type Static, Type } from '@sinclair/typebox';
-import { PaginationDefaults } from '../../utils/constants';
-import { HttpRequestSchema, HttpResponseSchema } from '../http';
-import { MovieListSchema, MovieSchema } from './data';
+import { PaginationDefaults, RouteTags } from '../../utils/constants';
+import { NoContentSchema } from '../http';
+import { MovieListSchema, MovieSchema, MovieWithIdSchema, PartialMovieSchema } from './data';
+import { HttpStatusCodes } from '../../utils/enums';
+import { createResponseSchema } from '../../utils/schema-utils';
+import { ErrorSchema } from '../errors';
+import type { FastifySchema } from 'fastify';
 
-const ListMoviesResponseBodySchema = Type.Object({
+const MovieListWithCountSchema = Type.Object({
   movies: MovieListSchema,
   total: Type.Number()
 });
-
 const ListMoviesQuerySchema = Type.Object({
   title: Type.Optional(Type.String()),
   page: Type.Integer({
@@ -23,80 +26,76 @@ const ListMoviesQuerySchema = Type.Object({
   })
 });
 
-const CreateMovieResponseBodySchema = Type.Object({
+export const MovieIdObjectSchema = Type.Object({
   id: Type.String({ description: 'The unique identifier of the movie' })
 });
 
-const MovieByIdParamsSchema = Type.Object({
-  id: Type.String({ description: 'The unique identifier of the movie' })
-});
+export const ListMoviesSchema: FastifySchema = {
+  tags: [RouteTags.movies, RouteTags.cache],
+  querystring: ListMoviesQuerySchema,
+  response: {
+    ...createResponseSchema(HttpStatusCodes.OK, MovieListWithCountSchema),
+    ...createResponseSchema(HttpStatusCodes.BadRequest, ErrorSchema),
+    ...createResponseSchema(HttpStatusCodes.InternalServerError, ErrorSchema)
+  }
+};
 
-const CompleteMovieRequestBodySchema = MovieSchema;
-const PartialMovieRequestBodySchema = Type.Partial(CompleteMovieRequestBodySchema);
+export const CreateMovieSchema: FastifySchema = {
+  tags: [RouteTags.movies],
+  body: MovieSchema,
+  response: {
+    ...createResponseSchema(HttpStatusCodes.Created, MovieIdObjectSchema),
+    ...createResponseSchema(HttpStatusCodes.BadRequest, ErrorSchema),
+    ...createResponseSchema(HttpStatusCodes.InternalServerError, ErrorSchema)
+  }
+};
 
+export const FetchMovieSchema: FastifySchema = {
+  tags: [RouteTags.movies, RouteTags.cache],
+  params: MovieIdObjectSchema,
+  response: {
+    ...createResponseSchema(HttpStatusCodes.OK, MovieWithIdSchema),
+    ...createResponseSchema(HttpStatusCodes.BadRequest, ErrorSchema),
+    ...createResponseSchema(HttpStatusCodes.NotFound, ErrorSchema),
+    ...createResponseSchema(HttpStatusCodes.InternalServerError, ErrorSchema)
+  }
+};
+
+export const ReplaceMovieSchema: FastifySchema = {
+  tags: [RouteTags.movies],
+  params: MovieIdObjectSchema,
+  body: MovieSchema,
+  response: {
+    ...createResponseSchema(HttpStatusCodes.NoContent, NoContentSchema),
+    ...createResponseSchema(HttpStatusCodes.BadRequest, ErrorSchema),
+    ...createResponseSchema(HttpStatusCodes.NotFound, ErrorSchema),
+    ...createResponseSchema(HttpStatusCodes.InternalServerError, ErrorSchema)
+  }
+};
+
+export const UpdateMovieSchema: FastifySchema = {
+  tags: [RouteTags.movies],
+  params: MovieIdObjectSchema,
+  body: PartialMovieSchema,
+  response: {
+    ...createResponseSchema(HttpStatusCodes.NoContent, NoContentSchema),
+    ...createResponseSchema(HttpStatusCodes.BadRequest, ErrorSchema),
+    ...createResponseSchema(HttpStatusCodes.NotFound, ErrorSchema),
+    ...createResponseSchema(HttpStatusCodes.InternalServerError, ErrorSchema)
+  }
+};
+
+export const DeleteMovieSchema: FastifySchema = {
+  tags: [RouteTags.movies],
+  params: MovieIdObjectSchema,
+  response: {
+    ...createResponseSchema(HttpStatusCodes.NoContent, NoContentSchema),
+    ...createResponseSchema(HttpStatusCodes.BadRequest, ErrorSchema),
+    ...createResponseSchema(HttpStatusCodes.NotFound, ErrorSchema),
+    ...createResponseSchema(HttpStatusCodes.InternalServerError, ErrorSchema)
+  }
+};
+
+export type MovieIdObjectSchemaType = Static<typeof MovieIdObjectSchema>;
 export type MovieQuerySchemaType = Static<typeof ListMoviesQuerySchema>;
-
-export const ListMoviesRequestSchema = HttpRequestSchema(
-  Type.Undefined(),
-  Type.Undefined(),
-  Type.Undefined(),
-  ListMoviesQuerySchema
-);
-export type ListMoviesRequestSchemaType = Static<typeof ListMoviesRequestSchema>;
-export const ListMoviesResponseSchema = HttpResponseSchema(
-  ListMoviesResponseBodySchema,
-  Type.Undefined()
-);
-export type ListMoviesResponseSchemaType = Static<typeof ListMoviesResponseSchema>;
-
-export const CreateMovieRequestSchema = HttpRequestSchema(
-  MovieSchema,
-  Type.Undefined(),
-  Type.Undefined(),
-  Type.Undefined()
-);
-export const CreateMovieResponseSchema = HttpResponseSchema(
-  CreateMovieResponseBodySchema,
-  Type.Undefined()
-);
-export type CreateMovieRequestSchemaType = Static<typeof CreateMovieRequestSchema>;
-export type CreateMovieResponseSchemaType = Static<typeof CreateMovieResponseSchema>;
-
-export const FetchMovieRequestSchema = HttpRequestSchema(
-  Type.Undefined(),
-  Type.Undefined(),
-  MovieByIdParamsSchema,
-  Type.Undefined()
-);
-export const FetchMovieResponseSchema = HttpResponseSchema(MovieSchema, Type.Undefined());
-
-export const ReplaceMovieRequestSchema = HttpRequestSchema(
-  CompleteMovieRequestBodySchema,
-  Type.Undefined(),
-  MovieByIdParamsSchema,
-  Type.Undefined()
-);
-export const ReplaceMovieResponseSchema = HttpResponseSchema(MovieSchema, Type.Undefined());
-
-export const UpdateMovieRequestSchema = HttpRequestSchema(
-  PartialMovieRequestBodySchema,
-  Type.Undefined(),
-  MovieByIdParamsSchema,
-  Type.Undefined()
-);
-export const UpdateMovieResponseSchema = HttpResponseSchema(MovieSchema, Type.Undefined());
-
-export const DeleteMovieRequestSchema = HttpRequestSchema(
-  Type.Undefined(),
-  Type.Undefined(),
-  MovieByIdParamsSchema,
-  Type.Undefined()
-);
-export const DeleteMovieResponseSchema = HttpResponseSchema(Type.Undefined(), Type.Undefined());
-
 export type ListMoviesQuerySchemaType = Static<typeof ListMoviesQuerySchema>;
-export type CreateMovieBodySchemaType = Static<typeof CompleteMovieRequestBodySchema>;
-export type ReplaceMovieBodySchemaType = Static<typeof CompleteMovieRequestBodySchema>;
-export type UpdateMovieBodySchemaType = Static<typeof PartialMovieRequestBodySchema>;
-
-export type MovieByIdParamsSchemaType = Static<typeof MovieByIdParamsSchema>;

@@ -25,10 +25,9 @@ module.exports = fp(
         return output;
       },
       async createMovie(movie) {
-        const now = new Date();
         const movieDoc = {
           ...movie,
-          lastupdated: now.toISOString()
+          lastupdated: new Date().toISOString()
         };
         const { insertedId } = await movies.insertOne(movieDoc);
         return insertedId.toString();

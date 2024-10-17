@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify';
-import { buildTestInstance } from '../utils/test-utils';
-import { HttpStatusCodes } from '../utils/enums';
+import { buildTestInstance } from '../../utils/test-utils';
+import { HttpStatusCodes } from '../../utils/enums';
 
 describe(' diagnosticsApi', () => {
   const fastifyInstance: FastifyInstance = buildTestInstance();
