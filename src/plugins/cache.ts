@@ -14,7 +14,7 @@ const isCacheable = (request: FastifyRequest): boolean => {
 
 module.exports = fp(async (fastify: FastifyInstance) => {
   fastify.addHook('onRequest', async (request, reply) => {
-    if (isCacheable(request)) {
+    if (!isCacheable(request)) {
       return;
     }
 
@@ -33,7 +33,7 @@ module.exports = fp(async (fastify: FastifyInstance) => {
   });
 
   fastify.addHook('onSend', async (request, reply, payload) => {
-    if (isCacheable(request) || reply.statusCode !== HttpStatusCodes.OK) {
+    if (!isCacheable(request) || reply.statusCode !== HttpStatusCodes.OK) {
       return;
     }
 
