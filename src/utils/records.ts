@@ -1,6 +1,6 @@
 import { HttpStatusCodes, HttpStatusCodeDescriptions } from './enums';
 
-export const HttpCodesToDescriptions: Record<HttpStatusCodes, HttpStatusCodeDescriptions> = {
+const HttpCodesToDescriptions: Record<HttpStatusCodes, HttpStatusCodeDescriptions> = {
   [HttpStatusCodes.OK]: HttpStatusCodeDescriptions.OK,
   [HttpStatusCodes.Created]: HttpStatusCodeDescriptions.Created,
   [HttpStatusCodes.NoContent]: HttpStatusCodeDescriptions.NoContent,
@@ -8,3 +8,5 @@ export const HttpCodesToDescriptions: Record<HttpStatusCodes, HttpStatusCodeDesc
   [HttpStatusCodes.NotFound]: HttpStatusCodeDescriptions.NotFound,
   [HttpStatusCodes.InternalServerError]: HttpStatusCodeDescriptions.InternalServerError
 };
+
+export { HttpCodesToDescriptions };

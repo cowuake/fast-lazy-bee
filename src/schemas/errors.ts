@@ -80,7 +80,7 @@ const ErrorsSchema = Type.Array(
  *
  * See also: https://swagger.io/blog/problem-details-rfc9457-api-error-handling/
  */
-export const ErrorSchema = Type.Object({
+const ErrorSchema = Type.Object({
   type: ErrorTypeSchema,
   status: ErrorStatusSchema,
   title: Type.Optional(ErrorTitleSchema),
@@ -90,4 +90,6 @@ export const ErrorSchema = Type.Object({
   errors: Type.Optional(ErrorsSchema)
 });
 
-export type ErrorSchemaType = Static<typeof ErrorSchema>;
+type ErrorSchemaType = Static<typeof ErrorSchema>;
+
+export { ErrorSchema, type ErrorSchemaType };

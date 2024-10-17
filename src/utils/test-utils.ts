@@ -5,7 +5,7 @@ import autoloadOptions from '../options/autoload-options';
 import { TestConstants } from '../utils/constants';
 import { ObjectId } from '@fastify/mongodb';
 
-export function buildTestInstance(): FastifyInstance {
+function buildTestInstance(): FastifyInstance {
   const fastifyApp: FastifyInstance = buildInstance(serverOptions, autoloadOptions, {});
 
   beforeAll(async () => {
@@ -31,3 +31,5 @@ export function buildTestInstance(): FastifyInstance {
 
   return fastifyApp;
 }
+
+export { buildTestInstance };

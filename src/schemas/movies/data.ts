@@ -57,23 +57,34 @@ const MovieOptionalFieldsSchema = Type.Partial(
   })
 );
 
-export const MovieIdSchema = Type.String({
+const MovieIdSchema = Type.String({
   description: 'The unique identifier of the movie'
 });
 
-export const MovieSchema = Type.Object({
+const MovieSchema = Type.Object({
   ...MovieMandatoryFieldsSchema.properties,
   ...MovieOptionalFieldsSchema.properties
 });
 
-export const PartialMovieSchema = Type.Partial(MovieSchema);
+const PartialMovieSchema = Type.Partial(MovieSchema);
 
-export const MovieWithIdSchema = Type.Object({
+const MovieWithIdSchema = Type.Object({
   ...MovieSchema.properties,
   ...{ id: MovieIdSchema }
 });
-export const MovieListSchema = Type.Array(MovieWithIdSchema);
+const MovieListSchema = Type.Array(MovieWithIdSchema);
 
-export type MovieSchemaType = Static<typeof MovieSchema>;
-export type MovieWithIdSchemaType = Static<typeof MovieWithIdSchema>;
-export type MovieListSchemaType = Static<typeof MovieListSchema>;
+type MovieSchemaType = Static<typeof MovieSchema>;
+type MovieWithIdSchemaType = Static<typeof MovieWithIdSchema>;
+type MovieListSchemaType = Static<typeof MovieListSchema>;
+
+export {
+  MovieIdSchema,
+  MovieSchema,
+  PartialMovieSchema,
+  MovieWithIdSchema,
+  MovieListSchema,
+  type MovieSchemaType,
+  type MovieWithIdSchemaType,
+  type MovieListSchemaType
+};

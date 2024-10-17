@@ -26,11 +26,11 @@ const ListMoviesQuerySchema = Type.Object({
   })
 });
 
-export const MovieIdObjectSchema = Type.Object({
+const MovieIdObjectSchema = Type.Object({
   id: Type.String({ description: 'The unique identifier of the movie' })
 });
 
-export const ListMoviesSchema: FastifySchema = {
+const ListMoviesSchema: FastifySchema = {
   tags: [RouteTags.movies, RouteTags.cache],
   querystring: ListMoviesQuerySchema,
   response: {
@@ -40,7 +40,7 @@ export const ListMoviesSchema: FastifySchema = {
   }
 };
 
-export const CreateMovieSchema: FastifySchema = {
+const CreateMovieSchema: FastifySchema = {
   tags: [RouteTags.movies],
   body: MovieSchema,
   response: {
@@ -50,7 +50,7 @@ export const CreateMovieSchema: FastifySchema = {
   }
 };
 
-export const FetchMovieSchema: FastifySchema = {
+const FetchMovieSchema: FastifySchema = {
   tags: [RouteTags.movies, RouteTags.cache],
   params: MovieIdObjectSchema,
   response: {
@@ -61,7 +61,7 @@ export const FetchMovieSchema: FastifySchema = {
   }
 };
 
-export const ReplaceMovieSchema: FastifySchema = {
+const ReplaceMovieSchema: FastifySchema = {
   tags: [RouteTags.movies],
   params: MovieIdObjectSchema,
   body: MovieSchema,
@@ -73,7 +73,7 @@ export const ReplaceMovieSchema: FastifySchema = {
   }
 };
 
-export const UpdateMovieSchema: FastifySchema = {
+const UpdateMovieSchema: FastifySchema = {
   tags: [RouteTags.movies],
   params: MovieIdObjectSchema,
   body: PartialMovieSchema,
@@ -85,7 +85,7 @@ export const UpdateMovieSchema: FastifySchema = {
   }
 };
 
-export const DeleteMovieSchema: FastifySchema = {
+const DeleteMovieSchema: FastifySchema = {
   tags: [RouteTags.movies],
   params: MovieIdObjectSchema,
   response: {
@@ -96,6 +96,19 @@ export const DeleteMovieSchema: FastifySchema = {
   }
 };
 
-export type MovieIdObjectSchemaType = Static<typeof MovieIdObjectSchema>;
-export type MovieQuerySchemaType = Static<typeof ListMoviesQuerySchema>;
-export type ListMoviesQuerySchemaType = Static<typeof ListMoviesQuerySchema>;
+type MovieIdObjectSchemaType = Static<typeof MovieIdObjectSchema>;
+type MovieQuerySchemaType = Static<typeof ListMoviesQuerySchema>;
+type ListMoviesQuerySchemaType = Static<typeof ListMoviesQuerySchema>;
+
+export {
+  MovieIdObjectSchema,
+  ListMoviesSchema,
+  CreateMovieSchema,
+  FetchMovieSchema,
+  ReplaceMovieSchema,
+  UpdateMovieSchema,
+  DeleteMovieSchema,
+  type MovieIdObjectSchemaType,
+  type MovieQuerySchemaType,
+  type ListMoviesQuerySchemaType
+};
