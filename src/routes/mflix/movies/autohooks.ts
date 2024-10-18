@@ -1,7 +1,7 @@
 import type { FastifyError, FastifyInstance } from 'fastify';
 import fp from 'fastify-plugin';
 import type { MovieSchemaType } from '../../../schemas/movies/data';
-import type { Collection, Db } from 'mongodb';
+import type { Collection, Db, Sort, SortDirection } from 'mongodb';
 import { HttpStatusCodes } from '../../../utils/enums';
 import type { MovieFilterSchemaType } from '../../../schemas/movies/http';
 
@@ -21,6 +21,25 @@ const movieFiltertoMongoFilter = (
   return { ...titleFilter, ...yearFilter };
 };
 
+const defaultMovieSort = (filter: MovieFilterSchemaType): Sort => {
+  return filter.year === undefined ? { title: 1 } : { year: 1, title: 1 };
+};
+
+const movieSort = (filter: MovieFilterSchemaType): Sort => {
+  const sort = filter.sort;
+
+  if (sort !== undefined) {
+    const sortParts = sort.split(',');
+    return sortParts.reduce((acc, sortPart) => {
+      const [key, order] = sortPart.split(':');
+      const sortDirection: SortDirection = order.toLowerCase() === 'asc' ? 1 : -1;
+      return { ...acc, [key]: sortDirection };
+    }, {});
+  }
+
+  return defaultMovieSort(filter);
+};
+
 const autoHooks = fp(
   async function movieAutoHooks(fastify: FastifyInstance) {
     const db: Db | undefined = fastify.mongo.db;
@@ -38,9 +57,10 @@ const autoHooks = fp(
       async listMovies(filter) {
         const skip = (filter.page - 1) * filter.pageSize;
         const mongoFilter = movieFiltertoMongoFilter(filter);
+        const sort: Sort = movieSort(filter);
         const docs = await movies
           .find(mongoFilter, { limit: filter.pageSize, skip })
-          .sort(filter.year === undefined ? { title: 1 } : { year: 1, title: 1 })
+          .sort(sort)
           .toArray();
         const output = docs.map((doc) => ({ ...doc, id: doc._id.toString() }));
         return output;

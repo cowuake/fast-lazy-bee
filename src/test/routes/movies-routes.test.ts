@@ -13,6 +13,7 @@ describe('movieApi', () => {
   const fastifyInstance: FastifyInstance = buildTestInstance();
   const baseUrl = '/mflix/movies';
   const idUrl = '/mflix/movies/:id';
+  const pagination = 'page=1&size=10';
   const allUrls = [baseUrl, idUrl];
 
   const testMovieId = TestConstants.magicId;
@@ -48,7 +49,31 @@ describe('movieApi', () => {
   it('should fetch movies', async () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.GET,
-      url: `${baseUrl}?page=1&size=10`
+      url: `${baseUrl}?${pagination}`
+    });
+    expect(response.statusCode).toBe(HttpStatusCodes.OK);
+  });
+
+  it('should filter movies by title', async () => {
+    const response = await fastifyInstance.inject({
+      method: HttpMethods.GET,
+      url: `${baseUrl}?${pagination}&title=alien`
+    });
+    expect(response.statusCode).toBe(HttpStatusCodes.OK);
+  });
+
+  it('should filter movies by year', async () => {
+    const response = await fastifyInstance.inject({
+      method: HttpMethods.GET,
+      url: `${baseUrl}?${pagination}&year=1979`
+    });
+    expect(response.statusCode).toBe(HttpStatusCodes.OK);
+  });
+
+  it('should sort movies', async () => {
+    const response = await fastifyInstance.inject({
+      method: HttpMethods.GET,
+      url: `${baseUrl}?${pagination}&sort=awards:desc,year:asc,title:asc`
     });
     expect(response.statusCode).toBe(HttpStatusCodes.OK);
   });

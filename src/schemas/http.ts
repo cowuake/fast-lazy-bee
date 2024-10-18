@@ -55,10 +55,16 @@ const PaginationFilterSchema = Type.Object({
   })
 });
 
+const SortStringSchema = Type.String({
+  pattern: '^[a-zA-Z0-9_]+:(asc|desc)(,[a-zA-Z0-9_]+:(asc|desc))*$',
+  description: 'A comma-separated list of fields to sort by, with their respective order'
+});
+
 export {
   // HttpRequestSchema,
   // HttpResponseSchema,
   NoContentSchema,
   PaginatedDataSchema,
-  PaginationFilterSchema
+  PaginationFilterSchema,
+  SortStringSchema
 };

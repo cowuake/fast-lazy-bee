@@ -1,6 +1,11 @@
 import { type Static, Type } from '@sinclair/typebox';
 import { RouteTags } from '../../utils/constants';
-import { NoContentSchema, PaginatedDataSchema, PaginationFilterSchema } from '../http';
+import {
+  NoContentSchema,
+  PaginatedDataSchema,
+  PaginationFilterSchema,
+  SortStringSchema
+} from '../http';
 import { MovieSchema, MovieWithIdSchema, PartialMovieSchema } from './data';
 import { HttpStatusCodes } from '../../utils/enums';
 import { createResponseSchema } from '../../utils/schema-utils';
@@ -12,6 +17,7 @@ const PaginatedMoviesSchema = PaginatedDataSchema(MovieWithIdSchema);
 const MovieFilterSchema = Type.Object({
   title: Type.Optional(MovieSchema.properties.title),
   year: Type.Optional(MovieSchema.properties.year),
+  sort: Type.Optional(SortStringSchema),
   ...PaginationFilterSchema.properties
 });
 
