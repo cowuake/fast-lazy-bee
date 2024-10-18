@@ -20,8 +20,10 @@ const routes: RouteOptions[] = [
   }
 ];
 
-module.exports = async function testRoutes(fastify: FastifyInstance) {
+const diagnosticsRoutes = async function (fastify: FastifyInstance): Promise<void> {
   routes.forEach((route) => {
     fastify.route(route);
   });
 };
+
+export default diagnosticsRoutes;
