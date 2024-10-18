@@ -28,7 +28,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Build and run ${{ env.APP_NAME }} with Docker Compose
+      - name: Run ${{ env.APP_NAME }} with Docker Compose
         run: |
           chmod +x run.sh
           ./run.sh
@@ -49,6 +49,10 @@ jobs:
             echo " Basic health check FAILED!"
             exit 1
           fi
+
+      - name: Install Node dependencies
+        run: |
+          npm ci
 
       - name: Report coverage to Coveralls
         run: |
