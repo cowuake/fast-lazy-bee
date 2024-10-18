@@ -50,6 +50,10 @@ jobs:
             exit 1
           fi
 
+      - name: Report coverage to Coveralls
+        run: |
+          npm run coveralls
+
       - name: Tear down Docker Compose
         run: |
           docker-compose -f docker-compose.yml down
