@@ -70,7 +70,7 @@ describe('movieApi', () => {
     expect(response.statusCode).toBe(HttpStatusCodes.OK);
   });
 
-  it('should return a 404 when fetching a non-existent movie', async () => {
+  it(`should return a ${HttpStatusCodes.NotFound} when fetching a non-existent movie`, async () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.GET,
       url: `${baseUrl}/${TestConstants.fakeId}`
@@ -87,7 +87,7 @@ describe('movieApi', () => {
     expect(response.statusCode).toBe(HttpStatusCodes.NoContent);
   });
 
-  it('should return a 404 when replacing a non-existent movie', async () => {
+  it(`should return a ${HttpStatusCodes.NotFound} when replacing a non-existent movie`, async () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.PUT,
       url: `${baseUrl}/${TestConstants.fakeId}`,
@@ -107,7 +107,7 @@ describe('movieApi', () => {
     expect(response.statusCode).toBe(HttpStatusCodes.NoContent);
   });
 
-  it('should return a 404 when updating a non-existent movie', async () => {
+  it(`should return a ${HttpStatusCodes.NotFound} when updating a non-existent movie`, async () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.PATCH,
       url: `${baseUrl}/${TestConstants.fakeId}`,
@@ -126,7 +126,7 @@ describe('movieApi', () => {
     expect(response.statusCode).toBe(HttpStatusCodes.NoContent);
   });
 
-  it('should return a 404 when deleting a non-existent movie', async () => {
+  it(`should return a ${HttpStatusCodes.NotFound} when deleting a non-existent movie`, async () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.DELETE,
       url: `${baseUrl}/${TestConstants.fakeId}`
