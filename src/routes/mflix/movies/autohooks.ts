@@ -13,14 +13,17 @@ const autoHooks = fp(
     const movies: Collection<MovieSchemaType> = db.collection('movies');
 
     fastify.decorate('movieDataSource', {
-      async countMovies() {
-        const totalCount = await movies.countDocuments();
+      async countMovies(filter) {
+        const title = filter.title ?? '';
+        const titleFilter = title !== '' ? { title: new RegExp(title, 'i') } : {};
+        const totalCount = await movies.countDocuments(titleFilter);
         return totalCount;
       },
-      async listMovies(title, pageNumber, pageSize) {
-        const skip = --pageNumber * pageSize;
-        const filter = title !== '' ? { title: new RegExp(title, 'i') } : {};
-        const docs = await movies.find(filter, { limit: pageSize, skip }).toArray();
+      async listMovies(filter) {
+        const skip = (filter.page - 1) * filter.pageSize;
+        const title = filter.title ?? '';
+        const titleFilter = filter.title !== '' ? { title: new RegExp(title, 'i') } : {};
+        const docs = await movies.find(titleFilter, { limit: filter.pageSize, skip }).toArray();
         const output = docs.map((doc) => ({ ...doc, id: doc._id.toString() }));
         return output;
       },
@@ -32,7 +35,7 @@ const autoHooks = fp(
         const { insertedId } = await movies.insertOne(movieDoc);
         return insertedId.toString();
       },
-      async fetchMovie(id: string) {
+      async fetchMovie(id) {
         const movie = await movies.findOne(
           { _id: new fastify.mongo.ObjectId(id) },
           { projection: { _id: 0 } }
@@ -68,7 +71,6 @@ const autoHooks = fp(
           };
           throw error;
         }
-        return replacement;
       },
       async updateMovie(id, update) {
         const updated = await movies.updateOne(
@@ -89,9 +91,8 @@ const autoHooks = fp(
           };
           throw error;
         }
-        return update;
       },
-      async deleteMovie(id: string) {
+      async deleteMovie(id) {
         const deleted = await movies.deleteOne({ _id: new fastify.mongo.ObjectId(id) });
         if (deleted.deletedCount === 0) {
           const error: FastifyError = {

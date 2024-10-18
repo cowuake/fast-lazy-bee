@@ -1,4 +1,5 @@
 import { type TNull, type TObject, type TSchema, Type } from '@sinclair/typebox';
+import { NaturalSchema } from './common';
 
 const HttpRequestSchema = <
   TBody extends TSchema | TNull,
@@ -31,4 +32,12 @@ const HttpResponseSchema = <TBody extends TSchema, THeader extends TSchema>(
 
 const NoContentSchema = Type.Object({});
 
-export { HttpRequestSchema, HttpResponseSchema, NoContentSchema };
+const PaginatedDataSchema = <TData extends TSchema>(dataSchema: TData): TObject =>
+  Type.Object({
+    data: Type.Array(dataSchema),
+    page: NaturalSchema,
+    pageSize: NaturalSchema,
+    totalCount: NaturalSchema
+  });
+
+export { HttpRequestSchema, HttpResponseSchema, NoContentSchema, PaginatedDataSchema };

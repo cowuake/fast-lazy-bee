@@ -1,8 +1,8 @@
 import type { FastifyInstance, RouteOptions } from 'fastify';
 import {
   CreateMovieSchema,
-  type ListMoviesQuerySchemaType,
-  ListMoviesSchema
+  ListMoviesSchema,
+  type MovieFilterSchemaType
 } from '../../../schemas/movies/http';
 import { HttpMethods, HttpStatusCodes } from '../../../utils/enums';
 import { genOptionsRoute } from '../../../utils/routing-utils';
@@ -17,14 +17,15 @@ const routes: RouteOptions[] = [
     url,
     schema: ListMoviesSchema,
     handler: async function listMovies(request, reply) {
-      const query = request.query as ListMoviesQuerySchemaType;
-      const movies = await this.movieDataSource.listMovies(
-        query.title ?? '',
-        query.page,
-        query.size
-      );
-      const totalCount: number = await this.movieDataSource.countMovies();
-      const body = { movies, total: totalCount };
+      const filter = request.query as MovieFilterSchemaType;
+      const movies = await this.movieDataSource.listMovies(filter);
+      const totalCount: number = await this.movieDataSource.countMovies(filter);
+      const body = {
+        data: movies,
+        page: filter.page,
+        pageSize: Math.min(movies.length, totalCount),
+        totalCount
+      };
       reply.code(HttpStatusCodes.OK).send(body);
     }
   },

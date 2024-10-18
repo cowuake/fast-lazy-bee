@@ -1,24 +1,21 @@
 import { type Static, Type } from '@sinclair/typebox';
 import { PaginationDefaults, RouteTags } from '../../utils/constants';
-import { NoContentSchema } from '../http';
-import { MovieListSchema, MovieSchema, MovieWithIdSchema, PartialMovieSchema } from './data';
+import { NoContentSchema, PaginatedDataSchema } from '../http';
+import { MovieSchema, MovieWithIdSchema, PartialMovieSchema } from './data';
 import { HttpStatusCodes } from '../../utils/enums';
 import { createResponseSchema } from '../../utils/schema-utils';
 import { ErrorSchema } from '../errors';
 import type { FastifySchema } from 'fastify';
 
-const MovieListWithCountSchema = Type.Object({
-  movies: MovieListSchema,
-  total: Type.Number()
-});
-const ListMoviesQuerySchema = Type.Object({
+const PaginatedMoviesSchema = PaginatedDataSchema(MovieWithIdSchema);
+const MovieFilterSchema = Type.Object({
   title: Type.Optional(Type.String()),
   page: Type.Integer({
     description: 'The page number to retrieve',
     default: PaginationDefaults.defaultPageNumber,
     minimum: PaginationDefaults.minimumPageNumber
   }),
-  size: Type.Integer({
+  pageSize: Type.Integer({
     description: 'The number of items to retrieve per page',
     default: PaginationDefaults.defaultPageSize,
     minimum: PaginationDefaults.minimumPageSize,
@@ -32,9 +29,9 @@ const MovieIdObjectSchema = Type.Object({
 
 const ListMoviesSchema: FastifySchema = {
   tags: [RouteTags.movies, RouteTags.cache],
-  querystring: ListMoviesQuerySchema,
+  querystring: MovieFilterSchema,
   response: {
-    ...createResponseSchema(HttpStatusCodes.OK, MovieListWithCountSchema),
+    ...createResponseSchema(HttpStatusCodes.OK, PaginatedMoviesSchema),
     ...createResponseSchema(HttpStatusCodes.BadRequest, ErrorSchema),
     ...createResponseSchema(HttpStatusCodes.InternalServerError, ErrorSchema)
   }
@@ -97,8 +94,9 @@ const DeleteMovieSchema: FastifySchema = {
 };
 
 type MovieIdObjectSchemaType = Static<typeof MovieIdObjectSchema>;
-type MovieQuerySchemaType = Static<typeof ListMoviesQuerySchema>;
-type ListMoviesQuerySchemaType = Static<typeof ListMoviesQuerySchema>;
+type MovieQuerySchemaType = Static<typeof MovieFilterSchema>;
+type MovieFilterSchemaType = Static<typeof MovieFilterSchema>;
+type PaginatedMoviesSchemaType = Static<typeof PaginatedMoviesSchema>;
 
 export {
   MovieIdObjectSchema,
@@ -110,5 +108,6 @@ export {
   DeleteMovieSchema,
   type MovieIdObjectSchemaType,
   type MovieQuerySchemaType,
-  type ListMoviesQuerySchemaType
+  type MovieFilterSchemaType,
+  type PaginatedMoviesSchemaType
 };
