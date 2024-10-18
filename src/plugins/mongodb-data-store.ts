@@ -2,7 +2,7 @@ import fp from 'fastify-plugin';
 import fastifyMongo from '@fastify/mongodb';
 import type { FastifyInstance } from 'fastify';
 
-module.exports = fp(
+const mongoPlugin = fp(
   async (fastify: FastifyInstance) => {
     await fastify.register(fastifyMongo, {
       forceClose: true,
@@ -11,3 +11,5 @@ module.exports = fp(
   },
   { dependencies: ['server-config'] }
 );
+
+export default mongoPlugin;

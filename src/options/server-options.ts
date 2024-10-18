@@ -1,6 +1,6 @@
 import type { FastifyServerOptions } from 'fastify';
 
-export const serverOptions: FastifyServerOptions = {
+const serverOptions: FastifyServerOptions = {
   caseSensitive: false,
   logger: {
     level: 'debug',
@@ -9,3 +9,5 @@ export const serverOptions: FastifyServerOptions = {
     }
   }
 };
+
+export { serverOptions };

@@ -1,29 +1,21 @@
 import type { FastifyInstance, RouteOptions } from 'fastify';
 import {
-  ListMoviesResponseSchema,
-  ListMoviesRequestSchema,
-  CreateMovieRequestSchema,
-  CreateMovieResponseSchema,
-  type ListMoviesQuerySchemaType
+  CreateMovieSchema,
+  type ListMoviesQuerySchemaType,
+  ListMoviesSchema
 } from '../../../schemas/movies/http';
 import { HttpMethods, HttpStatusCodes } from '../../../utils/enums';
 import { genOptionsRoute } from '../../../utils/routing-utils';
 import type { MovieSchemaType } from '../../../schemas/movies/data';
+import { RouteTags } from '../../../utils/constants';
 
 const url = '';
-const tags = ['Movies'];
 
 const routes: RouteOptions[] = [
   {
     method: HttpMethods.GET,
     url,
-    schema: {
-      tags: [...tags, 'Cache'],
-      querystring: ListMoviesRequestSchema.properties.querystring,
-      response: {
-        [HttpStatusCodes.OK]: ListMoviesResponseSchema.properties.body
-      }
-    },
+    schema: ListMoviesSchema,
     handler: async function listMovies(request, reply) {
       const query = request.query as ListMoviesQuerySchemaType;
       const movies = await this.movieDataSource.listMovies(
@@ -39,13 +31,7 @@ const routes: RouteOptions[] = [
   {
     method: HttpMethods.POST,
     url,
-    schema: {
-      tags,
-      body: CreateMovieRequestSchema.properties.body,
-      response: {
-        [HttpStatusCodes.Created]: CreateMovieResponseSchema.properties.body
-      }
-    },
+    schema: CreateMovieSchema,
     handler: async function createMovie(request, reply) {
       const body = request.body as MovieSchemaType;
       const insertedId = await this.movieDataSource.createMovie(body);
@@ -54,12 +40,14 @@ const routes: RouteOptions[] = [
   }
 ];
 
-module.exports = async function movieRoutes(fastify: FastifyInstance) {
+const baseMovieRoutes = async (fastify: FastifyInstance): Promise<void> => {
   const methods = routes.map((route) => route.method);
   const allowString = [HttpMethods.OPTIONS, ...methods].join(', ');
-  const optionsRoute: RouteOptions = genOptionsRoute(url, tags, allowString);
+  const optionsRoute: RouteOptions = genOptionsRoute(url, [RouteTags.movies], allowString);
 
   [optionsRoute, ...routes].forEach((route) => {
     fastify.route(route);
   });
 };
+
+export default baseMovieRoutes;
