@@ -50,13 +50,16 @@ jobs:
             exit 1
           fi
 
-      - name: Install Node dependencies
+      - name: Run unit/integration tests
         run: |
           npm ci
+          npm run test
 
       - name: Report coverage to Coveralls
-        run: |
-          npm run coveralls
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: ./coverage/lcov.info
 
       - name: Tear down Docker Compose
         run: |
