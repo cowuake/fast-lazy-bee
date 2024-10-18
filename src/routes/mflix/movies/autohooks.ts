@@ -4,6 +4,13 @@ import type { MovieSchemaType } from '../../../schemas/movies/data';
 import type { Collection, Db } from 'mongodb';
 import { HttpStatusCodes } from '../../../utils/enums';
 
+const notFoundError = (id: string): FastifyError => ({
+  statusCode: HttpStatusCodes.NotFound,
+  message: `Could not find movie with id ${id}`,
+  name: 'Movie not found',
+  code: 'ERR_NOT_FOUND'
+});
+
 const autoHooks = fp(
   async function movieAutoHooks(fastify: FastifyInstance) {
     const db: Db | undefined = fastify.mongo.db;
@@ -41,13 +48,7 @@ const autoHooks = fp(
           { projection: { _id: 0 } }
         );
         if (movie === null) {
-          const error: FastifyError = {
-            statusCode: HttpStatusCodes.NotFound,
-            message: `Could not find movie with id ${id}`,
-            name: 'Movie not found',
-            code: 'ERR_NOT_FOUND'
-          };
-          throw error;
+          throw notFoundError(id);
         }
         const output = { ...movie, id };
         return output;
@@ -63,13 +64,7 @@ const autoHooks = fp(
           }
         );
         if (updated.modifiedCount === 0) {
-          const error: FastifyError = {
-            statusCode: HttpStatusCodes.NotFound,
-            message: `Could not find movie with id ${id}`,
-            name: 'Movie not found',
-            code: 'ERR_NOT_FOUND'
-          };
-          throw error;
+          throw notFoundError(id);
         }
       },
       async updateMovie(id, update) {
@@ -83,25 +78,13 @@ const autoHooks = fp(
           }
         );
         if (updated.matchedCount === 0) {
-          const error: FastifyError = {
-            statusCode: HttpStatusCodes.NotFound,
-            message: `Could not find movie with id ${id}`,
-            name: 'Movie not found',
-            code: 'ERR_NOT_FOUND'
-          };
-          throw error;
+          throw notFoundError(id);
         }
       },
       async deleteMovie(id) {
         const deleted = await movies.deleteOne({ _id: new fastify.mongo.ObjectId(id) });
         if (deleted.deletedCount === 0) {
-          const error: FastifyError = {
-            statusCode: HttpStatusCodes.NotFound,
-            message: `Could not find movie with id ${id}`,
-            name: 'Movie not found',
-            code: 'ERR_NOT_FOUND'
-          };
-          throw error;
+          throw notFoundError(id);
         }
       }
     });
