@@ -81,7 +81,7 @@ const ErrorsSchema = Type.Array(
  * See also: https://swagger.io/blog/problem-details-rfc9457-api-error-handling/
  */
 const ErrorSchema = Type.Object({
-  type: ErrorTypeSchema,
+  type: Type.Optional(ErrorTypeSchema),
   status: ErrorStatusSchema,
   title: Type.Optional(ErrorTitleSchema),
   detail: ErrorDetailSchema,

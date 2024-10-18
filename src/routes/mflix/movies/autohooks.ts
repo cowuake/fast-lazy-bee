@@ -3,6 +3,7 @@ import fp from 'fastify-plugin';
 import type { MovieSchemaType } from '../../../schemas/movies/data';
 import type { Collection, Db } from 'mongodb';
 import { HttpStatusCodes } from '../../../utils/enums';
+import type { MovieFilterSchemaType } from '../../../schemas/movies/http';
 
 const notFoundError = (id: string): FastifyError => ({
   statusCode: HttpStatusCodes.NotFound,
@@ -10,6 +11,15 @@ const notFoundError = (id: string): FastifyError => ({
   name: 'Movie not found',
   code: 'ERR_NOT_FOUND'
 });
+
+const movieFiltertoMongoFilter = (
+  filter: MovieFilterSchemaType
+): Record<string, string | number | RegExp | undefined> => {
+  const title = filter.title ?? '';
+  const titleFilter = title !== '' ? { title: new RegExp(title, 'i') } : {};
+  const yearFilter = filter.year !== undefined ? { year: filter.year } : {};
+  return { ...titleFilter, ...yearFilter };
+};
 
 const autoHooks = fp(
   async function movieAutoHooks(fastify: FastifyInstance) {
@@ -21,16 +31,14 @@ const autoHooks = fp(
 
     fastify.decorate('movieDataSource', {
       async countMovies(filter) {
-        const title = filter.title ?? '';
-        const titleFilter = title !== '' ? { title: new RegExp(title, 'i') } : {};
-        const totalCount = await movies.countDocuments(titleFilter);
+        const mongoFilter = movieFiltertoMongoFilter(filter);
+        const totalCount = await movies.countDocuments(mongoFilter);
         return totalCount;
       },
       async listMovies(filter) {
         const skip = (filter.page - 1) * filter.pageSize;
-        const title = filter.title ?? '';
-        const titleFilter = filter.title !== '' ? { title: new RegExp(title, 'i') } : {};
-        const docs = await movies.find(titleFilter, { limit: filter.pageSize, skip }).toArray();
+        const mongoFilter = movieFiltertoMongoFilter(filter);
+        const docs = await movies.find(mongoFilter, { limit: filter.pageSize, skip }).toArray();
         const output = docs.map((doc) => ({ ...doc, id: doc._id.toString() }));
         return output;
       },

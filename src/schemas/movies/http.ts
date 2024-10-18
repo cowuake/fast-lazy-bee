@@ -10,8 +10,8 @@ import type { FastifySchema } from 'fastify';
 const PaginatedMoviesSchema = PaginatedDataSchema(MovieWithIdSchema);
 
 const MovieFilterSchema = Type.Object({
-  title: Type.Optional(Type.String({ description: 'The title of the movie' })),
-  year: Type.Optional(Type.Integer({ description: 'The year the movie was released' })),
+  title: Type.Optional(MovieSchema.properties.title),
+  year: Type.Optional(MovieSchema.properties.year),
   ...PaginationFilterSchema.properties
 });
 

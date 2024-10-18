@@ -1,6 +1,8 @@
 import { type Static, Type } from '@sinclair/typebox';
 import { StringSchema, StringArraySchema, FloatSchema, NaturalSchema, UriSchema } from '../common';
 
+const MovieYearSchema = Type.Integer({ minimum: 1878 });
+
 const AwardsSchema = Type.Object({
   wins: NaturalSchema,
   nominations: NaturalSchema,
@@ -25,9 +27,9 @@ const TomatoesSchema = Type.Object({
 });
 
 const MovieMandatoryFieldsSchema = Type.Object({
-  title: { ...StringSchema },
+  title: { ...StringSchema, description: 'The title of the movie' },
   type: StringSchema,
-  year: NaturalSchema
+  year: { ...MovieYearSchema, description: 'The year the movie was released' }
 });
 
 const MovieOptionalFieldsSchema = Type.Partial(
@@ -74,8 +76,9 @@ type MovieWithIdSchemaType = Static<typeof MovieWithIdSchema>;
 export {
   MovieIdSchema,
   MovieSchema,
-  PartialMovieSchema,
+  MovieYearSchema,
   MovieWithIdSchema,
+  PartialMovieSchema,
   type MovieSchemaType,
   type MovieWithIdSchemaType
 };
