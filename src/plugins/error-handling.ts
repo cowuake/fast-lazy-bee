@@ -10,7 +10,8 @@ function mapFastifyErrorToErrorSchemaType(
   return {
     status: error.statusCode ?? HttpStatusCodes.InternalServerError,
     type: error.name,
-    detail: error.message
+    detail: error.message,
+    code: error.code
     // errors:
     //   error.validation !== undefined
     //     ? error.validation.map((validationError) => ({
