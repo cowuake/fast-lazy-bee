@@ -38,7 +38,10 @@ const autoHooks = fp(
       async listMovies(filter) {
         const skip = (filter.page - 1) * filter.pageSize;
         const mongoFilter = movieFiltertoMongoFilter(filter);
-        const docs = await movies.find(mongoFilter, { limit: filter.pageSize, skip }).toArray();
+        const docs = await movies
+          .find(mongoFilter, { limit: filter.pageSize, skip })
+          .sort(filter.year === undefined ? { title: 1 } : { year: 1, title: 1 })
+          .toArray();
         const output = docs.map((doc) => ({ ...doc, id: doc._id.toString() }));
         return output;
       },
