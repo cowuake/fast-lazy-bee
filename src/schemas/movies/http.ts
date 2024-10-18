@@ -1,6 +1,6 @@
 import { type Static, Type } from '@sinclair/typebox';
-import { PaginationDefaults, RouteTags } from '../../utils/constants';
-import { NoContentSchema, PaginatedDataSchema } from '../http';
+import { RouteTags } from '../../utils/constants';
+import { NoContentSchema, PaginatedDataSchema, PaginationFilterSchema } from '../http';
 import { MovieSchema, MovieWithIdSchema, PartialMovieSchema } from './data';
 import { HttpStatusCodes } from '../../utils/enums';
 import { createResponseSchema } from '../../utils/schema-utils';
@@ -8,19 +8,11 @@ import { ErrorSchema } from '../errors';
 import type { FastifySchema } from 'fastify';
 
 const PaginatedMoviesSchema = PaginatedDataSchema(MovieWithIdSchema);
+
 const MovieFilterSchema = Type.Object({
-  title: Type.Optional(Type.String()),
-  page: Type.Integer({
-    description: 'The page number to retrieve',
-    default: PaginationDefaults.defaultPageNumber,
-    minimum: PaginationDefaults.minimumPageNumber
-  }),
-  pageSize: Type.Integer({
-    description: 'The number of items to retrieve per page',
-    default: PaginationDefaults.defaultPageSize,
-    minimum: PaginationDefaults.minimumPageSize,
-    maximum: PaginationDefaults.maximumPageSize
-  })
+  title: Type.Optional(Type.String({ description: 'The title of the movie' })),
+  year: Type.Optional(Type.Integer({ description: 'The year the movie was released' })),
+  ...PaginationFilterSchema.properties
 });
 
 const MovieIdObjectSchema = Type.Object({

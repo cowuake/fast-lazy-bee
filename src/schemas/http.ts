@@ -1,5 +1,6 @@
 import { type TNull, type TObject, type TSchema, Type } from '@sinclair/typebox';
 import { NaturalSchema } from './common';
+import { PaginationDefaults } from '../utils/constants';
 
 const HttpRequestSchema = <
   TBody extends TSchema | TNull,
@@ -40,4 +41,24 @@ const PaginatedDataSchema = <TData extends TSchema>(dataSchema: TData): TObject 
     totalCount: NaturalSchema
   });
 
-export { HttpRequestSchema, HttpResponseSchema, NoContentSchema, PaginatedDataSchema };
+const PaginationFilterSchema = Type.Object({
+  page: Type.Integer({
+    description: 'The page number to retrieve',
+    default: PaginationDefaults.defaultPageNumber,
+    minimum: PaginationDefaults.minimumPageNumber
+  }),
+  pageSize: Type.Integer({
+    description: 'The number of items to retrieve per page',
+    default: PaginationDefaults.defaultPageSize,
+    minimum: PaginationDefaults.minimumPageSize,
+    maximum: PaginationDefaults.maximumPageSize
+  })
+});
+
+export {
+  HttpRequestSchema,
+  HttpResponseSchema,
+  NoContentSchema,
+  PaginatedDataSchema,
+  PaginationFilterSchema
+};
