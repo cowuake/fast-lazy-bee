@@ -7,7 +7,8 @@ const serverOptions: FastifyServerOptions = {
     transport: {
       target: 'pino-pretty'
     }
-  }
+  },
+  pluginTimeout: 100000
 };
 
 export { serverOptions };

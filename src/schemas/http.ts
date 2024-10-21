@@ -1,6 +1,6 @@
 import { type TObject, type TSchema, Type } from '@sinclair/typebox';
 import { NaturalSchema } from './common';
-import { PaginationDefaults } from '../utils/constants';
+import { PaginationDefaults } from '../utils/constants/constants';
 
 // const HttpRequestSchema = <
 //   TBody extends TSchema | TNull,

@@ -1,5 +1,5 @@
 import { type Static, Type } from '@sinclair/typebox';
-import { RouteTags } from '../../utils/constants';
+import { RouteTags } from '../../utils/constants/constants';
 import {
   NoContentSchema,
   PaginatedDataSchema,
@@ -7,7 +7,7 @@ import {
   SortStringSchema
 } from '../http';
 import { MovieSchema, MovieWithIdSchema, PartialMovieSchema } from './data';
-import { HttpStatusCodes } from '../../utils/enums';
+import { HttpStatusCodes } from '../../utils/constants/enums';
 import { createResponseSchema } from '../../utils/schema-utils';
 import { ErrorSchema } from '../errors';
 import type { FastifySchema } from 'fastify';

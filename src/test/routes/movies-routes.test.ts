@@ -1,13 +1,7 @@
 import type { FastifyInstance } from 'fastify';
-import { buildTestInstance } from '../../utils/test-utils';
-import { HttpMethods, HttpStatusCodes } from '../../utils/enums';
-import { TestConstants } from '../../utils/constants';
-
-// const mongod: MongoMemoryServer = await MongoMemoryServer.create();
-// const uri = mongod.getUri();
-// const client: MongoClient = new MongoClient(uri);
-// const db: Db = client.db();
-// const movies: Collection<MovieSchemaType> = new Collection<MovieSchemaType>();
+import buildTestInstance from '../../utils/testing/build-test-instance';
+import { HttpMethods, HttpStatusCodes } from '../../utils/constants/enums';
+import { TestConstants } from '../../utils/constants/constants';
 
 describe('movieApi', () => {
   const fastifyInstance: FastifyInstance = buildTestInstance();
