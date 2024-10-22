@@ -11,7 +11,7 @@ echo "> Checking local environment..."
 if [ ! -x "$(command -v docker)" ]; then
     echo "> Docker is not installed! Please install Docker."
     exit 1
-elif [ ! -x "$(command -v docker-compose)" ]; then
+elif ! docker compose version > /dev/null 2>&1; then
     echo "> Docker Compose is not installed! Please install Docker Compose."
     exit 1
 elif [ ! -x "$(command -v curl)" ]; then
@@ -28,7 +28,7 @@ echo "> Local environment is ready!"
 
 # Docker Compose up
 echo "> Running Docker Compose..."
-docker-compose up --build -d
+docker compose up --build --detach
 
 # Announce that FastLazyBee is up and running
 echo "> FastLazyBee is up and running! Please wait for initial data to be loaded into the database..."
