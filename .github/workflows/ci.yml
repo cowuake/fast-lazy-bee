@@ -19,11 +19,10 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-      - name: Set up build and runtime deps
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y curl
-          sudo apt-get install -y docker-compose
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
 
       - name: Checkout code
         uses: actions/checkout@v4
@@ -32,13 +31,6 @@ jobs:
         run: |
           chmod +x run.sh
           ./run.sh
-
-      - name: Wait for ${{ env.APP_NAME }} to be ready
-        run: |
-          while ! curl -s ${{ env.TEST_ENDPOINT }}; do
-            echo "Waiting for ${{ env.APP_NAME }}..."
-            sleep 1
-          done
 
       - name: Run basic test (workshop scenario)
         run: |
@@ -52,7 +44,7 @@ jobs:
 
       - name: Tear down Docker Compose
         run: |
-          docker-compose -f docker-compose.yml down
+          docker compose -f docker-compose.yml down
 
       - name: Run unit/integration tests
         run: |

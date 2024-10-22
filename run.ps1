@@ -18,9 +18,6 @@ Write-Output "> Checking local environment..."
 if (-not (Get-Command docker -ErrorAction SilentlyContinue)) {
     Write-Output "> Docker is not installed! Please install Docker."
     exit 1
-} elseif (-not (Get-Command docker-compose -ErrorAction SilentlyContinue)) {
-    Write-Output "> Docker Compose is not installed! Please install Docker Compose."
-    exit 1
 } elseif (-not (Get-Command curl -ErrorAction SilentlyContinue)) {
     Write-Output "> cURL is not installed! Please install cURL."
     exit 1
@@ -35,7 +32,7 @@ Write-Output "> Local environment is ready!"
 
 # Docker Compose up
 Write-Output "> Running Docker Compose..."
-docker-compose up --build -d
+docker compose up --build --detach
 
 # Announce that FastLazyBee is up and running
 Write-Output "> FastLazyBee is up and running! Please wait for initial data to be loaded into the database..."
@@ -44,8 +41,6 @@ Write-Output "> FastLazyBee is up and running! Please wait for initial data to b
 if (-not (Test-Path $env:SAMPLE_DATA_ARCHIVE_LOCATION)) {
     Write-Output "> Downloading the official MongoDB sample data archive (dump) from AWS S3..."
     # $ProgressPreference = 'SilentlyContinue'
-    # Invoke-RestMethod -Uri "https://atlas-education.s3.amazonaws.com/sampledata.archive" -OutFile $env:SAMPLE_DATA_ARCHIVE_LOCATION
-    # Invoke-WebRequest -Uri "https://atlas-education.s3.amazonaws.com/sampledata.archive" -OutFile $env:SAMPLE_DATA_ARCHIVE_LOCATION -UseBasicParsing
     Start-BitsTransfer -Source "https://atlas-education.s3.amazonaws.com/sampledata.archive" -Destination $env:SAMPLE_DATA_ARCHIVE_LOCATION
     Write-Output "> Sample data archive downloaded successfully!"
 }
