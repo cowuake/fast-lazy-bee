@@ -40,7 +40,7 @@ jobs:
             sleep 1
           done
 
-      - name: Run basic tests
+      - name: Run basic test (workshop scenario)
         run: |
           RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" ${{ env.TEST_ENDPOINT }})
           if [ $RESPONSE_CODE -eq 200 ]; then
@@ -49,6 +49,10 @@ jobs:
             echo " Basic health check FAILED!"
             exit 1
           fi
+
+      - name: Tear down Docker Compose
+        run: |
+          docker-compose -f docker-compose.yml down
 
       - name: Run unit/integration tests
         run: |
@@ -60,7 +64,3 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path-to-lcov: ./coverage/lcov.info
-
-      - name: Tear down Docker Compose
-        run: |
-          docker-compose -f docker-compose.yml down

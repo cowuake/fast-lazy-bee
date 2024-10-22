@@ -1,5 +1,5 @@
 import type { RouteOptions } from 'fastify';
-import { HttpMethods, HttpStatusCodes } from './enums';
+import { HttpMethods, HttpStatusCodes } from './constants/enums';
 
 const genOptionsRoute = (url: string, tags: string[], allowString: string): RouteOptions => {
   return {

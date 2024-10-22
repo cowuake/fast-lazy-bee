@@ -1,6 +1,6 @@
 import type { TSchema } from '@sinclair/typebox';
-import type { HttpStatusCodes } from './enums';
-import { HttpCodesToDescriptions } from './records';
+import type { HttpStatusCodes } from './constants/enums';
+import { HttpCodesToDescriptions } from './constants/records';
 
 const createResponseSchema = <T extends TSchema>(
   statusCode: HttpStatusCodes,

@@ -3,7 +3,7 @@ import fastifySwagger, { type FastifyDynamicSwaggerOptions } from '@fastify/swag
 import fastifySwaggerUi, { type FastifySwaggerUiOptions } from '@fastify/swagger-ui';
 import type { FastifyInstance } from 'fastify';
 import pkg from '../../package.json';
-import { RouteTags } from '../utils/constants';
+import { RouteTags } from '../utils/constants/constants';
 
 const swaggerOptions: FastifyDynamicSwaggerOptions = {
   swagger: {
@@ -42,7 +42,7 @@ const swaggerPlugin = fp(
     await fastify.register(fastifySwagger, swaggerOptions);
     await fastify.register(fastifySwaggerUi, swaggerUIOptions);
   },
-  { dependencies: ['server-config'] }
+  { name: 'swagger', dependencies: ['server-config'] }
 );
 
 export default swaggerPlugin;

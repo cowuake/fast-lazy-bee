@@ -1,6 +1,6 @@
 import type { FastifyError, FastifyInstance } from 'fastify';
 import fp from 'fastify-plugin';
-import { HttpStatusCodes } from '../utils/enums';
+import { HttpStatusCodes } from '../utils/constants/enums';
 import type { ErrorSchemaType } from '../schemas/errors';
 
 const mapFastifyErrorToErrorSchemaType = (error: FastifyError): ErrorSchemaType => {
@@ -15,13 +15,16 @@ const mapFastifyErrorToErrorSchemaType = (error: FastifyError): ErrorSchemaType 
   };
 };
 
-const errorHandlingPlugin = fp(async (fastify: FastifyInstance) => {
-  fastify.setErrorHandler(async (error: FastifyError, request, reply) => {
-    fastify.log.error(error);
-    const replyError: ErrorSchemaType = mapFastifyErrorToErrorSchemaType(error);
-    reply.code(replyError.status).send(replyError);
-  });
-});
+const errorHandlingPlugin = fp(
+  async (fastify: FastifyInstance) => {
+    fastify.setErrorHandler(async (error: FastifyError, request, reply) => {
+      fastify.log.error(error);
+      const replyError: ErrorSchemaType = mapFastifyErrorToErrorSchemaType(error);
+      reply.code(replyError.status).send(replyError);
+    });
+  },
+  { name: 'error-handling' }
+);
 
 export default errorHandlingPlugin;
 export { mapFastifyErrorToErrorSchemaType };

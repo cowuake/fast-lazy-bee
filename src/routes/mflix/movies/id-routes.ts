@@ -6,10 +6,10 @@ import {
   UpdateMovieSchema,
   DeleteMovieSchema
 } from '../../../schemas/movies/http';
-import { HttpMethods, HttpStatusCodes } from '../../../utils/enums';
+import { HttpMethods, HttpStatusCodes } from '../../../utils/constants/enums';
 import { genOptionsRoute } from '../../../utils/routing-utils';
 import type { MovieSchemaType } from '../../../schemas/movies/data';
-import { RouteTags } from '../../../utils/constants';
+import { RouteTags } from '../../../utils/constants/constants';
 
 const url = '/:id';
 

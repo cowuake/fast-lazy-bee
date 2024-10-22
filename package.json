@@ -12,7 +12,12 @@
     "build": "npm run clean && npx tsc -p tsconfig.json",
     "start": "node dist/src/server.js"
   },
-  "keywords": ["fastify", "typescript", "mongodb", "restful-api"],
+  "keywords": [
+    "fastify",
+    "typescript",
+    "mongodb",
+    "restful-api"
+  ],
   "author": "Riccardo Mura",
   "license": "MIT",
   "dependencies": {
@@ -29,6 +34,7 @@
     "@babel/core": "^7.25.8",
     "@babel/preset-env": "^7.25.8",
     "@babel/preset-typescript": "^7.25.7",
+    "@testcontainers/mongodb": "^10.13.2",
     "@types/jest": "^29.5.13",
     "@types/node": "^22.7.7",
     "@typescript-eslint/eslint-plugin": "^8.10.0",
