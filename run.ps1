@@ -53,14 +53,8 @@ if (-not (Test-Path $env:SAMPLE_DATA_ARCHIVE_LOCATION)) {
 # Copy the sample data archive to the MongoDB container
 docker cp $env:SAMPLE_DATA_ARCHIVE_LOCATION "${env:MONGO_CONTAINER_NAME}:${env:SAMPLE_DATA_ARCHIVE_FINAL_LOCATION}"
 
-# Drop all databases except for admin, config, and local
-Set-Content env:DROP_COMMAND_1 "const dbNames = db.getMongo().getDBNames();"
-Set-Content env:DROP_COMMAND_2 "const toBeDropped = dbNames.filter(name => !['admin', 'config', 'local'].includes(name));"
-Set-Content env:DROP_COMMAND_3 "toBeDropped.forEach(name => db.getMongo().getDB(name).dropDatabase());"
-docker exec $env:MONGO_CONTAINER_NAME mongosh --eval "$env:DROP_COMMAND_1 $env:DROP_COMMAND_2 $env:DROP_COMMAND_3"
-
 # Restore the sample data archive in the MongoDB container
-docker exec $env:MONGO_CONTAINER_NAME mongorestore --archive=$env:SAMPLE_DATA_ARCHIVE_FINAL_LOCATION
+docker exec $env:MONGO_CONTAINER_NAME mongorestore --archive=$env:SAMPLE_DATA_ARCHIVE_FINAL_LOCATION --drop
 
 # Announce that the initial data has been loaded successfully and provide the URL to access the FastLazyBee app
 Write-Output "> Initial data loaded successfully!"

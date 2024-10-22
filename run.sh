@@ -43,14 +43,8 @@ fi
 # Copy the sample data archive to the MongoDB container
 docker cp $SAMPLE_DATA_ARCHIVE_LOCATION $MONGO_CONTAINER_NAME:/$SAMPLE_DATA_ARCHIVE_LOCATION
 
-# Drop all databases except for admin, config, and local
-DROP_COMMAND_1="const dbNames = db.getMongo().getDBNames();"
-DROP_COMMAND_2="const toBeDropped = dbNames.filter(name => !['admin', 'config', 'local'].includes(name));"
-DROP_COMMAND_3="toBeDropped.forEach(name => db.getMongo().getDB(name).dropDatabase());"
-docker exec $MONGO_CONTAINER_NAME mongosh --eval "$DROP_COMMAND_1 $DROP_COMMAND_2 $DROP_COMMAND_3"
-
 # Restore the sample data archive in the MongoDB container
-docker exec $MONGO_CONTAINER_NAME mongorestore --archive=/$SAMPLE_DATA_ARCHIVE_LOCATION
+docker exec $MONGO_CONTAINER_NAME mongorestore --archive=/$SAMPLE_DATA_ARCHIVE_LOCATION --drop
 
 # Announce that the initial data has been loaded successfully and provide the URL to access the FastLazyBee app
 echo "> Initial data loaded successfully!"
