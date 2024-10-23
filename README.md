@@ -15,7 +15,7 @@ Two different options are available for running Fast Lazy Bee in your local mach
 
 | Tool                           | Version        | Required by                                         |
 | ------------------------------ | -------------- | --------------------------------------------------- |
-| Node.js[^Node]                 | 22             | [Strat. 1](#strategy-1) and [Strat. 2](#strategy-2) |
+| Node.js[^Node]                 | 21.7.3         | [Strat. 1](#strategy-1) and [Strat. 2](#strategy-2) |
 | Docker                         | (a recent one) | [Strat. 1](#strategy-1) and [Strat. 2](#strategy-2) |
 | Docker Compose[^DockerCompose] | (a recent one) | [Strat. 1](#strategy-1)                             |
 
