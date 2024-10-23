@@ -3,7 +3,7 @@
 [![CI](https://github.com/cowuake/fast-lazy-bee/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/cowuake/fast-lazy-bee/actions/workflows/ci.yml)
 [![Coverage Status](https://coveralls.io/repos/github/cowuake/fast-lazy-bee/badge.svg?branch=main)](https://coveralls.io/github/cowuake/fast-lazy-bee?branch=main)
 
-Fast Lazy Bee is a simple and RESTful API developed in TypeScript with the Fastify framework.
+Fast Lazy Bee is a simple and *RESTful sample API* developed in TypeScript with the [Fastify](https://fastify.dev/) framework.
 
 ## How to run locally
 
