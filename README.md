@@ -32,13 +32,7 @@ See replies to [this question in Stack Overflow](https://stackoverflow.com/quest
 
 #### GNU/Linux and macOS
 
-Give the run script execution permission with
-
-```Bash
-chmod +x ./run.sh
-```
-
-then launch it with
+Give the run script execution permission with `chmod +x ./run.sh`, then launch it with
 
 ```bash
 ./run.sh
@@ -64,7 +58,7 @@ Launch the run script with:
 > No changes to the initial state of the database due to server activity are persisted after teardown, nor should you expect container junk left around.
 > The strategy is exactly the same that was adopted for running integration tests against a representative database instance instead of relying on hand-crafted mock data or in-memory databases.
 
-Use the command:
+Install the project dependencies with `npm ci`, then run the command:
 
 ```shell
 NODE_ENV=test npm run dev
