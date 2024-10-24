@@ -48,7 +48,7 @@ const autoHooks = fp(
     }
     const movies: Collection<MovieSchemaType> = db.collection('movies');
 
-    fastify.decorate('movieDataSource', {
+    fastify.decorate('movieDataStore', {
       async countMovies(filter) {
         const mongoFilter = movieFiltertoMongoFilter(filter);
         const totalCount = await movies.countDocuments(mongoFilter);
