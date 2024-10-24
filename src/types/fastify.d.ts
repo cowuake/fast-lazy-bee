@@ -3,7 +3,7 @@ import type { EnvSchemaType } from '../schemas/dotenv';
 import type { MovieSchemaType, MovieWithIdSchemaType } from '../schemas/movies/data';
 import type { MovieFilterSchemaType } from '../schemas/movies/http';
 
-interface MovieDataSource {
+interface MovieDataStore {
   countMovies: (filter: MovieFilterSchemaType) => Promise<number>;
   listMovies: (filter: MovieFilterSchemaType) => Promise<MovieWithIdSchemaType[]>;
   createMovie: (movie: MovieSchemaType) => Promise<string>;
@@ -17,6 +17,6 @@ declare module 'fastify' {
   interface FastifyInstance {
     config: EnvSchemaType;
     mongo: FastifyMongoObject & FastifyMongoNestedObject;
-    movieDataSource: MovieDataSource;
+    movieDataStore: MovieDataStore;
   }
 }

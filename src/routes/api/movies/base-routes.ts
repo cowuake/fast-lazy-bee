@@ -18,8 +18,8 @@ const routes: RouteOptions[] = [
     schema: ListMoviesSchema,
     handler: async function listMovies(request, reply) {
       const filter = request.query as MovieFilterSchemaType;
-      const movies = await this.movieDataSource.listMovies(filter);
-      const totalCount: number = await this.movieDataSource.countMovies(filter);
+      const movies = await this.movieDataStore.listMovies(filter);
+      const totalCount: number = await this.movieDataStore.countMovies(filter);
       const body = {
         data: movies,
         page: filter.page,
@@ -35,7 +35,7 @@ const routes: RouteOptions[] = [
     schema: CreateMovieSchema,
     handler: async function createMovie(request, reply) {
       const body = request.body as MovieSchemaType;
-      const insertedId = await this.movieDataSource.createMovie(body);
+      const insertedId = await this.movieDataStore.createMovie(body);
       reply.code(HttpStatusCodes.Created).send({ id: insertedId });
     }
   }
