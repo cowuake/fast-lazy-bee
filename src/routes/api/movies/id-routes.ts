@@ -15,7 +15,7 @@ const url = '/:id';
 
 const routes: RouteOptions[] = [
   {
-    method: HttpMethods.GET,
+    method: [HttpMethods.GET, HttpMethods.HEAD],
     url,
     schema: FetchMovieSchema,
     handler: async function fetchMovie(request, reply) {

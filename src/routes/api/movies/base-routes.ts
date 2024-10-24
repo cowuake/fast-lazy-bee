@@ -13,7 +13,7 @@ const url = '';
 
 const routes: RouteOptions[] = [
   {
-    method: HttpMethods.GET,
+    method: [HttpMethods.GET, HttpMethods.HEAD],
     url,
     schema: ListMoviesSchema,
     handler: async function listMovies(request, reply) {

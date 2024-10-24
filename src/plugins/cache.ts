@@ -12,7 +12,7 @@ const isCacheable = (request: FastifyRequest): boolean => {
   return routeOptions.schema.tags.includes(RouteTags.cache);
 };
 
-const modulePlugin = fp(
+const cachePlugin = fp(
   async (fastify: FastifyInstance) => {
     fastify.addHook('onRequest', async (request, reply) => {
       if (!isCacheable(request)) {
@@ -57,4 +57,4 @@ const modulePlugin = fp(
   { name: 'cache' }
 );
 
-export default modulePlugin;
+export default cachePlugin;
