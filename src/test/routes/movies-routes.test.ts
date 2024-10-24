@@ -5,8 +5,8 @@ import { TestConstants } from '../../utils/constants/constants';
 
 describe('movieApi', () => {
   const fastifyInstance: FastifyInstance = buildTestInstance();
-  const baseUrl = '/mflix/movies';
-  const idUrl = '/mflix/movies/:id';
+  const baseUrl = '/api/movies';
+  const idUrl = '/api/movies/:id';
   const pagination = 'page=1&size=10';
   const allUrls = [baseUrl, idUrl];
 
