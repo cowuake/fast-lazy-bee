@@ -1,13 +1,13 @@
 import type { FastifyInstance, RouteOptions } from 'fastify';
 import {
   CreateMovieSchema,
-  ListMoviesSchema,
+  FetchMoviesSchema,
   type MovieFilterSchemaType
-} from '../../../../schemas/movies/http';
-import { HttpMethods, HttpStatusCodes } from '../../../../utils/constants/enums';
-import { genOptionsRoute } from '../../../../utils/routing-utils';
-import type { MovieSchemaType } from '../../../../schemas/movies/data';
-import { RouteTags } from '../../../../utils/constants/constants';
+} from '../../schemas/movies/http';
+import { HttpMethods, HttpStatusCodes } from '../../utils/constants/enums';
+import { genOptionsRoute } from '../../utils/routing-utils';
+import type { MovieSchemaType } from '../../schemas/movies/data';
+import { RouteTags } from '../../utils/constants/constants';
 
 const url = '';
 
@@ -15,10 +15,10 @@ const routes: RouteOptions[] = [
   {
     method: [HttpMethods.GET, HttpMethods.HEAD],
     url,
-    schema: ListMoviesSchema,
-    handler: async function listMovies(request, reply) {
+    schema: FetchMoviesSchema,
+    handler: async function fetchMovies(request, reply) {
       const filter = request.query as MovieFilterSchemaType;
-      const movies = await this.movieDataStore.listMovies(filter);
+      const movies = await this.movieDataStore.fetchMovies(filter);
       const totalCount: number = await this.movieDataStore.countMovies(filter);
       const body = {
         data: movies,

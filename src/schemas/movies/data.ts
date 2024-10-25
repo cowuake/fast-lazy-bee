@@ -54,9 +54,12 @@ const MovieOptionalFieldsSchema = Type.Partial(
   })
 );
 
-const MovieIdSchema = Type.String({
-  description: 'The unique identifier of the movie'
-});
+const IdSchema = Type.String({ description: 'The unique identifier of the resource' });
+const MovieIdSchema = { ...IdSchema, description: 'The unique identifier of the movie' };
+const MovieCommentIdSchema = {
+  ...IdSchema,
+  description: 'The unique identifier of the movie comment'
+};
 
 const MovieSchema = Type.Object({
   ...MovieMandatoryFieldsSchema.properties,
@@ -70,15 +73,36 @@ const MovieWithIdSchema = Type.Object({
   ...{ id: MovieIdSchema }
 });
 
+const MovieCommentSchema = Type.Partial(
+  Type.Object({
+    name: StringSchema,
+    email: StringSchema,
+    movie_id: MovieIdSchema,
+    text: StringSchema,
+    date: StringSchema
+  })
+);
+
+const MovieCommentWithIdSchema = Type.Object({
+  ...MovieCommentSchema.properties,
+  ...{ id: MovieCommentIdSchema }
+});
+
 type MovieSchemaType = Static<typeof MovieSchema>;
 type MovieWithIdSchemaType = Static<typeof MovieWithIdSchema>;
+type MovieCommentSchemaType = Static<typeof MovieCommentSchema>;
 
 export {
+  IdSchema,
   MovieIdSchema,
+  MovieCommentIdSchema,
   MovieSchema,
   MovieYearSchema,
   MovieWithIdSchema,
   PartialMovieSchema,
+  MovieCommentSchema,
+  MovieCommentWithIdSchema,
   type MovieSchemaType,
-  type MovieWithIdSchemaType
+  type MovieWithIdSchemaType,
+  type MovieCommentSchemaType
 };

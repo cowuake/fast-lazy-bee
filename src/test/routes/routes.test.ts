@@ -5,10 +5,10 @@ import { TestConstants } from '../../utils/constants/constants';
 
 describe('movieApi', () => {
   const fastifyInstance: FastifyInstance = buildTestInstance();
-  const baseUrl = `${TestConstants.v1Root}/movies`;
-  const idUrl = `${TestConstants.v1Root}/movies/:id`;
+  const moviesEndpoint = `${TestConstants.v1Root}/movies`;
+  const movieIdEndpoint = `${moviesEndpoint}/:movie_id`;
   const pagination = 'page=1&size=10';
-  const allUrls = [baseUrl, idUrl];
+  const allUrls = [moviesEndpoint, movieIdEndpoint];
 
   const testMovieId = TestConstants.magicId;
   const testMovie = TestConstants.testMovie;
@@ -23,10 +23,18 @@ describe('movieApi', () => {
       expect(fastifyInstance.hasRoute({ method: HttpMethods.OPTIONS, url })).toBeTruthy();
     });
 
-    expect(fastifyInstance.hasRoute({ method: HttpMethods.POST, url: baseUrl })).toBeTruthy();
-    expect(fastifyInstance.hasRoute({ method: HttpMethods.PUT, url: idUrl })).toBeTruthy();
-    expect(fastifyInstance.hasRoute({ method: HttpMethods.PATCH, url: idUrl })).toBeTruthy();
-    expect(fastifyInstance.hasRoute({ method: HttpMethods.DELETE, url: idUrl })).toBeTruthy();
+    expect(
+      fastifyInstance.hasRoute({ method: HttpMethods.POST, url: moviesEndpoint })
+    ).toBeTruthy();
+    expect(
+      fastifyInstance.hasRoute({ method: HttpMethods.PUT, url: movieIdEndpoint })
+    ).toBeTruthy();
+    expect(
+      fastifyInstance.hasRoute({ method: HttpMethods.PATCH, url: movieIdEndpoint })
+    ).toBeTruthy();
+    expect(
+      fastifyInstance.hasRoute({ method: HttpMethods.DELETE, url: movieIdEndpoint })
+    ).toBeTruthy();
   });
 
   it('should return the available HTTP methods', async () => {
@@ -43,7 +51,7 @@ describe('movieApi', () => {
   it('should fetch movies', async () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.GET,
-      url: `${baseUrl}?${pagination}`
+      url: `${moviesEndpoint}?${pagination}`
     });
     expect(response.statusCode).toBe(HttpStatusCodes.OK);
   });
@@ -51,7 +59,7 @@ describe('movieApi', () => {
   it('should filter movies by title', async () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.GET,
-      url: `${baseUrl}?${pagination}&title=alien`
+      url: `${moviesEndpoint}?${pagination}&title=alien`
     });
     expect(response.statusCode).toBe(HttpStatusCodes.OK);
   });
@@ -59,7 +67,7 @@ describe('movieApi', () => {
   it('should filter movies by year', async () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.GET,
-      url: `${baseUrl}?${pagination}&year=1979`
+      url: `${moviesEndpoint}?${pagination}&year=1979`
     });
     expect(response.statusCode).toBe(HttpStatusCodes.OK);
   });
@@ -67,7 +75,7 @@ describe('movieApi', () => {
   it('should sort movies', async () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.GET,
-      url: `${baseUrl}?${pagination}&sort=awards:desc,year:asc,title:asc`
+      url: `${moviesEndpoint}?${pagination}&sort=awards:desc,year:asc,title:asc`
     });
     expect(response.statusCode).toBe(HttpStatusCodes.OK);
   });
@@ -75,7 +83,7 @@ describe('movieApi', () => {
   it('should create a movie', async () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.POST,
-      url: baseUrl,
+      url: moviesEndpoint,
       payload: testMovie
     });
     expect(response.statusCode).toBe(HttpStatusCodes.Created);
@@ -84,7 +92,7 @@ describe('movieApi', () => {
   it('should fetch a movie by id', async () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.GET,
-      url: `${baseUrl}/${testMovieId}`
+      url: `${moviesEndpoint}/${testMovieId}`
     });
     expect(response.statusCode).toBe(HttpStatusCodes.OK);
   });
@@ -92,7 +100,7 @@ describe('movieApi', () => {
   it(`should return a ${HttpStatusCodes.NotFound} when fetching a non-existent movie`, async () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.GET,
-      url: `${baseUrl}/${TestConstants.fakeId}`
+      url: `${moviesEndpoint}/${TestConstants.fakeId}`
     });
     expect(response.statusCode).toBe(HttpStatusCodes.NotFound);
   });
@@ -100,7 +108,7 @@ describe('movieApi', () => {
   it('should replace a movie', async () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.PUT,
-      url: `${baseUrl}/${testMovieId}`,
+      url: `${moviesEndpoint}/${testMovieId}`,
       payload: testMovie
     });
     expect(response.statusCode).toBe(HttpStatusCodes.NoContent);
@@ -109,7 +117,7 @@ describe('movieApi', () => {
   it(`should return a ${HttpStatusCodes.NotFound} when replacing a non-existent movie`, async () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.PUT,
-      url: `${baseUrl}/${TestConstants.fakeId}`,
+      url: `${moviesEndpoint}/${TestConstants.fakeId}`,
       payload: testMovie
     });
     expect(response.statusCode).toBe(HttpStatusCodes.NotFound);
@@ -118,7 +126,7 @@ describe('movieApi', () => {
   it('should update a movie', async () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.PATCH,
-      url: `${baseUrl}/${testMovieId}`,
+      url: `${moviesEndpoint}/${testMovieId}`,
       payload: {
         type: 'movie'
       }
@@ -129,7 +137,7 @@ describe('movieApi', () => {
   it(`should return a ${HttpStatusCodes.NotFound} when updating a non-existent movie`, async () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.PATCH,
-      url: `${baseUrl}/${TestConstants.fakeId}`,
+      url: `${moviesEndpoint}/${TestConstants.fakeId}`,
       payload: {
         type: 'movie'
       }
@@ -140,7 +148,7 @@ describe('movieApi', () => {
   it('should delete a movie', async () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.DELETE,
-      url: `${baseUrl}/${testMovieId}`
+      url: `${moviesEndpoint}/${testMovieId}`
     });
     expect(response.statusCode).toBe(HttpStatusCodes.NoContent);
   });
@@ -148,8 +156,16 @@ describe('movieApi', () => {
   it(`should return a ${HttpStatusCodes.NotFound} when deleting a non-existent movie`, async () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.DELETE,
-      url: `${baseUrl}/${TestConstants.fakeId}`
+      url: `${moviesEndpoint}/${TestConstants.fakeId}`
     });
     expect(response.statusCode).toBe(HttpStatusCodes.NotFound);
+  });
+
+  it('should fetch movie comments', async () => {
+    const response = await fastifyInstance.inject({
+      method: HttpMethods.GET,
+      url: `${moviesEndpoint}/${testMovieId}/comments?${pagination}`
+    });
+    expect(response.statusCode).toBe(HttpStatusCodes.OK);
   });
 });
