@@ -25,6 +25,7 @@ class TestConstants {
   static readonly mongoArchiveUrl = 'https://atlas-education.s3.amazonaws.com/sampledata.archive';
   static readonly mongoTestcontainersPort = 27028;
   static readonly longTimeout = 60000;
+  static readonly v1Root = '/api/v1';
 }
 
 class RouteTags {

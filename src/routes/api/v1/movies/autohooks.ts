@@ -1,9 +1,9 @@
 import type { FastifyError, FastifyInstance } from 'fastify';
 import fp from 'fastify-plugin';
-import type { MovieSchemaType } from '../../../schemas/movies/data';
+import type { MovieSchemaType } from '../../../../schemas/movies/data';
 import type { Collection, Db, Sort, SortDirection } from 'mongodb';
-import { HttpStatusCodes } from '../../../utils/constants/enums';
-import type { MovieFilterSchemaType } from '../../../schemas/movies/http';
+import { HttpStatusCodes } from '../../../../utils/constants/enums';
+import type { MovieFilterSchemaType } from '../../../../schemas/movies/http';
 
 const notFoundError = (id: string): FastifyError => ({
   statusCode: HttpStatusCodes.NotFound,

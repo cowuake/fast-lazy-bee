@@ -5,8 +5,8 @@ import { TestConstants } from '../../utils/constants/constants';
 
 describe('movieApi', () => {
   const fastifyInstance: FastifyInstance = buildTestInstance();
-  const baseUrl = '/api/movies';
-  const idUrl = '/api/movies/:id';
+  const baseUrl = `${TestConstants.v1Root}/movies`;
+  const idUrl = `${TestConstants.v1Root}/movies/:id`;
   const pagination = 'page=1&size=10';
   const allUrls = [baseUrl, idUrl];
 

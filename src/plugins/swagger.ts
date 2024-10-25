@@ -6,20 +6,20 @@ import pkg from '../../package.json';
 import { RouteTags } from '../utils/constants/constants';
 
 const swaggerOptions: FastifyDynamicSwaggerOptions = {
-  swagger: {
+  mode: 'dynamic',
+  openapi: {
     info: {
       title: 'FastLazyBee API',
       description: 'A sample API built with Fastify and TypeScript using MongoDB',
       version: pkg.version
     },
-    consumes: ['application/json'],
-    produces: ['application/json'],
     tags: [
-      { name: RouteTags.movies, description: 'Movie operations' },
-      { name: RouteTags.diagnostics, description: 'Health check operations' },
-      { name: RouteTags.cache, description: 'Cacheable operations' }
+      { name: RouteTags.diagnostics, description: 'Diagnostics' },
+      { name: RouteTags.movies, description: 'Movie Catalog' },
+      { name: RouteTags.cache, description: 'Cache-enabled routes' }
     ]
-  }
+  },
+  hideUntagged: false
 };
 
 const swaggerUIOptions: FastifySwaggerUiOptions = {

@@ -1,6 +1,6 @@
 {
   "name": "fast-lazy-bee",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "dist/server.js",
   "scripts": {
@@ -12,12 +12,7 @@
     "build": "npm run clean && npx tsc -p tsconfig.json",
     "start": "node dist/src/server.js"
   },
-  "keywords": [
-    "fastify",
-    "typescript",
-    "mongodb",
-    "restful-api"
-  ],
+  "keywords": ["fastify", "typescript", "mongodb", "restful-api"],
   "author": "Riccardo Mura",
   "license": "MIT",
   "dependencies": {
