@@ -44,7 +44,7 @@ const autoHooks = fp(
         const search = getGenericSearch(filter);
         const totalCount = await comments.countDocuments({
           ...search,
-          movie_id: new fastify.mongo.ObjectId(movieId)
+          movie_id: new fastify.mongo.ObjectId(movieId) as unknown as string
         });
         return totalCount;
       },
@@ -65,7 +65,7 @@ const autoHooks = fp(
         const sort: Sort = getMovieCommentSort(filter);
         const docs = await comments
           .find(
-            { ...search, movie_id: new fastify.mongo.ObjectId(movieId) },
+            { ...search, movie_id: new fastify.mongo.ObjectId(movieId) as unknown as string },
             { limit: filter.pageSize, skip }
           )
           .sort(sort)
