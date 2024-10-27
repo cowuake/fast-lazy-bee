@@ -5,13 +5,13 @@ import {
   ReplaceMovieSchema,
   UpdateMovieSchema,
   DeleteMovieSchema
-} from '../../../../schemas/movies/http';
-import { HttpMethods, HttpStatusCodes } from '../../../../utils/constants/enums';
-import { genOptionsRoute } from '../../../../utils/routing-utils';
-import type { MovieSchemaType } from '../../../../schemas/movies/data';
-import { RouteTags } from '../../../../utils/constants/constants';
+} from '../../../schemas/movies/http';
+import { HttpMethods, HttpStatusCodes } from '../../../utils/constants/enums';
+import { genOptionsRoute } from '../../../utils/routing-utils';
+import type { MovieSchemaType } from '../../../schemas/movies/data';
+import { RouteTags } from '../../../utils/constants/constants';
 
-const url = '/:id';
+const url = '';
 
 const routes: RouteOptions[] = [
   {
@@ -20,7 +20,7 @@ const routes: RouteOptions[] = [
     schema: FetchMovieSchema,
     handler: async function fetchMovie(request, reply) {
       const params = request.params as MovieIdObjectSchemaType;
-      const movie = await this.movieDataStore.fetchMovie(params.id);
+      const movie = await this.movieDataStore.fetchMovie(params.movie_id);
       reply.code(HttpStatusCodes.OK).send(movie);
     }
   },
@@ -31,7 +31,7 @@ const routes: RouteOptions[] = [
     handler: async function updateMovie(request, reply) {
       const params = request.params as MovieIdObjectSchemaType;
       const body = request.body as MovieSchemaType;
-      await this.movieDataStore.replaceMovie(params.id, body);
+      await this.movieDataStore.replaceMovie(params.movie_id, body);
       reply.code(HttpStatusCodes.NoContent);
     }
   },
@@ -42,7 +42,7 @@ const routes: RouteOptions[] = [
     handler: async function updateMovie(request, reply) {
       const params = request.params as MovieIdObjectSchemaType;
       const body = request.body as MovieSchemaType;
-      await this.movieDataStore.updateMovie(params.id, body);
+      await this.movieDataStore.updateMovie(params.movie_id, body);
       reply.code(HttpStatusCodes.NoContent);
     }
   },
@@ -52,7 +52,7 @@ const routes: RouteOptions[] = [
     schema: DeleteMovieSchema,
     handler: async function deleteMovie(request, reply) {
       const params = request.params as MovieIdObjectSchemaType;
-      await this.movieDataStore.deleteMovie(params.id);
+      await this.movieDataStore.deleteMovie(params.movie_id);
       reply.code(HttpStatusCodes.NoContent);
     }
   }
@@ -61,7 +61,7 @@ const routes: RouteOptions[] = [
 const idMovieRoutes = async (fastify: FastifyInstance): Promise<void> => {
   const methods = routes.map((route) => route.method);
   const allowString = [HttpMethods.OPTIONS, ...methods].join(', ');
-  const optionsRoute: RouteOptions = genOptionsRoute(url, [RouteTags.movies], allowString);
+  const optionsRoute: RouteOptions = genOptionsRoute(url, [RouteTags.movie], allowString);
 
   [optionsRoute, ...routes].forEach((route) => {
     fastify.route(route);

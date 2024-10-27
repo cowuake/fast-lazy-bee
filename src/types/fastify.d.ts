@@ -1,13 +1,22 @@
 import type { FastifyMongoNestedObject, FastifyMongoObject } from '@fastify/mongodb';
 import type { EnvSchemaType } from '../schemas/dotenv';
-import type { MovieSchemaType, MovieWithIdSchemaType } from '../schemas/movies/data';
-import type { MovieFilterSchemaType } from '../schemas/movies/http';
+import type {
+  MovieCommentSchemaType,
+  MovieSchemaType,
+  MovieWithIdSchemaType
+} from '../schemas/movies/data';
+import type { MovieCommentFilterSchemaType, MovieFilterSchemaType } from '../schemas/movies/http';
 
 interface MovieDataStore {
   countMovies: (filter: MovieFilterSchemaType) => Promise<number>;
-  listMovies: (filter: MovieFilterSchemaType) => Promise<MovieWithIdSchemaType[]>;
-  createMovie: (movie: MovieSchemaType) => Promise<string>;
+  countMovieComments: (movieId: string, filter: MovieCommentFilterSchemaType) => Promise<number>;
+  fetchMovies: (filter: MovieFilterSchemaType) => Promise<MovieWithIdSchemaType[]>;
+  fetchMovieComments: (
+    movieId: string,
+    filter: MovieCommentFilterSchemaType
+  ) => Promise<MovieCommentSchemaType[]>;
   fetchMovie: (id: string) => Promise<MovieWithIdSchemaType>;
+  createMovie: (movie: MovieSchemaType) => Promise<string>;
   replaceMovie: (id: string, replacement: MovieSchemaType) => Promise<void>;
   updateMovie: (id: string, update: MovieSchemaType) => Promise<void>;
   deleteMovie: (id: string) => Promise<void>;

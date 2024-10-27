@@ -1,6 +1,6 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest, RouteOptions } from 'fastify';
-import { HttpMethods, HttpStatusCodes } from '../../../../utils/constants/enums';
-import { RouteTags } from '../../../../utils/constants/constants';
+import { HttpMethods, HttpStatusCodes } from '../../utils/constants/enums';
+import { RouteTags } from '../../utils/constants/constants';
 
 const routes: RouteOptions[] = [
   {

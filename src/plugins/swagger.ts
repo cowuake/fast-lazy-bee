@@ -16,6 +16,8 @@ const swaggerOptions: FastifyDynamicSwaggerOptions = {
     tags: [
       { name: RouteTags.diagnostics, description: 'Diagnostics' },
       { name: RouteTags.movies, description: 'Movie Catalog' },
+      { name: RouteTags.movie, description: 'Single Movies' },
+      { name: RouteTags.comments, description: 'Movie Comments' },
       { name: RouteTags.cache, description: 'Cache-enabled routes' }
     ]
   },

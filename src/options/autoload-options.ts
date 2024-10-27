@@ -6,7 +6,10 @@ const autoloadPluginsOptions: AutoloadPluginOptions = {
 };
 const autoloadRoutesOptions: AutoloadPluginOptions = {
   dir: join(__dirname, '../routes'),
-  autoHooks: true
+  autoHooks: true,
+  cascadeHooks: true,
+  dirNameRoutePrefix: true,
+  options: { prefix: '/api/v1' }
 };
 
 const autoloadOptions = [autoloadPluginsOptions, autoloadRoutesOptions];
