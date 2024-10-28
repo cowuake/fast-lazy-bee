@@ -9,10 +9,10 @@ const getMongoOptions = async (fastify: FastifyInstance): Promise<FastifyMongodb
   };
 
   if (fastify.config.NODE_ENV === 'test') {
-    const mongoOptions = await setupMongoTestcontainers();
+    const mongoTestcontainersOptions = await setupMongoTestcontainers();
     return {
       ...commonOptions,
-      ...mongoOptions
+      ...mongoTestcontainersOptions
     };
   }
 
