@@ -13,7 +13,7 @@ describe('movieApi', () => {
   const testMovieId = TestConstants.magicId;
   const testMovie = TestConstants.testMovie;
 
-  it('should be defined', () => {
+  it('should rely on a defined Fastify instance', () => {
     expect(fastifyInstance).toBeDefined();
   });
 

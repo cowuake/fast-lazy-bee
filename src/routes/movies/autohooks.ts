@@ -1,6 +1,11 @@
 import type { FastifyError, FastifyInstance } from 'fastify';
 import fp from 'fastify-plugin';
-import type { MovieCommentSchemaType, MovieSchemaType } from '../../schemas/movies/data';
+import {
+  MovieSchema,
+  MovieCommentSchema,
+  type MovieCommentSchemaType,
+  type MovieSchemaType
+} from '../../schemas/movies/data';
 import type { Collection, Db, Sort } from 'mongodb';
 import { HttpStatusCodes } from '../../utils/constants/enums';
 import { getGenericSearch, getGenericSort } from '../../utils/collection-utils';
@@ -36,12 +41,12 @@ const autoHooks = fp(
 
     fastify.decorate('movieDataStore', {
       async countMovies(filter) {
-        const search = getGenericSearch(filter);
+        const search = getGenericSearch(MovieSchema, filter);
         const totalCount = await movies.countDocuments(search);
         return totalCount;
       },
       async countMovieComments(movieId, filter) {
-        const search = getGenericSearch(filter);
+        const search = getGenericSearch(MovieCommentSchema, filter);
         const totalCount = await comments.countDocuments({
           ...search,
           movie_id: new fastify.mongo.ObjectId(movieId) as unknown as string
@@ -50,7 +55,7 @@ const autoHooks = fp(
       },
       async fetchMovies(filter) {
         const skip = (filter.page - 1) * filter.pageSize;
-        const search = getGenericSearch(filter);
+        const search = getGenericSearch(MovieSchema, filter);
         const sort: Sort = getMovieSort(filter);
         const docs = await movies
           .find(search, { limit: filter.pageSize, skip })
@@ -61,7 +66,7 @@ const autoHooks = fp(
       },
       async fetchMovieComments(movieId, filter) {
         const skip = (filter.page - 1) * filter.pageSize;
-        const search = getGenericSearch(filter);
+        const search = getGenericSearch(MovieCommentSchema, filter);
         const sort: Sort = getMovieCommentSort(filter);
         const docs = await comments
           .find(

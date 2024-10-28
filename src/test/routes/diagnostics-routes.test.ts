@@ -6,11 +6,11 @@ import { TestConstants } from '../../utils/constants/constants';
 describe(' diagnosticsApi', () => {
   const fastifyInstance: FastifyInstance = buildTestInstance();
 
-  it('should be defined', () => {
+  it('should rely on a defined Fastify instance', () => {
     expect(fastifyInstance).toBeDefined();
   });
 
-  test('should be defined', async () => {
+  it('should return the API health status', async () => {
     const response = await fastifyInstance.inject({
       method: 'GET',
       url: `${TestConstants.v1Root}/health`

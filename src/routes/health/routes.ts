@@ -1,4 +1,4 @@
-import type { FastifyInstance, FastifyReply, FastifyRequest, RouteOptions } from 'fastify';
+import type { FastifyInstance, RouteOptions } from 'fastify';
 import { HttpMethods, HttpStatusCodes } from '../../utils/constants/enums';
 import { RouteTags } from '../../utils/constants/constants';
 
@@ -14,7 +14,7 @@ const routes: RouteOptions[] = [
         }
       }
     },
-    handler: async (request: FastifyRequest, reply: FastifyReply) => {
+    handler: async (request, reply) => {
       return "I'm alive!";
     }
   }
