@@ -3,7 +3,7 @@ import { RouteTags } from '../../utils/constants/constants';
 import {
   FilterStringSchema,
   NoContentSchema,
-  PaginatedDataSchema,
+  genPaginatedDataSchema,
   PaginationFilterSchema,
   SortStringSchema
 } from '../http';
@@ -20,8 +20,8 @@ import { createResponseSchema } from '../../utils/schema-utils';
 import { ErrorSchema } from '../errors';
 import type { FastifySchema } from 'fastify';
 
-const PaginatedMoviesSchema = PaginatedDataSchema(MovieWithIdSchema);
-const PaginatedMovieCommentsSchema = PaginatedDataSchema(MovieCommentWithIdSchema);
+const PaginatedMoviesSchema = genPaginatedDataSchema(MovieWithIdSchema);
+const PaginatedMovieCommentsSchema = genPaginatedDataSchema(MovieCommentWithIdSchema);
 
 const GenericSearchSchema = Type.Object({
   search: Type.Optional(FilterStringSchema)

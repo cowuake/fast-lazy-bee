@@ -4,7 +4,7 @@ import { PaginationDefaults } from '../utils/constants/constants';
 
 const NoContentSchema = Type.Object({});
 
-const PaginatedDataSchema = <TData extends TSchema>(dataSchema: TData): TObject =>
+const genPaginatedDataSchema = <TData extends TSchema>(dataSchema: TData): TObject =>
   Type.Object({
     data: Type.Array(dataSchema),
     page: NaturalNumberSchema,
@@ -40,7 +40,7 @@ const SortStringSchema = Type.String({
 
 export {
   NoContentSchema,
-  PaginatedDataSchema,
+  genPaginatedDataSchema,
   PaginationFilterSchema,
   FilterStringSchema,
   SortStringSchema
