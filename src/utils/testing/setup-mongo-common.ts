@@ -19,7 +19,8 @@ const downloadMongoArchive = async (
       }
       fs.writeFileSync(archivePath, Buffer.from(buffer));
     } catch (error) {
-      throw new Error(`Failed to download archive: ${error}`);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      throw new Error(`Failed to download archive: ${errorMessage}`);
     }
   }
 

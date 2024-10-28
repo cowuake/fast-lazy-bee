@@ -34,7 +34,7 @@ const cachePlugin = fp(
     });
 
     fastify.addHook('onSend', async (request, reply, payload) => {
-      if (!isCacheable(request) || reply.statusCode !== HttpStatusCodes.OK) {
+      if (!isCacheable(request) || reply.statusCode !== HttpStatusCodes.OK.valueOf()) {
         return;
       }
 
