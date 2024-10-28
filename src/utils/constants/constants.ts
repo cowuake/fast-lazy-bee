@@ -7,7 +7,7 @@ const AppConfigDefaults = {
   mongoImage: 'mongo:8',
   mongoPort: 27027,
   mongoDbName: 'sample_mflix',
-  mongoUrl: 'mongodb://localhost:3000/sample_mflix',
+  mongoUrl: 'mongodb://localhost:27027/sample_mflix',
   cacheExpiration: 10000
 } as const;
 
