@@ -1,44 +1,43 @@
 import path from 'path';
 import os from 'os';
-import type { MovieSchemaType } from '../../schemas/movies/data';
 
-class AppConfigDefaults {
-  static readonly env = 'development';
-  static readonly port = 3000;
-  static readonly mongoImage = 'mongo:8';
-  static readonly mongoPort = 27027;
-  static readonly mongoDbName = 'sample_mflix';
-  static readonly mongoUrl = `mongodb://localhost:${this.mongoPort}/${this.mongoDbName}`;
-  static readonly cacheExpiration = 10000;
-}
+const AppConfigDefaults = {
+  env: 'development',
+  port: 3000,
+  mongoImage: 'mongo:8',
+  mongoPort: 27027,
+  mongoDbName: 'sample_mflix',
+  mongoUrl: 'mongodb://localhost:3000/sample_mflix',
+  cacheExpiration: 10000
+} as const;
 
-class PaginationDefaults {
-  static readonly defaultPageNumber = 1;
-  static readonly minimumPageNumber = 1;
-  static readonly defaultPageSize = 100;
-  static readonly maximumPageSize = 500;
-  static readonly minimumPageSize = 1;
-}
+const PaginationDefaults = {
+  defaultPageNumber: 1,
+  minimumPageNumber: 1,
+  defaultPageSize: 100,
+  maximumPageSize: 500,
+  minimumPageSize: 1
+} as const;
 
-class TestConstants {
-  static readonly fakeId = '000000000000000000000000';
-  static readonly magicId = '670f5e20c286545ba702aade';
-  static readonly testMovie: MovieSchemaType = { title: 'Test Movie', type: 'movie', year: 2024 };
-  static readonly mongoArchiveUrl = 'https://atlas-education.s3.amazonaws.com/sampledata.archive';
-  static readonly mongoArchivePath = path.join(os.tmpdir(), 'sampledata.archive');
-  static readonly impossibleUrl = 'www.impossi.bru/nyan/cat?troll=lol';
-  static readonly mongoTestcontainersPort = 27028;
-  static readonly longTimeout = 120000;
-  static readonly v1Root = '/api/v1';
-}
+const TestConstants = {
+  fakeId: '000000000000000000000000',
+  magicId: '670f5e20c286545ba702aade',
+  testMovie: { title: 'Test Movie', type: 'movie', year: 2024 },
+  mongoArchiveUrl: 'https://atlas-education.s3.amazonaws.com/sampledata.archive',
+  mongoArchivePath: path.join(os.tmpdir(), 'sampledata.archive'),
+  impossibleUrl: 'www.impossi.bru/nyan/cat?troll=lol',
+  mongoTestcontainersPort: 27028,
+  longTimeout: 120000,
+  v1Root: '/api/v1'
+} as const;
 
-class RouteTags {
-  static readonly cache = 'Cache';
-  static readonly diagnostics = 'Diagnostics';
-  static readonly movies = 'Movie Catalog';
-  static readonly movie = 'Single Movies';
-  static readonly comments = 'Movie Comments';
-  static readonly comment = 'Single comments';
-}
+const RouteTags = {
+  cache: 'Cache',
+  diagnostics: 'Diagnostics',
+  movies: 'Movie Catalog',
+  movie: 'Single Movies',
+  comments: 'Movie Comments',
+  comment: 'Single comments'
+} as const;
 
 export { AppConfigDefaults, PaginationDefaults, TestConstants, RouteTags };
