@@ -24,6 +24,7 @@ enum HttpStatusCodeDescriptions {
   NoContent = 'Client Error (No Content)',
   BadRequest = 'Client Error (Bad Request)',
   NotFound = 'Client Error (Not Found)',
+  Conflict = 'Client Error (Conflict)',
   InternalServerError = 'Server Error (Internal Server Error)'
 }
 

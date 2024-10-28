@@ -5,6 +5,7 @@ const HttpCodesToDescriptions: Record<HttpStatusCodes, HttpStatusCodeDescription
   [HttpStatusCodes.Created]: HttpStatusCodeDescriptions.Created,
   [HttpStatusCodes.NoContent]: HttpStatusCodeDescriptions.NoContent,
   [HttpStatusCodes.BadRequest]: HttpStatusCodeDescriptions.BadRequest,
+  [HttpStatusCodes.Conflict]: HttpStatusCodeDescriptions.Conflict,
   [HttpStatusCodes.NotFound]: HttpStatusCodeDescriptions.NotFound,
   [HttpStatusCodes.InternalServerError]: HttpStatusCodeDescriptions.InternalServerError
 };
