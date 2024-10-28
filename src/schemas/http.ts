@@ -1,5 +1,5 @@
 import { type TObject, type TSchema, Type } from '@sinclair/typebox';
-import { NaturalSchema } from './common';
+import { NaturalNumberSchema } from './data';
 import { PaginationDefaults } from '../utils/constants/constants';
 
 const NoContentSchema = Type.Object({});
@@ -7,9 +7,9 @@ const NoContentSchema = Type.Object({});
 const PaginatedDataSchema = <TData extends TSchema>(dataSchema: TData): TObject =>
   Type.Object({
     data: Type.Array(dataSchema),
-    page: NaturalSchema,
-    pageSize: NaturalSchema,
-    totalCount: NaturalSchema
+    page: NaturalNumberSchema,
+    pageSize: NaturalNumberSchema,
+    totalCount: NaturalNumberSchema
   });
 
 const PaginationFilterSchema = Type.Object({
@@ -28,12 +28,14 @@ const PaginationFilterSchema = Type.Object({
 
 const FilterStringSchema = Type.String({
   pattern: '^[a-zA-Z0-9_]+:[^,]+(,[a-zA-Z0-9_]+:[^,]+)*$',
-  description: 'A string to filter the data by'
+  description: 'A string to filter the data by',
+  examples: ['field_1:value_1,field_2:value_2']
 });
 
 const SortStringSchema = Type.String({
   pattern: '^[a-zA-Z0-9_]+:(asc|desc)(,[a-zA-Z0-9_]+:(asc|desc))*$',
-  description: 'A comma-separated list of fields to sort by, with their respective order'
+  description: 'A comma-separated list of fields to sort by, with their respective order',
+  examples: ['field_1:asc,field_2:desc']
 });
 
 export {

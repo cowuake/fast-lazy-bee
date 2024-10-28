@@ -1,56 +1,108 @@
 import { type Static, Type } from '@sinclair/typebox';
-import { StringSchema, StringArraySchema, FloatSchema, NaturalSchema, UriSchema } from '../common';
+import {
+  DateSchema,
+  EmailSchema,
+  FloatSchema,
+  NaturalNumberSchema,
+  StringSchema,
+  StringArraySchema,
+  UriSchema
+} from '../data';
 
 const MovieYearSchema = Type.Integer({ minimum: 1878 });
 
 const AwardsSchema = Type.Object({
-  wins: NaturalSchema,
-  nominations: NaturalSchema,
+  wins: NaturalNumberSchema,
+  nominations: NaturalNumberSchema,
   text: StringSchema
 });
 
 const ImdbSchema = Type.Object({
   id: StringSchema,
   rating: FloatSchema,
-  votes: NaturalSchema
+  votes: NaturalNumberSchema
+});
+
+const TomatoesRatingSchema = Type.Object({
+  meter: { ...NaturalNumberSchema, description: 'The rating meter in percent', examples: [42] },
+  numReviews: { ...NaturalNumberSchema, description: 'The number of reviews', examples: [42] },
+  rating: { ...FloatSchema, description: 'The rating', examples: [3.14] }
 });
 
 const TomatoesSchema = Type.Object({
-  viewer: Type.Partial(
-    Type.Object({
-      meter: NaturalSchema,
-      numReviews: NaturalSchema,
-      rating: FloatSchema
-    })
-  ),
-  lastUpdated: StringSchema
+  critic: Type.Partial(TomatoesRatingSchema),
+  dvd: DateSchema,
+  fresh: NaturalNumberSchema,
+  lastUpdated: DateSchema,
+  production: StringSchema,
+  rotten: NaturalNumberSchema,
+  viewer: Type.Partial(TomatoesRatingSchema),
+  website: StringSchema
 });
 
+const MediaTypeSchema = Type.Union([Type.Literal('movie'), Type.Literal('series')]);
+
 const MovieMandatoryFieldsSchema = Type.Object({
-  title: { ...StringSchema, description: 'The title of the movie' },
-  type: StringSchema,
-  year: { ...MovieYearSchema, description: 'The year the movie was released' }
+  title: { ...StringSchema, description: 'The title of the movie/series' },
+  type: MediaTypeSchema,
+  year: { ...MovieYearSchema, description: 'The year the movie/series was released' }
 });
 
 const MovieOptionalFieldsSchema = Type.Partial(
   Type.Object({
     awards: AwardsSchema,
-    cast: StringArraySchema,
-    countries: StringArraySchema,
-    directors: StringArraySchema,
-    fullplot: StringSchema,
+    cast: {
+      ...StringArraySchema,
+      description: 'The cast of the movie/series',
+      examples: [['Sigourney Weaver', 'Ahsley Johnson']]
+    },
+    countries: {
+      ...StringArraySchema,
+      description: 'The countries where the movie/series was produced',
+      examples: [['USA', 'UK']]
+    },
+    directors: {
+      ...StringArraySchema,
+      description: 'The directors of the movie/series',
+      examples: [['Stanley Kubrick', 'John Spielberg']]
+    },
+    fullplot: {
+      ...StringSchema,
+      description: 'The full plot of the movie/series',
+      examples: ['A long time ago...']
+    },
+    genres: {
+      ...StringArraySchema,
+      description: 'The genres of the movie/series',
+      examples: [['Drama', 'Sci-Fi']]
+    },
     imdb: Type.Partial(ImdbSchema),
-    languages: StringArraySchema,
+    languages: {
+      ...StringArraySchema,
+      description: 'The languages spoken in the movie/series',
+      examples: [['English', 'Latin', 'Swenglish']]
+    },
     lastupdated: StringSchema,
-    metacritic: Type.Number(),
-    num_mflix_comments: NaturalSchema,
-    plot: StringSchema,
+    num_mflix_comments: NaturalNumberSchema,
+    plot: {
+      ...StringSchema,
+      description: 'The plot of the movie/series',
+      examples: ['A long time ago...']
+    },
     poster: UriSchema,
     rated: StringSchema,
-    released: StringSchema,
-    runtime: NaturalSchema,
+    released: DateSchema,
+    runtime: {
+      ...NaturalNumberSchema,
+      description: 'The runtime of the movie/series in minutes',
+      examples: [120]
+    },
     tomatoes: Type.Partial(TomatoesSchema),
-    writers: StringArraySchema
+    writers: {
+      ...StringArraySchema,
+      description: 'The writers of the movie/series',
+      examples: [['Neil Druckman']]
+    }
   })
 );
 
@@ -75,11 +127,15 @@ const MovieWithIdSchema = Type.Object({
 
 const MovieCommentSchema = Type.Partial(
   Type.Object({
-    name: StringSchema,
-    email: StringSchema,
+    name: {
+      ...StringSchema,
+      description: 'The name of the commenter',
+      examples: ['The Commenter']
+    },
+    email: EmailSchema,
     movie_id: MovieIdSchema,
     text: StringSchema,
-    date: StringSchema
+    date: DateSchema
   })
 );
 
