@@ -1,6 +1,6 @@
-import fp from 'fastify-plugin';
 import fastifyMongo, { type FastifyMongodbOptions } from '@fastify/mongodb';
 import type { FastifyInstance } from 'fastify';
+import fp from 'fastify-plugin';
 import setupMongoTestcontainers from '../utils/testing/setup-mongo-testcontainers';
 
 const getMongoOptions = async (fastify: FastifyInstance): Promise<FastifyMongodbOptions> => {

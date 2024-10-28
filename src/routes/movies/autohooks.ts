@@ -1,18 +1,18 @@
 import type { FastifyError, FastifyInstance } from 'fastify';
 import fp from 'fastify-plugin';
+import type { Collection, Db, Sort } from 'mongodb';
 import {
-  MovieSchema,
   MovieCommentSchema,
+  MovieSchema,
   type MovieCommentSchemaType,
   type MovieSchemaType
 } from '../../schemas/movies/data';
-import type { Collection, Db, Sort } from 'mongodb';
-import { HttpStatusCodes } from '../../utils/constants/enums';
-import { getGenericSearch, getGenericSort } from '../../utils/collection-utils';
 import type {
-  MovieFilterSchemaType,
-  MovieCommentFilterSchemaType
+  MovieCommentFilterSchemaType,
+  MovieFilterSchemaType
 } from '../../schemas/movies/http';
+import { getGenericSearch, getGenericSort } from '../../utils/collection-utils';
+import { HttpStatusCodes } from '../../utils/constants/enums';
 
 const genNotFoundError = (id: string): FastifyError => ({
   statusCode: HttpStatusCodes.NotFound,

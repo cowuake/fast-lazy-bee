@@ -1,5 +1,5 @@
-import { getGenericSearch, getGenericSort } from '../../utils/collection-utils';
 import { Type } from '@sinclair/typebox';
+import { getGenericSearch, getGenericSort } from '../../utils/collection-utils';
 
 describe('collectionUtils', () => {
   it('should correctly build the search object', () => {

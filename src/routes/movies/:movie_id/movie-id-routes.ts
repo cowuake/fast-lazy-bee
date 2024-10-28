@@ -1,15 +1,15 @@
 import type { FastifyInstance, RouteOptions } from 'fastify';
+import type { MovieSchemaType } from '../../../schemas/movies/data';
 import {
   type MovieIdObjectSchemaType,
+  DeleteMovieSchema,
   FetchMovieSchema,
   ReplaceMovieSchema,
-  UpdateMovieSchema,
-  DeleteMovieSchema
+  UpdateMovieSchema
 } from '../../../schemas/movies/http';
+import { RouteTags } from '../../../utils/constants/constants';
 import { HttpMethods, HttpStatusCodes } from '../../../utils/constants/enums';
 import { genOptionsRoute } from '../../../utils/routing-utils';
-import type { MovieSchemaType } from '../../../schemas/movies/data';
-import { RouteTags } from '../../../utils/constants/constants';
 
 const url = '';
 

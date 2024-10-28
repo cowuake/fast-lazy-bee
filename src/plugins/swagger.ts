@@ -1,7 +1,7 @@
-import fp from 'fastify-plugin';
 import fastifySwagger, { type FastifyDynamicSwaggerOptions } from '@fastify/swagger';
 import fastifySwaggerUi, { type FastifySwaggerUiOptions } from '@fastify/swagger-ui';
 import type { FastifyInstance } from 'fastify';
+import fp from 'fastify-plugin';
 import pkg from '../../package.json';
 import { RouteTags } from '../utils/constants/constants';
 

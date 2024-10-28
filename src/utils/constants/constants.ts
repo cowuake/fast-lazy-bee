@@ -1,5 +1,5 @@
-import path from 'path';
 import os from 'os';
+import path from 'path';
 
 const AppConfigDefaults = {
   env: 'development',
@@ -40,4 +40,4 @@ const RouteTags = {
   comment: 'Single comments'
 } as const;
 
-export { AppConfigDefaults, PaginationDefaults, TestConstants, RouteTags };
+export { AppConfigDefaults, PaginationDefaults, RouteTags, TestConstants };

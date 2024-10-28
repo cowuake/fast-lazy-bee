@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import { buildInstance } from './app';
-import { serverOptions } from './options/server-options';
 import autoloadOptions from './options/autoload-options';
+import { serverOptions } from './options/server-options';
 
 const fastifyApp: FastifyInstance = buildInstance(serverOptions, autoloadOptions, {});
 

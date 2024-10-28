@@ -1,8 +1,8 @@
-import setupMongoTestcontainers from '../../utils/testing/setup-mongo-testcontainers';
-import { downloadMongoArchive } from '../../utils/testing/setup-mongo-common';
-import * as fs from 'fs';
 import type { FastifyMongodbOptions } from '@fastify/mongodb';
+import * as fs from 'fs';
 import { TestConstants } from '../../utils/constants/constants';
+import { downloadMongoArchive } from '../../utils/testing/setup-mongo-common';
+import setupMongoTestcontainers from '../../utils/testing/setup-mongo-testcontainers';
 
 describe('downloadMongoArchive', () => {
   beforeEach(() => {

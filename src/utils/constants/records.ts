@@ -1,4 +1,4 @@
-import { HttpStatusCodes, HttpStatusCodeDescriptions } from './enums';
+import { HttpStatusCodeDescriptions, HttpStatusCodes } from './enums';
 
 const HttpCodesToDescriptions: Record<HttpStatusCodes, HttpStatusCodeDescriptions> = {
   [HttpStatusCodes.OK]: HttpStatusCodeDescriptions.OK,

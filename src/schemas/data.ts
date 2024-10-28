@@ -38,7 +38,7 @@ export {
   EmailSchema,
   FloatSchema,
   NaturalNumberSchema,
-  StringSchema,
   StringArraySchema,
+  StringSchema,
   UriSchema
 };

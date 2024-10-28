@@ -1,6 +1,6 @@
+import fs from 'fs';
 import path from 'path';
 import { TestConstants } from '../constants/constants';
-import fs from 'fs';
 
 const downloadMongoArchive = async (
   archiveUrl: string = TestConstants.mongoArchiveUrl,

@@ -1,5 +1,5 @@
-import { join } from 'path';
 import type { AutoloadPluginOptions } from '@fastify/autoload';
+import { join } from 'path';
 
 const autoloadPluginsOptions: AutoloadPluginOptions = {
   dir: join(__dirname, '../plugins')

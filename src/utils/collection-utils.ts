@@ -1,8 +1,8 @@
-import type { GenericFilterSchemaType } from '../schemas/movies/http';
-import type { Sort, SortDirection } from 'mongodb';
 import { type TObject, Type } from '@sinclair/typebox';
 import { Value } from '@sinclair/typebox/value';
 import type { FastifyError } from 'fastify';
+import type { Sort, SortDirection } from 'mongodb';
+import type { GenericFilterSchemaType } from '../schemas/movies/http';
 import { HttpStatusCodes } from './constants/enums';
 
 const allowedSearchTypes = ['string', 'integer', 'float', 'number'];
@@ -82,4 +82,4 @@ function getGenericSearch<T extends TObject>(
   return {};
 }
 
-export { genGenericSort as getGenericSort, getGenericSearch };
+export { getGenericSearch, genGenericSort as getGenericSort };

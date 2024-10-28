@@ -28,4 +28,4 @@ enum HttpStatusCodeDescriptions {
   InternalServerError = 'Server Error (Internal Server Error)'
 }
 
-export { HttpMethods, HttpStatusCodes, HttpStatusCodeDescriptions };
+export { HttpMethods, HttpStatusCodeDescriptions, HttpStatusCodes };

@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify';
-import buildTestInstance from '../../utils/testing/build-test-instance';
-import { HttpMethods, HttpStatusCodes } from '../../utils/constants/enums';
 import { TestConstants } from '../../utils/constants/constants';
+import { HttpMethods, HttpStatusCodes } from '../../utils/constants/enums';
+import buildTestInstance from '../../utils/testing/build-test-instance';
 
 describe('movieApi', () => {
   const fastifyInstance: FastifyInstance = buildTestInstance();

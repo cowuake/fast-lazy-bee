@@ -1,5 +1,5 @@
-import { MovieSchema, type MovieSchemaType } from '../../schemas/movies/data';
 import { TypeCompiler } from '@sinclair/typebox/compiler';
+import { MovieSchema, type MovieSchemaType } from '../../schemas/movies/data';
 
 describe('MovieSchema', () => {
   const validate = TypeCompiler.Compile(MovieSchema);

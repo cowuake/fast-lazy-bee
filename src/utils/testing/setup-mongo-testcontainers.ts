@@ -1,8 +1,8 @@
-import { MongoDBContainer } from '@testcontainers/mongodb';
-import { downloadMongoArchive } from './setup-mongo-common';
-import * as fs from 'fs';
 import type { FastifyMongodbOptions } from '@fastify/mongodb';
+import { MongoDBContainer } from '@testcontainers/mongodb';
+import * as fs from 'fs';
 import { AppConfigDefaults } from '../constants/constants';
+import { downloadMongoArchive } from './setup-mongo-common';
 
 const setupMongoTestcontainers = async (): Promise<FastifyMongodbOptions> => {
   const archivePath: string = await downloadMongoArchive();

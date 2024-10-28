@@ -1,9 +1,13 @@
 import { type Static, Type } from '@sinclair/typebox';
+import type { FastifySchema } from 'fastify';
 import { RouteTags } from '../../utils/constants/constants';
+import { HttpStatusCodes } from '../../utils/constants/enums';
+import { createResponseSchema } from '../../utils/schema-utils';
+import { ErrorSchema } from '../errors';
 import {
   FilterStringSchema,
-  NoContentSchema,
   genPaginatedDataSchema,
+  NoContentSchema,
   PaginationFilterSchema,
   SortStringSchema
 } from '../http';
@@ -15,10 +19,6 @@ import {
   MovieWithIdSchema,
   PartialMovieSchema
 } from './data';
-import { HttpStatusCodes } from '../../utils/constants/enums';
-import { createResponseSchema } from '../../utils/schema-utils';
-import { ErrorSchema } from '../errors';
-import type { FastifySchema } from 'fastify';
 
 const PaginatedMoviesSchema = genPaginatedDataSchema(MovieWithIdSchema);
 const PaginatedMovieCommentsSchema = genPaginatedDataSchema(MovieCommentWithIdSchema);
@@ -141,20 +141,20 @@ type MovieCommentFilterSchemaType = Static<typeof MovieCommentFilterSchema>;
 type GenericFilterSchemaType = Static<typeof GenericFilterSchema>;
 
 export {
-  MovieIdObjectSchema,
-  FetchMoviesSchema,
   CreateMovieSchema,
-  FetchMovieSchema,
-  ReplaceMovieSchema,
-  UpdateMovieSchema,
   DeleteMovieSchema,
   FetchMovieCommentsSchema,
-  type MovieIdObjectSchemaType,
-  type MovieCommentIdObjectSchemaType,
-  type MovieQuerySchemaType,
-  type MovieFilterSchemaType,
-  type PaginatedMoviesSchemaType,
-  type PaginatedGenericFilterSchemaType,
+  FetchMovieSchema,
+  FetchMoviesSchema,
+  MovieIdObjectSchema,
+  ReplaceMovieSchema,
+  UpdateMovieSchema,
+  type GenericFilterSchemaType,
   type MovieCommentFilterSchemaType,
-  type GenericFilterSchemaType
+  type MovieCommentIdObjectSchemaType,
+  type MovieFilterSchemaType,
+  type MovieIdObjectSchemaType,
+  type MovieQuerySchemaType,
+  type PaginatedGenericFilterSchemaType,
+  type PaginatedMoviesSchemaType
 };

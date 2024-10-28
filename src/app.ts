@@ -1,6 +1,6 @@
-import fastify, { type FastifyServerOptions, type FastifyInstance } from 'fastify';
 import Autoload, { type AutoloadPluginOptions } from '@fastify/autoload';
 import fastifyCaching, { type FastifyCachingPluginOptions } from '@fastify/caching';
+import fastify, { type FastifyInstance, type FastifyServerOptions } from 'fastify';
 
 export const buildInstance = (
   serverOptions: FastifyServerOptions,

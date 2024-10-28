@@ -4,8 +4,8 @@ import {
   EmailSchema,
   FloatSchema,
   NaturalNumberSchema,
-  StringSchema,
   StringArraySchema,
+  StringSchema,
   UriSchema
 } from '../data';
 
@@ -150,15 +150,15 @@ type MovieCommentSchemaType = Static<typeof MovieCommentSchema>;
 
 export {
   IdSchema,
-  MovieIdSchema,
   MovieCommentIdSchema,
-  MovieSchema,
-  MovieYearSchema,
-  MovieWithIdSchema,
-  PartialMovieSchema,
   MovieCommentSchema,
   MovieCommentWithIdSchema,
+  MovieIdSchema,
+  MovieSchema,
+  MovieWithIdSchema,
+  MovieYearSchema,
+  PartialMovieSchema,
+  type MovieCommentSchemaType,
   type MovieSchemaType,
-  type MovieWithIdSchemaType,
-  type MovieCommentSchemaType
+  type MovieWithIdSchemaType
 };
