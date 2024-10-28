@@ -68,6 +68,7 @@ const CreateMovieSchema: FastifySchema = {
   response: {
     ...createResponseSchema(HttpStatusCodes.Created, IdObjectSchema),
     ...createResponseSchema(HttpStatusCodes.BadRequest, ErrorSchema),
+    ...createResponseSchema(HttpStatusCodes.Conflict, ErrorSchema),
     ...createResponseSchema(HttpStatusCodes.InternalServerError, ErrorSchema)
   }
 };

@@ -14,11 +14,18 @@ import type {
   MovieCommentFilterSchemaType
 } from '../../schemas/movies/http';
 
-const notFoundError = (id: string): FastifyError => ({
+const genNotFoundError = (id: string): FastifyError => ({
   statusCode: HttpStatusCodes.NotFound,
   message: `Could not find movie with id ${id}`,
   name: 'Movie not found',
   code: 'ERR_NOT_FOUND'
+});
+
+const genMovieConflictError = (title: string, year: number): FastifyError => ({
+  statusCode: HttpStatusCodes.Conflict,
+  message: `Movie with title ${title} and year ${year} already exists`,
+  name: 'Movie already exists',
+  code: 'ERR_CONFLICT'
 });
 
 const defaultMovieSort: Sort = { year: 1, title: 1 };
@@ -79,6 +86,10 @@ const autoHooks = fp(
         return output;
       },
       async createMovie(movie) {
+        const matchingMovie = await movies.findOne({ title: movie.title, year: movie.year });
+        if (matchingMovie !== null) {
+          throw genMovieConflictError(movie.title, movie.year);
+        }
         const movieDoc = {
           ...movie,
           lastupdated: new Date().toISOString()
@@ -92,7 +103,7 @@ const autoHooks = fp(
           { projection: { _id: 0 } }
         );
         if (movie === null) {
-          throw notFoundError(id);
+          throw genNotFoundError(id);
         }
         const output = { ...movie, id };
         return output;
@@ -108,7 +119,7 @@ const autoHooks = fp(
           }
         );
         if (updated.modifiedCount === 0) {
-          throw notFoundError(id);
+          throw genNotFoundError(id);
         }
       },
       async updateMovie(id, update) {
@@ -122,13 +133,13 @@ const autoHooks = fp(
           }
         );
         if (updated.matchedCount === 0) {
-          throw notFoundError(id);
+          throw genNotFoundError(id);
         }
       },
       async deleteMovie(id) {
         const deleted = await movies.deleteOne({ _id: new fastify.mongo.ObjectId(id) });
         if (deleted.deletedCount === 0) {
-          throw notFoundError(id);
+          throw genNotFoundError(id);
         }
       }
     });

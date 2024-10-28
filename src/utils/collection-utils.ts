@@ -7,7 +7,7 @@ import { HttpStatusCodes } from './constants/enums';
 
 const allowedSearchTypes = ['string', 'integer', 'float', 'number'];
 
-const getInvalidPropertyKeyError = (key: string): FastifyError => {
+const genInvalidPropertyKeyError = (key: string): FastifyError => {
   return {
     statusCode: HttpStatusCodes.BadRequest,
     message: `Invalid property key: ${key}`,
@@ -16,7 +16,7 @@ const getInvalidPropertyKeyError = (key: string): FastifyError => {
   } as const;
 };
 
-const getUnsupportedSearchTypeError = (key: string, valueType: string): FastifyError => {
+const genUnsupportedSearchTypeError = (key: string, valueType: string): FastifyError => {
   return {
     statusCode: HttpStatusCodes.BadRequest,
     message: `Unsupported search property: ${key} (type: ${valueType})`,
@@ -25,7 +25,7 @@ const getUnsupportedSearchTypeError = (key: string, valueType: string): FastifyE
   } as const;
 };
 
-const getGenericSort = (filter: GenericFilterSchemaType, defaultSort: Sort): Sort => {
+const genGenericSort = (filter: GenericFilterSchemaType, defaultSort: Sort): Sort => {
   const sort = filter.sort;
 
   if (sort !== undefined) {
@@ -53,12 +53,12 @@ function getGenericSearch<T extends TObject>(
       const propertySchema = schema.properties[key];
 
       if (propertySchema === Type.Undefined()) {
-        throw getInvalidPropertyKeyError(key);
+        throw genInvalidPropertyKeyError(key);
       }
       const valueType: string = propertySchema.type as string;
 
       if (!allowedSearchTypes.includes(valueType)) {
-        throw getUnsupportedSearchTypeError(key, valueType);
+        throw genUnsupportedSearchTypeError(key, valueType);
       }
 
       switch (valueType) {
@@ -73,7 +73,7 @@ function getGenericSearch<T extends TObject>(
           return { ...acc, [key]: numericValue };
         }
         default: {
-          throw getUnsupportedSearchTypeError(key, valueType);
+          throw genUnsupportedSearchTypeError(key, valueType);
         }
       }
     }, {});
@@ -82,4 +82,4 @@ function getGenericSearch<T extends TObject>(
   return {};
 }
 
-export { getGenericSort, getGenericSearch };
+export { genGenericSort as getGenericSort, getGenericSearch };
