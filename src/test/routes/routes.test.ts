@@ -84,9 +84,18 @@ describe('movieApi', () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.POST,
       url: moviesEndpoint,
-      payload: testMovie
+      payload: { ...testMovie, year: 1899 }
     });
     expect(response.statusCode).toBe(HttpStatusCodes.Created);
+  });
+
+  it('should report a conflict when trying to create a movie replica', async () => {
+    const response = await fastifyInstance.inject({
+      method: HttpMethods.POST,
+      url: moviesEndpoint,
+      payload: testMovie
+    });
+    expect(response.statusCode).toBe(HttpStatusCodes.Conflict);
   });
 
   it('should fetch a movie by id', async () => {
