@@ -27,9 +27,10 @@ const PaginationFilterSchema = Type.Object({
 });
 
 const FilterStringSchema = Type.String({
-  pattern: '^[a-zA-Z0-9_]+:[^,]+(,[a-zA-Z0-9_]+:[^,]+)*$',
+  pattern:
+    '^[a-zA-Z0-9_]+:[a-zA-Z0-9_]+(\\|[a-zA-Z0-9_]+)*(,[a-zA-Z0-9_]+:[a-zA-Z0-9_]+(\\|[a-zA-Z0-9_]+)*)*$',
   description: 'A string to filter the data by',
-  examples: ['field_1:value_1,field_2:value_2']
+  examples: ['field_1:value_1,field_2:value_2|value_3', 'field_1:value_1,field_2:value_2']
 });
 
 const SortStringSchema = Type.String({

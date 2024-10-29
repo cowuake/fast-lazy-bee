@@ -1,11 +1,11 @@
-import { type TObject, Type } from '@sinclair/typebox';
+import { type Static, type TArray, type TObject, Type } from '@sinclair/typebox';
 import { Value } from '@sinclair/typebox/value';
 import type { FastifyError } from 'fastify';
-import type { Sort, SortDirection } from 'mongodb';
+import type { Filter, Sort, SortDirection } from 'mongodb';
 import type { GenericFilterSchemaType } from '../schemas/movies/http';
 import { HttpStatusCodes } from './constants/enums';
 
-const allowedSearchTypes = ['string', 'integer', 'float', 'number'];
+const allowedSearchTypes = ['string', 'integer', 'float', 'number', 'array'] as const;
 
 const genInvalidPropertyKeyError = (key: string): FastifyError => {
   return {
@@ -25,7 +25,7 @@ const genUnsupportedSearchTypeError = (key: string, valueType: string): FastifyE
   } as const;
 };
 
-const genGenericSort = (filter: GenericFilterSchemaType, defaultSort: Sort): Sort => {
+const getMongoSort = (filter: GenericFilterSchemaType, defaultSort: Sort): Sort => {
   const sort = filter.sort;
 
   if (sort !== undefined) {
@@ -40,10 +40,10 @@ const genGenericSort = (filter: GenericFilterSchemaType, defaultSort: Sort): Sor
   return defaultSort;
 };
 
-function getGenericSearch<T extends TObject>(
+function getMongoFilter<T extends TObject>(
   schema: T,
   filter: GenericFilterSchemaType
-): Record<string, string | RegExp | number> {
+): Filter<Static<typeof schema>> {
   const search = filter.search;
 
   if (search !== undefined) {
@@ -56,30 +56,47 @@ function getGenericSearch<T extends TObject>(
         throw genInvalidPropertyKeyError(key);
       }
       const valueType: string = propertySchema.type as string;
-
-      if (!allowedSearchTypes.includes(valueType)) {
+      if (!allowedSearchTypes.some((type) => type === valueType)) {
         throw genUnsupportedSearchTypeError(key, valueType);
       }
 
       switch (valueType) {
         case 'string': {
-          const stringValue: string = Value.Convert(Type.String(), stringifiedValue) as string;
-          return { ...acc, [key]: new RegExp(stringValue, 'i') };
+          return { ...acc, [key]: new RegExp(stringifiedValue, 'i') };
         }
         case 'integer':
         case 'float':
         case 'number': {
-          const numericValue: number = Value.Convert(Type.Number(), stringifiedValue) as number;
+          const numericValue = Value.Convert(Type.Number(), stringifiedValue) as number;
           return { ...acc, [key]: numericValue };
+        }
+        case 'array': {
+          const arraySchema = propertySchema.items as TArray;
+          const arrayValueType = arraySchema.type as string;
+
+          if (arrayValueType === 'string') {
+            const arrayValues = stringifiedValue.split('|');
+            const conditions = arrayValues.map((value) => ({
+              $elemMatch: { $regex: value, $options: 'i' }
+            }));
+            return { ...acc, [key]: { $all: conditions } };
+          } else if (['integer', 'float', 'number'].includes(arrayValueType)) {
+            const arrayValues = stringifiedValue
+              .split('|')
+              .map((value) => Value.Convert(Type.Number(), value)) as number[];
+            return { ...acc, [key]: { $all: arrayValues } };
+          }
+          break;
         }
         default: {
           throw genUnsupportedSearchTypeError(key, valueType);
         }
       }
+      return acc;
     }, {});
   }
 
   return {};
 }
 
-export { getGenericSearch, genGenericSort as getGenericSort };
+export { getMongoFilter, getMongoSort };
