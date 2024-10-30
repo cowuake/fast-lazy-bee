@@ -12,7 +12,7 @@ const genPaginatedDataSchema = <TData extends TSchema>(dataSchema: TData): TObje
     totalCount: NaturalNumberSchema
   });
 
-const PaginationFilterSchema = Type.Object({
+const PaginationParamsSchema = Type.Object({
   page: Type.Integer({
     description: 'The page number to retrieve',
     default: PaginationDefaults.defaultPageNumber,
@@ -49,6 +49,6 @@ export {
   FilterStringSchema,
   genPaginatedDataSchema,
   NoContentSchema,
-  PaginationFilterSchema,
+  PaginationParamsSchema,
   SortStringSchema
 };

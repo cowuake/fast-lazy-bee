@@ -28,4 +28,9 @@ enum HttpStatusCodeDescriptions {
   InternalServerError = 'Server Error (Internal Server Error)'
 }
 
-export { HttpMethods, HttpStatusCodeDescriptions, HttpStatusCodes };
+enum MediaTypes {
+  Movie = 'movie',
+  Series = 'series'
+}
+
+export { HttpMethods, HttpStatusCodeDescriptions, HttpStatusCodes, MediaTypes };

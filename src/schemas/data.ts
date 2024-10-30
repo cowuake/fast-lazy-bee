@@ -29,6 +29,7 @@ const UriSchema = Type.String({
 
 const StringArraySchema = Type.Array(StringSchema, {
   minItems: 1,
+  uniqueItems: true,
   description: 'An array of strings',
   examples: [['foo', 'bar']]
 });

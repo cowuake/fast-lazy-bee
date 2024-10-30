@@ -2,7 +2,7 @@ import { type Static, type TArray, type TObject, type TSchema, Type } from '@sin
 import { Value } from '@sinclair/typebox/value';
 import type { FastifyError } from 'fastify';
 import type { Filter, Sort, SortDirection } from 'mongodb';
-import type { GenericFilterSchemaType } from '../schemas/movies/http';
+import type { CollectionSearchSchemaType } from '../schemas/movies/http';
 import { HttpStatusCodes } from './constants/enums';
 
 const allowedSearchNumericTypes = ['integer', 'float', 'number'] as const;
@@ -26,7 +26,6 @@ const validateSearchType = (key: string, valueType: string): void => {
   if (allowedSearchTypes.some((type) => type === valueType)) {
     return;
   }
-
   const error: FastifyError = {
     statusCode: HttpStatusCodes.BadRequest,
     message: `Unsupported search property: ${key} (type: ${valueType})`,
@@ -37,7 +36,7 @@ const validateSearchType = (key: string, valueType: string): void => {
   throw error;
 };
 
-const getMongoSort = (filter: GenericFilterSchemaType, defaultSort: Sort): Sort => {
+const getMongoSort = (filter: CollectionSearchSchemaType, defaultSort: Sort): Sort => {
   const sort = filter.sort;
 
   if (sort !== undefined) {
@@ -54,9 +53,9 @@ const getMongoSort = (filter: GenericFilterSchemaType, defaultSort: Sort): Sort 
 
 function getMongoFilter<T extends TObject>(
   schema: T,
-  filter: GenericFilterSchemaType
+  filter: CollectionSearchSchemaType
 ): Filter<Static<typeof schema>> {
-  const search = filter.search;
+  const search = filter.filter;
 
   if (search !== undefined) {
     const searchParts = search.split(',');

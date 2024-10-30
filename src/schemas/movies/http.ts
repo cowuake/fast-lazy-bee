@@ -8,7 +8,7 @@ import {
   FilterStringSchema,
   genPaginatedDataSchema,
   NoContentSchema,
-  PaginationFilterSchema,
+  PaginationParamsSchema,
   SortStringSchema
 } from '../http';
 import {
@@ -23,26 +23,23 @@ import {
 const PaginatedMoviesSchema = genPaginatedDataSchema(MovieWithIdSchema);
 const PaginatedMovieCommentsSchema = genPaginatedDataSchema(MovieCommentWithIdSchema);
 
-const GenericSearchSchema = Type.Object({
-  search: Type.Optional(FilterStringSchema)
+const CollectionFilterSchema = Type.Object({
+  filter: Type.Optional(FilterStringSchema)
 });
 
-const GenericSortSchema = Type.Object({
+const CollectionSortSchema = Type.Object({
   sort: Type.Optional(SortStringSchema)
 });
 
-const GenericFilterSchema = Type.Object({
-  ...GenericSearchSchema.properties,
-  ...GenericSortSchema.properties
+const CollectionSearchSchema = Type.Object({
+  ...CollectionFilterSchema.properties,
+  ...CollectionSortSchema.properties
 });
 
-const PaginatedGenericFilterSchema = Type.Object({
-  ...GenericFilterSchema.properties,
-  ...PaginationFilterSchema.properties
+const PaginatedSearchSchema = Type.Object({
+  ...CollectionSearchSchema.properties,
+  ...PaginationParamsSchema.properties
 });
-
-const MovieFilterSchema = PaginatedGenericFilterSchema;
-const MovieCommentFilterSchema = PaginatedGenericFilterSchema;
 
 const IdObjectSchema = Type.Object({
   id: IdSchema
@@ -54,7 +51,7 @@ const MovieIdObjectSchema = Type.Object({
 
 const FetchMoviesSchema: FastifySchema = {
   tags: [RouteTags.movies, RouteTags.cache],
-  querystring: MovieFilterSchema,
+  querystring: PaginatedSearchSchema,
   response: {
     ...createResponseSchema(HttpStatusCodes.OK, PaginatedMoviesSchema),
     ...createResponseSchema(HttpStatusCodes.BadRequest, ErrorSchema),
@@ -87,7 +84,7 @@ const FetchMovieSchema: FastifySchema = {
 const FetchMovieCommentsSchema: FastifySchema = {
   tags: [RouteTags.comments, RouteTags.cache],
   params: MovieIdObjectSchema,
-  querystring: MovieCommentFilterSchema,
+  querystring: PaginatedSearchSchema,
   response: {
     ...createResponseSchema(HttpStatusCodes.OK, PaginatedMovieCommentsSchema),
     ...createResponseSchema(HttpStatusCodes.BadRequest, ErrorSchema),
@@ -131,14 +128,11 @@ const DeleteMovieSchema: FastifySchema = {
   }
 };
 
+type CollectionSearchSchemaType = Static<typeof CollectionSearchSchema>;
+type PaginatedSearchSchemaType = Static<typeof PaginatedSearchSchema>;
+
 type MovieIdObjectSchemaType = Static<typeof MovieIdObjectSchema>;
 type MovieCommentIdObjectSchemaType = Static<typeof MovieIdObjectSchema>;
-type MovieQuerySchemaType = Static<typeof MovieFilterSchema>;
-type MovieFilterSchemaType = Static<typeof MovieFilterSchema>;
-type PaginatedMoviesSchemaType = Static<typeof PaginatedMoviesSchema>;
-type PaginatedGenericFilterSchemaType = Static<typeof PaginatedGenericFilterSchema>;
-type MovieCommentFilterSchemaType = Static<typeof MovieCommentFilterSchema>;
-type GenericFilterSchemaType = Static<typeof GenericFilterSchema>;
 
 export {
   CreateMovieSchema,
@@ -149,12 +143,8 @@ export {
   MovieIdObjectSchema,
   ReplaceMovieSchema,
   UpdateMovieSchema,
-  type GenericFilterSchemaType,
-  type MovieCommentFilterSchemaType,
+  type CollectionSearchSchemaType,
   type MovieCommentIdObjectSchemaType,
-  type MovieFilterSchemaType,
   type MovieIdObjectSchemaType,
-  type MovieQuerySchemaType,
-  type PaginatedGenericFilterSchemaType,
-  type PaginatedMoviesSchemaType
+  type PaginatedSearchSchemaType
 };

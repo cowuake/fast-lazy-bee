@@ -3,7 +3,7 @@ import type { MovieSchemaType } from '../../schemas/movies/data';
 import {
   CreateMovieSchema,
   FetchMoviesSchema,
-  type MovieFilterSchemaType
+  type PaginatedSearchSchemaType
 } from '../../schemas/movies/http';
 import { RouteTags } from '../../utils/constants/constants';
 import { HttpMethods, HttpStatusCodes } from '../../utils/constants/enums';
@@ -17,9 +17,9 @@ const routes: RouteOptions[] = [
     url,
     schema: FetchMoviesSchema,
     handler: async function fetchMovies(request, reply) {
-      const filter = request.query as MovieFilterSchemaType;
-      const movies = await this.movieDataStore.fetchMovies(filter);
-      const totalCount: number = await this.movieDataStore.countMovies(filter);
+      const filter = request.query as PaginatedSearchSchemaType;
+      const movies = await this.dataStore.fetchMovies(filter);
+      const totalCount: number = await this.dataStore.countMovies(filter);
       const body = {
         data: movies,
         page: filter.page,
@@ -35,7 +35,7 @@ const routes: RouteOptions[] = [
     schema: CreateMovieSchema,
     handler: async function createMovie(request, reply) {
       const body = request.body as MovieSchemaType;
-      const insertedId = await this.movieDataStore.createMovie(body);
+      const insertedId = await this.dataStore.createMovie(body);
       reply.code(HttpStatusCodes.Created).send({ id: insertedId });
     }
   }

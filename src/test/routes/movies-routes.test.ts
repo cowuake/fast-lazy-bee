@@ -59,7 +59,7 @@ describe('API', () => {
   it('should filter movies by title', async () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.GET,
-      url: `${moviesEndpoint}?${pagination}&search=title:alien`
+      url: `${moviesEndpoint}?${pagination}&filter=title:alien`
     });
     expect(response.statusCode).toBe(HttpStatusCodes.OK);
   });
@@ -67,7 +67,7 @@ describe('API', () => {
   it('should filter movies by year', async () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.GET,
-      url: `${moviesEndpoint}?${pagination}&search=year:1979`
+      url: `${moviesEndpoint}?${pagination}&filter=year:1979`
     });
     expect(response.statusCode).toBe(HttpStatusCodes.OK);
   });
@@ -75,7 +75,7 @@ describe('API', () => {
   it('should filter movies by several properties', async () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.GET,
-      url: `${moviesEndpoint}?${pagination}&search=title:alien,year=1979`
+      url: `${moviesEndpoint}?${pagination}&filter=title:alien,year:1979,lastupdated:2000-01-01`
     });
     expect(response.statusCode).toBe(HttpStatusCodes.OK);
   });

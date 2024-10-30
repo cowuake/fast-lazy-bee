@@ -1,4 +1,5 @@
 import { type Static, Type } from '@sinclair/typebox';
+import { MediaTypes } from '../../utils/constants/enums';
 import {
   DateSchema,
   EmailSchema,
@@ -40,7 +41,10 @@ const TomatoesSchema = Type.Object({
   website: StringSchema
 });
 
-const MediaTypeSchema = Type.Union([Type.Literal('movie'), Type.Literal('series')]);
+const MediaTypeSchema = Type.Enum(MediaTypes, {
+  description: 'The type of media',
+  examples: ['movie', 'series']
+});
 
 const MovieMandatoryFieldsSchema = Type.Object({
   title: { ...StringSchema, description: 'The title of the movie/series' },

@@ -7,10 +7,7 @@ import {
   type MovieCommentSchemaType,
   type MovieSchemaType
 } from '../../schemas/movies/data';
-import type {
-  MovieCommentFilterSchemaType,
-  MovieFilterSchemaType
-} from '../../schemas/movies/http';
+import type { PaginatedSearchSchemaType } from '../../schemas/movies/http';
 import { HttpStatusCodes } from '../../utils/constants/enums';
 import { getMongoFilter, getMongoSort } from '../../utils/mongo-collection-utils';
 
@@ -31,11 +28,11 @@ const genMovieConflictError = (title: string, year: number): FastifyError => ({
 const defaultMovieSort: Sort = { year: 1, title: 1 };
 const defaultMovieCommentSort: Sort = { date: -1, name: 1 };
 
-const getMovieSort = (filter: MovieFilterSchemaType): Sort =>
-  getMongoSort(filter, defaultMovieSort);
+const getMovieSort = (searchParams: PaginatedSearchSchemaType): Sort =>
+  getMongoSort(searchParams, defaultMovieSort);
 
-const getMovieCommentSort = (filter: MovieCommentFilterSchemaType): Sort =>
-  getMongoSort(filter, defaultMovieCommentSort);
+const getMovieCommentSort = (searchParams: PaginatedSearchSchemaType): Sort =>
+  getMongoSort(searchParams, defaultMovieCommentSort);
 
 const autoHooks = fp(
   async function movieAutoHooks(fastify: FastifyInstance) {
@@ -46,37 +43,37 @@ const autoHooks = fp(
     const movies: Collection<MovieSchemaType> = db.collection('movies');
     const comments: Collection<MovieCommentSchemaType> = db.collection('comments');
 
-    fastify.decorate('movieDataStore', {
-      async countMovies(filter) {
-        const condition = getMongoFilter(MovieSchema, filter);
+    fastify.decorate('dataStore', {
+      async countMovies(searchParams) {
+        const condition = getMongoFilter(MovieSchema, searchParams);
         const totalCount = await movies.countDocuments(condition);
         return totalCount;
       },
-      async countMovieComments(movieId, filter) {
-        const condition = getMongoFilter(MovieCommentSchema, filter);
+      async countMovieComments(movieId, searchParams) {
+        const condition = getMongoFilter(MovieCommentSchema, searchParams);
         condition['movie_id'] = new fastify.mongo.ObjectId(movieId) as unknown as string;
         const totalCount = await comments.countDocuments(condition);
         return totalCount;
       },
-      async fetchMovies(filter) {
-        const skip = (filter.page - 1) * filter.pageSize;
-        const condition = getMongoFilter(MovieSchema, filter);
-        const sort: Sort = getMovieSort(filter);
+      async fetchMovies(searchParams) {
+        const skip = (searchParams.page - 1) * searchParams.pageSize;
+        const condition = getMongoFilter(MovieSchema, searchParams);
+        const sort: Sort = getMovieSort(searchParams);
         const docs = await movies
-          .find(condition, { limit: filter.pageSize, skip })
+          .find(condition, { limit: searchParams.pageSize, skip })
           .sort(sort)
           .toArray();
         const output = docs.map((doc) => ({ ...doc, id: doc._id.toString() }));
         return output;
       },
-      async fetchMovieComments(movieId, filter) {
-        const skip = (filter.page - 1) * filter.pageSize;
-        const condition = getMongoFilter(MovieCommentSchema, filter);
-        const sort: Sort = getMovieCommentSort(filter);
+      async fetchMovieComments(movieId, searchParams) {
+        const skip = (searchParams.page - 1) * searchParams.pageSize;
+        const condition = getMongoFilter(MovieCommentSchema, searchParams);
+        const sort: Sort = getMovieCommentSort(searchParams);
         const docs = await comments
           .find(
             { ...condition, movie_id: new fastify.mongo.ObjectId(movieId) as unknown as string },
-            { limit: filter.pageSize, skip }
+            { limit: searchParams.pageSize, skip }
           )
           .sort(sort)
           .toArray();

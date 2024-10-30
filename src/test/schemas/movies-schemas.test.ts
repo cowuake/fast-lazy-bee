@@ -1,18 +1,17 @@
 import { TypeCompiler } from '@sinclair/typebox/compiler';
 import { MovieSchema, type MovieSchemaType } from '../../schemas/movies/data';
+import { MediaTypes } from '../../utils/constants/enums';
 
 describe('MovieSchema', () => {
   const validate = TypeCompiler.Compile(MovieSchema);
 
   const movieTitle = 'Yet Another Movie';
-  const movieType = 'movie';
-  // const movieCast = ['This Guy', 'That Guy', 'The Other Guy', 'Guybrush Threepwood'];
-  // const movieGenres = ['Action', 'Adventure', 'Comedy'];
+  const mediaType = MediaTypes.Movie;
   const movieYear = 2022;
 
   const movieWithMandatoryFields: MovieSchemaType = {
     title: movieTitle,
-    type: movieType,
+    type: mediaType,
     year: movieYear
   };
 

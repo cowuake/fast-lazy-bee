@@ -5,15 +5,15 @@ import type {
   MovieSchemaType,
   MovieWithIdSchemaType
 } from '../schemas/movies/data';
-import type { MovieCommentFilterSchemaType, MovieFilterSchemaType } from '../schemas/movies/http';
+import type { PaginatedSearchSchemaType } from '../schemas/movies/http';
 
-interface MovieDataStore {
-  countMovies: (filter: MovieFilterSchemaType) => Promise<number>;
-  countMovieComments: (movieId: string, filter: MovieCommentFilterSchemaType) => Promise<number>;
-  fetchMovies: (filter: MovieFilterSchemaType) => Promise<MovieWithIdSchemaType[]>;
+interface DataStore {
+  countMovies: (searchParams: PaginatedSearchSchemaType) => Promise<number>;
+  countMovieComments: (movieId: string, searchParams: PaginatedSearchSchemaType) => Promise<number>;
+  fetchMovies: (searchParams: PaginatedSearchSchemaType) => Promise<MovieWithIdSchemaType[]>;
   fetchMovieComments: (
     movieId: string,
-    filter: MovieCommentFilterSchemaType
+    searchParams: PaginatedSearchSchemaType
   ) => Promise<MovieCommentSchemaType[]>;
   fetchMovie: (id: string) => Promise<MovieWithIdSchemaType>;
   createMovie: (movie: MovieSchemaType) => Promise<string>;
@@ -26,6 +26,6 @@ declare module 'fastify' {
   interface FastifyInstance {
     config: EnvSchemaType;
     mongo: FastifyMongoObject & FastifyMongoNestedObject;
-    movieDataStore: MovieDataStore;
+    dataStore: DataStore;
   }
 }

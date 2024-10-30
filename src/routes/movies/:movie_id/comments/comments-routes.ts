@@ -1,8 +1,8 @@
 import type { FastifyInstance, RouteOptions } from 'fastify';
 import {
   FetchMovieCommentsSchema,
-  type MovieCommentFilterSchemaType,
-  type MovieIdObjectSchemaType
+  type MovieIdObjectSchemaType,
+  type PaginatedSearchSchemaType
 } from '../../../../schemas/movies/http';
 import { RouteTags } from '../../../../utils/constants/constants';
 import { HttpMethods, HttpStatusCodes } from '../../../../utils/constants/enums';
@@ -18,9 +18,9 @@ const routes: RouteOptions[] = [
     handler: async function fetchMovieComments(request, reply) {
       const params = request.params as MovieIdObjectSchemaType;
       const movieId = params.movie_id;
-      const filter = request.query as MovieCommentFilterSchemaType;
-      const comments = await this.movieDataStore.fetchMovieComments(movieId, filter);
-      const totalCount: number = await this.movieDataStore.countMovieComments(movieId, filter);
+      const filter = request.query as PaginatedSearchSchemaType;
+      const comments = await this.dataStore.fetchMovieComments(movieId, filter);
+      const totalCount: number = await this.dataStore.countMovieComments(movieId, filter);
       const body = {
         data: comments,
         page: filter.page,
