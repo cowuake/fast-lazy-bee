@@ -3,7 +3,7 @@ import { TestConstants } from '../../utils/constants/constants';
 import { HttpMethods, HttpStatusCodes } from '../../utils/constants/enums';
 import buildTestInstance from '../../utils/testing/build-test-instance';
 
-describe('movieApi', () => {
+describe('API', () => {
   const fastifyInstance: FastifyInstance = buildTestInstance();
   const moviesEndpoint = `${TestConstants.v1Root}/movies`;
   const movieIdEndpoint = `${moviesEndpoint}/:movie_id`;
@@ -59,7 +59,7 @@ describe('movieApi', () => {
   it('should filter movies by title', async () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.GET,
-      url: `${moviesEndpoint}?${pagination}&title=alien`
+      url: `${moviesEndpoint}?${pagination}&search=title:alien`
     });
     expect(response.statusCode).toBe(HttpStatusCodes.OK);
   });
@@ -67,7 +67,15 @@ describe('movieApi', () => {
   it('should filter movies by year', async () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.GET,
-      url: `${moviesEndpoint}?${pagination}&year=1979`
+      url: `${moviesEndpoint}?${pagination}&search=year:1979`
+    });
+    expect(response.statusCode).toBe(HttpStatusCodes.OK);
+  });
+
+  it('should filter movies by several properties', async () => {
+    const response = await fastifyInstance.inject({
+      method: HttpMethods.GET,
+      url: `${moviesEndpoint}?${pagination}&search=title:alien,year=1979`
     });
     expect(response.statusCode).toBe(HttpStatusCodes.OK);
   });

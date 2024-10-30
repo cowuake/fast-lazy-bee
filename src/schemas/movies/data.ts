@@ -54,7 +54,7 @@ const MovieOptionalFieldsSchema = Type.Partial(
     cast: {
       ...StringArraySchema,
       description: 'The cast of the movie/series',
-      examples: [['Sigourney Weaver', 'Ahsley Johnson']]
+      examples: [['Sigourney Weaver', 'Ashley Johnson']]
     },
     countries: {
       ...StringArraySchema,

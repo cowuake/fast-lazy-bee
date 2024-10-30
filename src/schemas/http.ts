@@ -28,15 +28,21 @@ const PaginationFilterSchema = Type.Object({
 
 const FilterStringSchema = Type.String({
   pattern:
-    '^[a-zA-Z0-9_]+:[a-zA-Z0-9_]+(\\|[a-zA-Z0-9_]+)*(,[a-zA-Z0-9_]+:[a-zA-Z0-9_]+(\\|[a-zA-Z0-9_]+)*)*$',
-  description: 'A string to filter the data by',
-  examples: ['field_1:value_1,field_2:value_2|value_3', 'field_1:value_1,field_2:value_2']
+    '^[a-zA-Z0-9_]+:(?:[a-zA-Z0-9_]+|\\d{4}-\\d{2}-\\d{2})(\\|[a-zA-Z0-9_]+|\\|\\d{4}-\\d{2}-\\d{2})*(,[a-zA-Z0-9_]+:(?:[a-zA-Z0-9_]+|\\d{4}-\\d{2}-\\d{2})(\\|[a-zA-Z0-9_]+|\\|\\d{4}-\\d{2}-\\d{2})*)*$',
+  title: 'A string to filter the data by',
+  description:
+    'A string to filter the data by.\n' +
+    'The format is `key:value` or `key:value|value` for arrays.\n' +
+    'Multiple filters can be separated by commas.'
 });
 
 const SortStringSchema = Type.String({
   pattern: '^[a-zA-Z0-9_]+:(asc|desc)(,[a-zA-Z0-9_]+:(asc|desc))*$',
-  description: 'A comma-separated list of fields to sort by, with their respective order',
-  examples: ['field_1:asc,field_2:desc']
+  title: 'A string to sort the data by',
+  description:
+    'A string to sort the data by.\n' +
+    'The format is `key:asc` or `key:desc`.\n' +
+    'Multiple sorts can be separated by commas.'
 });
 
 export {

@@ -1,28 +1,40 @@
-import { type Static, type TArray, type TObject, Type } from '@sinclair/typebox';
+import { type Static, type TArray, type TObject, type TSchema, Type } from '@sinclair/typebox';
 import { Value } from '@sinclair/typebox/value';
 import type { FastifyError } from 'fastify';
 import type { Filter, Sort, SortDirection } from 'mongodb';
 import type { GenericFilterSchemaType } from '../schemas/movies/http';
 import { HttpStatusCodes } from './constants/enums';
 
-const allowedSearchTypes = ['string', 'integer', 'float', 'number', 'array'] as const;
+const allowedSearchNumericTypes = ['integer', 'float', 'number'] as const;
+const allowedSearchTypes = [...allowedSearchNumericTypes, 'string', 'array', 'Date'] as const;
 
-const genInvalidPropertyKeyError = (key: string): FastifyError => {
-  return {
+const validatePropertyKey = (key: string, schema: TSchema): void => {
+  if (schema !== Type.Undefined()) {
+    return;
+  }
+  const error: FastifyError = {
     statusCode: HttpStatusCodes.BadRequest,
     message: `Invalid property key: ${key}`,
     name: 'Bad Request',
     code: 'ERR_BAD_REQUEST'
   } as const;
+
+  throw error;
 };
 
-const genUnsupportedSearchTypeError = (key: string, valueType: string): FastifyError => {
-  return {
+const validateSearchType = (key: string, valueType: string): void => {
+  if (allowedSearchTypes.some((type) => type === valueType)) {
+    return;
+  }
+
+  const error: FastifyError = {
     statusCode: HttpStatusCodes.BadRequest,
     message: `Unsupported search property: ${key} (type: ${valueType})`,
     name: 'Bad Request',
     code: 'ERR_BAD_REQUEST'
   } as const;
+
+  throw error;
 };
 
 const getMongoSort = (filter: GenericFilterSchemaType, defaultSort: Sort): Sort => {
@@ -50,15 +62,12 @@ function getMongoFilter<T extends TObject>(
     const searchParts = search.split(',');
     return searchParts.reduce((acc, searchPart) => {
       const [key, stringifiedValue] = searchPart.split(':');
-      const propertySchema = schema.properties[key];
 
-      if (propertySchema === Type.Undefined()) {
-        throw genInvalidPropertyKeyError(key);
-      }
+      const propertySchema = schema.properties[key];
+      validatePropertyKey(key, propertySchema);
+
       const valueType: string = propertySchema.type as string;
-      if (!allowedSearchTypes.some((type) => type === valueType)) {
-        throw genUnsupportedSearchTypeError(key, valueType);
-      }
+      validateSearchType(key, valueType);
 
       switch (valueType) {
         case 'string': {
@@ -69,6 +78,10 @@ function getMongoFilter<T extends TObject>(
         case 'number': {
           const numericValue = Value.Convert(Type.Number(), stringifiedValue) as number;
           return { ...acc, [key]: numericValue };
+        }
+        case 'Date': {
+          const dateValue = Value.Convert(Type.Date(), stringifiedValue) as Date;
+          return { ...acc, [key]: dateValue };
         }
         case 'array': {
           const arraySchema = propertySchema.items as TArray;
@@ -89,7 +102,7 @@ function getMongoFilter<T extends TObject>(
           break;
         }
         default: {
-          throw genUnsupportedSearchTypeError(key, valueType);
+          break;
         }
       }
       return acc;
