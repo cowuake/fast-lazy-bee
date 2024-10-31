@@ -10,6 +10,7 @@ import {
   UriSchema
 } from '../data';
 
+const KeySchema = Type.String({ description: 'A generic object key' });
 const MovieYearSchema = Type.Integer({ minimum: 1878 });
 
 const AwardsSchema = Type.Object({
@@ -124,11 +125,6 @@ const MovieSchema = Type.Object({
 
 const PartialMovieSchema = Type.Partial(MovieSchema);
 
-const MovieWithIdSchema = Type.Object({
-  ...MovieSchema.properties,
-  ...{ id: MovieIdSchema }
-});
-
 const MovieCommentSchema = Type.Partial(
   Type.Object({
     name: {
@@ -145,24 +141,22 @@ const MovieCommentSchema = Type.Partial(
 
 const MovieCommentWithIdSchema = Type.Object({
   ...MovieCommentSchema.properties,
-  ...{ id: MovieCommentIdSchema }
+  ...{ _id: MovieCommentIdSchema }
 });
 
 type MovieSchemaType = Static<typeof MovieSchema>;
-type MovieWithIdSchemaType = Static<typeof MovieWithIdSchema>;
 type MovieCommentSchemaType = Static<typeof MovieCommentSchema>;
 
 export {
   IdSchema,
+  KeySchema,
   MovieCommentIdSchema,
   MovieCommentSchema,
   MovieCommentWithIdSchema,
   MovieIdSchema,
   MovieSchema,
-  MovieWithIdSchema,
   MovieYearSchema,
   PartialMovieSchema,
   type MovieCommentSchemaType,
-  type MovieSchemaType,
-  type MovieWithIdSchemaType
+  type MovieSchemaType
 };

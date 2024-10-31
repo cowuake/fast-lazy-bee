@@ -1,27 +1,23 @@
 import { type Static, Type } from '@sinclair/typebox';
 import type { FastifySchema } from 'fastify';
 import { RouteTags } from '../../utils/constants/constants';
-import { HttpStatusCodes } from '../../utils/constants/enums';
+import { HttpMediaTypes, HttpStatusCodes } from '../../utils/constants/enums';
 import { createResponseSchema } from '../../utils/schema-utils';
 import { ErrorSchema } from '../errors';
 import {
   FilterStringSchema,
-  genPaginatedDataSchema,
   NoContentSchema,
   PaginationParamsSchema,
+  ResourceSchema,
   SortStringSchema
 } from '../http';
 import {
   IdSchema,
-  MovieCommentWithIdSchema,
+  MovieCommentSchema,
   MovieIdSchema,
   MovieSchema,
-  MovieWithIdSchema,
   PartialMovieSchema
 } from './data';
-
-const PaginatedMoviesSchema = genPaginatedDataSchema(MovieWithIdSchema);
-const PaginatedMovieCommentsSchema = genPaginatedDataSchema(MovieCommentWithIdSchema);
 
 const CollectionFilterSchema = Type.Object({
   filter: Type.Optional(FilterStringSchema)
@@ -50,10 +46,11 @@ const MovieIdObjectSchema = Type.Object({
 });
 
 const FetchMoviesSchema: FastifySchema = {
+  produces: [HttpMediaTypes.JSON, HttpMediaTypes.HAL_JSON],
   tags: [RouteTags.movies, RouteTags.cache],
   querystring: PaginatedSearchSchema,
   response: {
-    ...createResponseSchema(HttpStatusCodes.OK, PaginatedMoviesSchema),
+    ...createResponseSchema(HttpStatusCodes.OK, ResourceSchema(MovieSchema), true),
     ...createResponseSchema(HttpStatusCodes.BadRequest, ErrorSchema),
     ...createResponseSchema(HttpStatusCodes.InternalServerError, ErrorSchema)
   }
@@ -74,7 +71,7 @@ const FetchMovieSchema: FastifySchema = {
   tags: [RouteTags.movie, RouteTags.cache],
   params: MovieIdObjectSchema,
   response: {
-    ...createResponseSchema(HttpStatusCodes.OK, MovieWithIdSchema),
+    ...createResponseSchema(HttpStatusCodes.OK, ResourceSchema(MovieSchema)),
     ...createResponseSchema(HttpStatusCodes.BadRequest, ErrorSchema),
     ...createResponseSchema(HttpStatusCodes.NotFound, ErrorSchema),
     ...createResponseSchema(HttpStatusCodes.InternalServerError, ErrorSchema)
@@ -86,7 +83,7 @@ const FetchMovieCommentsSchema: FastifySchema = {
   params: MovieIdObjectSchema,
   querystring: PaginatedSearchSchema,
   response: {
-    ...createResponseSchema(HttpStatusCodes.OK, PaginatedMovieCommentsSchema),
+    ...createResponseSchema(HttpStatusCodes.OK, ResourceSchema(MovieCommentSchema), true),
     ...createResponseSchema(HttpStatusCodes.BadRequest, ErrorSchema),
     ...createResponseSchema(HttpStatusCodes.NotFound, ErrorSchema),
     ...createResponseSchema(HttpStatusCodes.InternalServerError, ErrorSchema)

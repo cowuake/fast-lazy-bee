@@ -63,7 +63,7 @@ const autoHooks = fp(
           .find(condition, { limit: searchParams.pageSize, skip })
           .sort(sort)
           .toArray();
-        const output = docs.map((doc) => ({ ...doc, id: doc._id.toString() }));
+        const output = docs.map((doc) => ({ ...doc, _id: doc._id.toString() }));
         return output;
       },
       async fetchMovieComments(movieId, searchParams) {
@@ -100,7 +100,7 @@ const autoHooks = fp(
         if (movie === null) {
           throw genNotFoundError(id);
         }
-        const output = { ...movie, id };
+        const output = { ...movie, _id: id };
         return output;
       },
       async replaceMovie(id, replacement) {

@@ -1,21 +1,17 @@
 import type { FastifyMongoNestedObject, FastifyMongoObject } from '@fastify/mongodb';
 import type { EnvSchemaType } from '../schemas/dotenv';
-import type {
-  MovieCommentSchemaType,
-  MovieSchemaType,
-  MovieWithIdSchemaType
-} from '../schemas/movies/data';
-import type { PaginatedSearchSchemaType } from '../schemas/movies/http';
+import type { MovieCommentSchemaType, MovieSchemaType } from '../schemas/movies/data';
+import type { PaginatedSearchSchemaType, ResourceSchemaType } from '../schemas/movies/http';
 
 interface DataStore {
   countMovies: (searchParams: PaginatedSearchSchemaType) => Promise<number>;
   countMovieComments: (movieId: string, searchParams: PaginatedSearchSchemaType) => Promise<number>;
-  fetchMovies: (searchParams: PaginatedSearchSchemaType) => Promise<MovieWithIdSchemaType[]>;
+  fetchMovies: (searchParams: PaginatedSearchSchemaType) => Promise<MovieSchemaType[]>;
   fetchMovieComments: (
     movieId: string,
     searchParams: PaginatedSearchSchemaType
-  ) => Promise<MovieCommentSchemaType[]>;
-  fetchMovie: (id: string) => Promise<MovieWithIdSchemaType>;
+  ) => Promise<Array<ResourceSchemaType<MovieCommentSchemaType>>>;
+  fetchMovie: (id: string) => Promise<ResourceSchemaType<MovieSchemaType>>;
   createMovie: (movie: MovieSchemaType) => Promise<string>;
   replaceMovie: (id: string, replacement: MovieSchemaType) => Promise<void>;
   updateMovie: (id: string, update: MovieSchemaType) => Promise<void>;
