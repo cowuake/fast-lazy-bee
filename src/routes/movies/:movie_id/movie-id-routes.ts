@@ -1,5 +1,5 @@
 import type { FastifyInstance, RouteOptions } from 'fastify';
-import type { MovieSchemaType } from '../../../schemas/movies/data';
+import type { MovieSchema, MovieSchemaType } from '../../../schemas/movies/data';
 import {
   type MovieIdObjectSchemaType,
   DeleteMovieSchema,
@@ -8,7 +8,8 @@ import {
   UpdateMovieSchema
 } from '../../../schemas/movies/http';
 import { RouteTags } from '../../../utils/constants/constants';
-import { HttpMethods, HttpStatusCodes } from '../../../utils/constants/enums';
+import { HttpMediaTypes, HttpMethods, HttpStatusCodes } from '../../../utils/constants/enums';
+import { addLinksToResource } from '../../../utils/hal-utils';
 import { genOptionsRoute } from '../../../utils/routing-utils';
 
 const url = '';
@@ -21,7 +22,17 @@ const routes: RouteOptions[] = [
     handler: async function fetchMovie(request, reply) {
       const params = request.params as MovieIdObjectSchemaType;
       const movie = await this.dataStore.fetchMovie(params.movie_id);
-      reply.code(HttpStatusCodes.OK).send(movie);
+      const acceptsHal = request.headers.accept?.includes(HttpMediaTypes.HAL_JSON);
+
+      if (acceptsHal !== undefined && acceptsHal) {
+        const halMovie = addLinksToResource<typeof MovieSchema>(request, movie);
+        reply
+          .code(HttpStatusCodes.OK)
+          .header('Content-Type', HttpMediaTypes.HAL_JSON)
+          .send(halMovie);
+      } else {
+        reply.code(HttpStatusCodes.OK).send(movie);
+      }
     }
   },
   {

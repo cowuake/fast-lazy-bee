@@ -33,4 +33,9 @@ enum MediaTypes {
   Series = 'series'
 }
 
-export { HttpMethods, HttpStatusCodeDescriptions, HttpStatusCodes, MediaTypes };
+enum HttpMediaTypes {
+  JSON = 'application/json',
+  HAL_JSON = 'application/hal+json'
+}
+
+export { HttpMediaTypes, HttpMethods, HttpStatusCodeDescriptions, HttpStatusCodes, MediaTypes };

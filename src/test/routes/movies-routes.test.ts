@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 import { TestConstants } from '../../utils/constants/constants';
-import { HttpMethods, HttpStatusCodes } from '../../utils/constants/enums';
+import { HttpMediaTypes, HttpMethods, HttpStatusCodes } from '../../utils/constants/enums';
 import buildTestInstance from '../../utils/testing/build-test-instance';
 
 describe('API', () => {
@@ -52,6 +52,15 @@ describe('API', () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.GET,
       url: `${moviesEndpoint}?${pagination}`
+    });
+    expect(response.statusCode).toBe(HttpStatusCodes.OK);
+  });
+
+  it('should fetch movies with HAL', async () => {
+    const response = await fastifyInstance.inject({
+      method: HttpMethods.GET,
+      url: `${moviesEndpoint}?${pagination}`,
+      headers: { accept: HttpMediaTypes.HAL_JSON }
     });
     expect(response.statusCode).toBe(HttpStatusCodes.OK);
   });
@@ -110,6 +119,15 @@ describe('API', () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.GET,
       url: `${moviesEndpoint}/${testMovieId}`
+    });
+    expect(response.statusCode).toBe(HttpStatusCodes.OK);
+  });
+
+  it('should fetch a movie by id with HAL', async () => {
+    const response = await fastifyInstance.inject({
+      method: HttpMethods.GET,
+      url: `${moviesEndpoint}/${testMovieId}`,
+      headers: { accept: HttpMediaTypes.HAL_JSON }
     });
     expect(response.statusCode).toBe(HttpStatusCodes.OK);
   });
@@ -182,6 +200,15 @@ describe('API', () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.GET,
       url: `${moviesEndpoint}/${testMovieId}/comments?${pagination}`
+    });
+    expect(response.statusCode).toBe(HttpStatusCodes.OK);
+  });
+
+  it('should fetch movie comments with HAL', async () => {
+    const response = await fastifyInstance.inject({
+      method: HttpMethods.GET,
+      url: `${moviesEndpoint}/${testMovieId}/comments?${pagination}`,
+      headers: { accept: HttpMediaTypes.HAL_JSON }
     });
     expect(response.statusCode).toBe(HttpStatusCodes.OK);
   });

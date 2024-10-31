@@ -11,12 +11,15 @@ const AppConfigDefaults = {
   cacheExpiration: 10000
 } as const;
 
-const PaginationDefaults = {
+const PaginationConstants = {
   defaultPageNumber: 1,
   minimumPageNumber: 1,
   defaultPageSize: 100,
   maximumPageSize: 500,
-  minimumPageSize: 1
+  minimumPageSize: 1,
+  pageNumberKey: 'page',
+  pageSizeKey: 'pageSize',
+  totalCountKey: 'totalCount'
 } as const;
 
 const TestConstants = {
@@ -40,4 +43,4 @@ const RouteTags = {
   comment: 'Single comments'
 } as const;
 
-export { AppConfigDefaults, PaginationDefaults, RouteTags, TestConstants };
+export { AppConfigDefaults, PaginationConstants, RouteTags, TestConstants };

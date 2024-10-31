@@ -1,8 +1,8 @@
 import type { FastifyRequest } from 'fastify';
 
 function genCacheKey(request: FastifyRequest): string {
-  const { method, url, params, body } = request;
-  return JSON.stringify({ method, url, params, body });
+  const { method, url, headers, params, body } = request;
+  return JSON.stringify({ method, url, headers, params, body });
 }
 
 export { genCacheKey };

@@ -1,11 +1,13 @@
 import type { FastifyInstance, RouteOptions } from 'fastify';
+import type { MovieCommentSchema } from '../../../../schemas/movies/data';
 import {
   FetchMovieCommentsSchema,
   type MovieIdObjectSchemaType,
   type PaginatedSearchSchemaType
 } from '../../../../schemas/movies/http';
 import { RouteTags } from '../../../../utils/constants/constants';
-import { HttpMethods, HttpStatusCodes } from '../../../../utils/constants/enums';
+import { HttpMediaTypes, HttpMethods, HttpStatusCodes } from '../../../../utils/constants/enums';
+import { addLinksToCollection } from '../../../../utils/hal-utils';
 import { genOptionsRoute } from '../../../../utils/routing-utils';
 
 const url = '';
@@ -27,7 +29,17 @@ const routes: RouteOptions[] = [
         pageSize: Math.min(comments.length, totalCount),
         totalCount
       };
-      reply.code(HttpStatusCodes.OK).send(body);
+      const isHalAccepted = request.headers.accept?.includes(HttpMediaTypes.HAL_JSON);
+
+      if (isHalAccepted !== undefined && isHalAccepted) {
+        const halBody = addLinksToCollection<typeof MovieCommentSchema>(request, body);
+        reply
+          .code(HttpStatusCodes.OK)
+          .header('Content-Type', HttpMediaTypes.HAL_JSON)
+          .send(halBody);
+      } else {
+        reply.code(HttpStatusCodes.OK).send(body);
+      }
     }
   }
 ];
