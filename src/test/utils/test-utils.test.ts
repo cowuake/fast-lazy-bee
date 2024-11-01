@@ -1,23 +1,19 @@
 import type { FastifyMongodbOptions } from '@fastify/mongodb';
 import * as fs from 'fs';
 import { TestConstants } from '../../utils/constants/constants';
-import { downloadMongoArchive } from '../../utils/testing/setup-mongo-common';
+import { downloadMongoArchive, genRandomPath } from '../../utils/testing/setup-mongo-common';
 import setupMongoTestcontainers from '../../utils/testing/setup-mongo-testcontainers';
 
 describe('downloadMongoArchive', () => {
-  beforeEach(() => {
-    if (fs.existsSync(TestConstants.mongoArchivePath)) {
-      fs.rmSync(TestConstants.mongoArchivePath);
-    }
-  });
-
   it(
     'should return the path where the archive was stored',
     async () => {
-      const path = await downloadMongoArchive();
+      const path = genRandomPath();
+      const result = await downloadMongoArchive(TestConstants.mongoArchiveUrl, path);
       expect(path).not.toBeNull();
-      const exists = fs.existsSync(path);
-      expect(exists).toBeTruthy();
+      expect(path).toEqual(result);
+      expect(fs.existsSync(result)).toBeTruthy();
+      fs.rmSync(result);
     },
     TestConstants.longTimeout
   );
@@ -25,7 +21,9 @@ describe('downloadMongoArchive', () => {
   it(
     'should fail to download the archive from a wrong URL',
     async () => {
-      await expect(downloadMongoArchive(TestConstants.impossibleUrl)).rejects.toThrow();
+      await expect(
+        downloadMongoArchive(TestConstants.impossibleUrl, genRandomPath())
+      ).rejects.toThrow();
     },
     TestConstants.longTimeout
   );
@@ -34,7 +32,7 @@ describe('downloadMongoArchive', () => {
     'should fail to download the archive to a wrong path',
     async () => {
       await expect(
-        downloadMongoArchive(TestConstants.mongoArchiveUrl, '/quack/archive')
+        downloadMongoArchive(TestConstants.mongoArchiveUrl, TestConstants.impossiblePath)
       ).rejects.toThrow();
     },
     TestConstants.longTimeout

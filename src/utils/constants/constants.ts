@@ -28,7 +28,8 @@ const TestConstants = {
   testMovie: { title: 'Test Movie', type: 'movie', year: 2024 },
   mongoArchiveUrl: 'https://atlas-education.s3.amazonaws.com/sampledata.archive',
   mongoArchivePath: path.join(os.tmpdir(), 'sampledata.archive'),
-  impossibleUrl: 'www.impossi.bru/nyan/cat?troll=lol',
+  impossibleUrl: 'hifi://www.impossi.bru/nyan/cat?troll=lol',
+  impossiblePath: '/quack/archive',
   mongoTestcontainersPort: 27028,
   longTimeout: 120000,
   v1Root: '/api/v1'
