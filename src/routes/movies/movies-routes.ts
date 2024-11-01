@@ -5,10 +5,11 @@ import {
   FetchMoviesSchema,
   type PaginatedSearchSchemaType
 } from '../../schemas/movies/http';
+import { getExpirationDate } from '../../utils/cache-utils';
 import { RouteTags } from '../../utils/constants/constants';
 import { HttpMediaTypes, HttpMethods, HttpStatusCodes } from '../../utils/constants/enums';
 import { addLinksToCollection } from '../../utils/hal-utils';
-import { genOptionsRoute } from '../../utils/routing-utils';
+import { acceptsHal, genOptionsRoute } from '../../utils/routing-utils';
 
 const url = '';
 
@@ -29,9 +30,8 @@ const routes: RouteOptions[] = [
         pageSize,
         totalCount
       };
-      const isHalAccepted = request.headers.accept?.includes(HttpMediaTypes.HAL_JSON);
 
-      if (isHalAccepted !== undefined && isHalAccepted) {
+      if (acceptsHal(request)) {
         const resourceLinks = {
           comments: { href: '{collection}/{resource}/comments' }
         };
@@ -41,7 +41,7 @@ const routes: RouteOptions[] = [
           .header('Content-Type', HttpMediaTypes.HAL_JSON)
           .send(halBody);
       } else {
-        reply.code(HttpStatusCodes.OK).send(body);
+        reply.code(HttpStatusCodes.OK).expires(getExpirationDate()).send(body);
       }
     }
   },

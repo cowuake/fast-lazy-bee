@@ -40,4 +40,16 @@ enum HttpMediaTypes {
   HAL_JSON = 'application/hal+json'
 }
 
-export { HttpMediaTypes, HttpMethods, HttpStatusCodeDescriptions, HttpStatusCodes, MediaTypes };
+enum FetchTypes {
+  Resource = 'resource',
+  Collection = 'collection'
+}
+
+export {
+  FetchTypes,
+  HttpMediaTypes,
+  HttpMethods,
+  HttpStatusCodeDescriptions,
+  HttpStatusCodes,
+  MediaTypes
+};

@@ -1,5 +1,5 @@
 import type { TObject } from '@sinclair/typebox';
-import type { RouteOptions } from 'fastify';
+import type { FastifyRequest, RouteOptions } from 'fastify';
 import { ErrorSchema } from '../schemas/errors';
 import {
   PaginatedCollectionSchema,
@@ -74,7 +74,12 @@ const genOptionsRoute = (url: string, tags: string[], allowString: string): Rout
   };
 };
 
+const acceptsHal = (request: FastifyRequest): boolean => {
+  return request.headers.accept?.includes(HttpMediaTypes.HAL_JSON) ?? false;
+};
+
 export {
+  acceptsHal,
   createEmptyResponseSchema,
   createErrorResponseSchemas,
   createResponseSchema,

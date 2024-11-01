@@ -1,8 +1,9 @@
 import Autoload, { type AutoloadPluginOptions } from '@fastify/autoload';
 import fastifyCaching, { type FastifyCachingPluginOptions } from '@fastify/caching';
+import fastifyEtag from '@fastify/etag';
 import fastify, { type FastifyInstance, type FastifyServerOptions } from 'fastify';
 
-export const buildInstance = (
+const buildInstance = (
   serverOptions: FastifyServerOptions,
   autoloadPluginsOptions: AutoloadPluginOptions[],
   cachingOptions: FastifyCachingPluginOptions
@@ -12,7 +13,11 @@ export const buildInstance = (
   for (const pluginOptions of autoloadPluginsOptions) {
     fastifyApp.register(Autoload, pluginOptions);
   }
+
   fastifyApp.register(fastifyCaching, cachingOptions);
+  fastifyApp.register(fastifyEtag);
 
   return fastifyApp;
 };
+
+export default buildInstance;
