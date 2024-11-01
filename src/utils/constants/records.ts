@@ -4,6 +4,7 @@ const HttpCodesToDescriptions: Record<HttpStatusCodes, HttpStatusCodeDescription
   [HttpStatusCodes.OK]: HttpStatusCodeDescriptions.OK,
   [HttpStatusCodes.Created]: HttpStatusCodeDescriptions.Created,
   [HttpStatusCodes.NoContent]: HttpStatusCodeDescriptions.NoContent,
+  [HttpStatusCodes.NotModified]: HttpStatusCodeDescriptions.NotModified,
   [HttpStatusCodes.BadRequest]: HttpStatusCodeDescriptions.BadRequest,
   [HttpStatusCodes.Conflict]: HttpStatusCodeDescriptions.Conflict,
   [HttpStatusCodes.NotFound]: HttpStatusCodeDescriptions.NotFound,
