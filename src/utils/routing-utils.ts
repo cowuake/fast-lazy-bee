@@ -1,5 +1,61 @@
+import type { TObject } from '@sinclair/typebox';
 import type { RouteOptions } from 'fastify';
-import { HttpMethods, HttpStatusCodes } from './constants/enums';
+import { ErrorSchema } from '../schemas/errors';
+import {
+  PaginatedCollectionSchema,
+  PaginatedCollectionWithLinksSchema,
+  ResourceWithLinksSchema
+} from '../schemas/http';
+import { HttpMediaTypes, HttpMethods, HttpStatusCodes } from './constants/enums';
+import { HttpCodesToDescriptions } from './constants/records';
+
+const createResponseSchema = (
+  statusCode: HttpStatusCodes,
+  schema: TObject,
+  collection = false
+): Partial<Record<HttpStatusCodes, TObject>> => ({
+  [statusCode]: {
+    description: HttpCodesToDescriptions[statusCode],
+    content: {
+      [HttpMediaTypes.JSON]: {
+        schema: collection ? PaginatedCollectionSchema(schema) : schema
+      },
+      [HttpMediaTypes.HAL_JSON]: {
+        schema: collection
+          ? PaginatedCollectionWithLinksSchema(schema)
+          : ResourceWithLinksSchema(schema)
+      }
+    }
+  }
+});
+
+const createEmptyResponseSchema = (
+  statusCode: HttpStatusCodes
+): Partial<Record<HttpStatusCodes, TObject>> => ({
+  [statusCode]: {
+    description: HttpCodesToDescriptions[statusCode],
+    content: null
+  }
+});
+
+const createErrorResponseSchemas = (
+  statusCodes: HttpStatusCodes[]
+): Partial<Record<HttpStatusCodes, TObject>> => ({
+  ...statusCodes.reduce(
+    (acc, statusCode) => ({
+      ...acc,
+      [statusCode]: {
+        description: HttpCodesToDescriptions[statusCode],
+        content: {
+          [HttpMediaTypes.JSON]: {
+            schema: ErrorSchema
+          }
+        }
+      }
+    }),
+    {}
+  )
+});
 
 const genOptionsRoute = (url: string, tags: string[], allowString: string): RouteOptions => {
   return {
@@ -8,9 +64,7 @@ const genOptionsRoute = (url: string, tags: string[], allowString: string): Rout
     schema: {
       tags,
       response: {
-        [HttpStatusCodes.NoContent]: {
-          description: 'No Content'
-        }
+        ...createEmptyResponseSchema(HttpStatusCodes.NoContent)
       }
     },
     handler: async function options(_, reply) {
@@ -20,4 +74,9 @@ const genOptionsRoute = (url: string, tags: string[], allowString: string): Rout
   };
 };
 
-export { genOptionsRoute };
+export {
+  createEmptyResponseSchema,
+  createErrorResponseSchemas,
+  createResponseSchema,
+  genOptionsRoute
+};

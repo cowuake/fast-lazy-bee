@@ -2,8 +2,11 @@ import { type Static, Type } from '@sinclair/typebox';
 import type { FastifySchema } from 'fastify';
 import { RouteTags } from '../../utils/constants/constants';
 import { HttpMediaTypes, HttpStatusCodes } from '../../utils/constants/enums';
-import { createResponseSchema } from '../../utils/schema-utils';
-import { ErrorSchema } from '../errors';
+import {
+  createEmptyResponseSchema,
+  createErrorResponseSchemas,
+  createResponseSchema
+} from '../../utils/routing-utils';
 import {
   FilterStringSchema,
   NoContentSchema,
@@ -51,8 +54,8 @@ const FetchMoviesSchema: FastifySchema = {
   querystring: PaginatedSearchSchema,
   response: {
     ...createResponseSchema(HttpStatusCodes.OK, ResourceSchema(MovieSchema), true),
-    ...createResponseSchema(HttpStatusCodes.BadRequest, ErrorSchema),
-    ...createResponseSchema(HttpStatusCodes.InternalServerError, ErrorSchema)
+    ...createEmptyResponseSchema(HttpStatusCodes.NotModified),
+    ...createErrorResponseSchemas([HttpStatusCodes.BadRequest, HttpStatusCodes.InternalServerError])
   }
 };
 
@@ -61,9 +64,11 @@ const CreateMovieSchema: FastifySchema = {
   body: MovieSchema,
   response: {
     ...createResponseSchema(HttpStatusCodes.Created, IdObjectSchema),
-    ...createResponseSchema(HttpStatusCodes.BadRequest, ErrorSchema),
-    ...createResponseSchema(HttpStatusCodes.Conflict, ErrorSchema),
-    ...createResponseSchema(HttpStatusCodes.InternalServerError, ErrorSchema)
+    ...createErrorResponseSchemas([
+      HttpStatusCodes.BadRequest,
+      HttpStatusCodes.Conflict,
+      HttpStatusCodes.InternalServerError
+    ])
   }
 };
 
@@ -72,9 +77,11 @@ const FetchMovieSchema: FastifySchema = {
   params: MovieIdObjectSchema,
   response: {
     ...createResponseSchema(HttpStatusCodes.OK, ResourceSchema(MovieSchema)),
-    ...createResponseSchema(HttpStatusCodes.BadRequest, ErrorSchema),
-    ...createResponseSchema(HttpStatusCodes.NotFound, ErrorSchema),
-    ...createResponseSchema(HttpStatusCodes.InternalServerError, ErrorSchema)
+    ...createErrorResponseSchemas([
+      HttpStatusCodes.BadRequest,
+      HttpStatusCodes.NotFound,
+      HttpStatusCodes.InternalServerError
+    ])
   }
 };
 
@@ -84,9 +91,11 @@ const FetchMovieCommentsSchema: FastifySchema = {
   querystring: PaginatedSearchSchema,
   response: {
     ...createResponseSchema(HttpStatusCodes.OK, ResourceSchema(MovieCommentSchema), true),
-    ...createResponseSchema(HttpStatusCodes.BadRequest, ErrorSchema),
-    ...createResponseSchema(HttpStatusCodes.NotFound, ErrorSchema),
-    ...createResponseSchema(HttpStatusCodes.InternalServerError, ErrorSchema)
+    ...createErrorResponseSchemas([
+      HttpStatusCodes.BadRequest,
+      HttpStatusCodes.NotFound,
+      HttpStatusCodes.InternalServerError
+    ])
   }
 };
 
@@ -96,9 +105,11 @@ const ReplaceMovieSchema: FastifySchema = {
   body: MovieSchema,
   response: {
     ...createResponseSchema(HttpStatusCodes.NoContent, NoContentSchema),
-    ...createResponseSchema(HttpStatusCodes.BadRequest, ErrorSchema),
-    ...createResponseSchema(HttpStatusCodes.NotFound, ErrorSchema),
-    ...createResponseSchema(HttpStatusCodes.InternalServerError, ErrorSchema)
+    ...createErrorResponseSchemas([
+      HttpStatusCodes.BadRequest,
+      HttpStatusCodes.NotFound,
+      HttpStatusCodes.InternalServerError
+    ])
   }
 };
 
@@ -107,10 +118,12 @@ const UpdateMovieSchema: FastifySchema = {
   params: MovieIdObjectSchema,
   body: PartialMovieSchema,
   response: {
-    ...createResponseSchema(HttpStatusCodes.NoContent, NoContentSchema),
-    ...createResponseSchema(HttpStatusCodes.BadRequest, ErrorSchema),
-    ...createResponseSchema(HttpStatusCodes.NotFound, ErrorSchema),
-    ...createResponseSchema(HttpStatusCodes.InternalServerError, ErrorSchema)
+    ...createEmptyResponseSchema(HttpStatusCodes.NoContent),
+    ...createErrorResponseSchemas([
+      HttpStatusCodes.BadRequest,
+      HttpStatusCodes.NotFound,
+      HttpStatusCodes.InternalServerError
+    ])
   }
 };
 
@@ -118,10 +131,12 @@ const DeleteMovieSchema: FastifySchema = {
   tags: [RouteTags.movie],
   params: MovieIdObjectSchema,
   response: {
-    ...createResponseSchema(HttpStatusCodes.NoContent, NoContentSchema),
-    ...createResponseSchema(HttpStatusCodes.BadRequest, ErrorSchema),
-    ...createResponseSchema(HttpStatusCodes.NotFound, ErrorSchema),
-    ...createResponseSchema(HttpStatusCodes.InternalServerError, ErrorSchema)
+    ...createEmptyResponseSchema(HttpStatusCodes.NoContent),
+    ...createErrorResponseSchemas([
+      HttpStatusCodes.BadRequest,
+      HttpStatusCodes.NotFound,
+      HttpStatusCodes.InternalServerError
+    ])
   }
 };
 
