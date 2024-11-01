@@ -1,7 +1,30 @@
-import type { FastifyInstance } from 'fastify';
-import { TestConstants } from '../../utils/constants/constants';
-import { HttpMediaTypes, HttpMethods, HttpStatusCodes } from '../../utils/constants/enums';
+import type { FastifyInstance, InjectOptions } from 'fastify';
+import type { Response as InjectReponse } from 'light-my-request';
+import { AppConfigDefaults, TestConstants } from '../../utils/constants/constants';
+import {
+  FetchTypes,
+  HttpMediaTypes,
+  HttpMethods,
+  HttpStatusCodes
+} from '../../utils/constants/enums';
+import { waitFor } from '../../utils/test-utils';
 import buildTestInstance from '../../utils/testing/build-test-instance';
+
+const expectHalResponse = (response: InjectReponse, type: FetchTypes): void => {
+  expect(response.statusCode).toBe(HttpStatusCodes.OK);
+  expect(response.headers).toHaveProperty('content-type');
+  expect(response.headers['content-type']).toMatch(HttpMediaTypes.HAL_JSON.valueOf());
+  expect(response.json()).toHaveProperty(type === FetchTypes.Collection ? 'data' : '_id');
+  expect(response.json()).toHaveProperty('_links');
+};
+
+const expectCachedResponse = (response: InjectReponse): void => {
+  expect(response.headers.age).toBeDefined();
+};
+
+const expectNotCachedResponse = (response: InjectReponse): void => {
+  expect(response.headers.age).toBeUndefined();
+};
 
 describe('API', () => {
   const fastifyInstance: FastifyInstance = buildTestInstance();
@@ -23,18 +46,14 @@ describe('API', () => {
       expect(fastifyInstance.hasRoute({ method: HttpMethods.OPTIONS, url })).toBeTruthy();
     });
 
-    expect(
-      fastifyInstance.hasRoute({ method: HttpMethods.POST, url: moviesEndpoint })
-    ).toBeTruthy();
-    expect(
-      fastifyInstance.hasRoute({ method: HttpMethods.PUT, url: movieIdEndpoint })
-    ).toBeTruthy();
-    expect(
-      fastifyInstance.hasRoute({ method: HttpMethods.PATCH, url: movieIdEndpoint })
-    ).toBeTruthy();
-    expect(
-      fastifyInstance.hasRoute({ method: HttpMethods.DELETE, url: movieIdEndpoint })
-    ).toBeTruthy();
+    [
+      { method: HttpMethods.POST, url: moviesEndpoint },
+      { method: HttpMethods.PUT, url: movieIdEndpoint },
+      { method: HttpMethods.PATCH, url: movieIdEndpoint },
+      { method: HttpMethods.DELETE, url: movieIdEndpoint }
+    ].forEach((route) => {
+      expect(fastifyInstance.hasRoute(route)).toBeTruthy();
+    });
   });
 
   it('should return the available HTTP methods', async () => {
@@ -62,7 +81,79 @@ describe('API', () => {
       url: `${moviesEndpoint}?${pagination}`,
       headers: { accept: HttpMediaTypes.HAL_JSON }
     });
-    expect(response.statusCode).toBe(HttpStatusCodes.OK);
+    expectHalResponse(response, FetchTypes.Collection);
+  });
+
+  it('should fetch movies with caching', async () => {
+    const options: InjectOptions = {
+      method: HttpMethods.GET,
+      url: `${moviesEndpoint}?${pagination}`,
+      headers: { 'cache-control': 'max-age=3600' }
+    };
+
+    const firstResponse = await fastifyInstance.inject({
+      ...options,
+      headers: { ...options.headers, 'cache-control': 'no-cache' }
+    });
+    const secondResponse = await fastifyInstance.inject(options);
+
+    expectNotCachedResponse(firstResponse);
+    expectCachedResponse(secondResponse);
+  });
+
+  it('should respect the request cache-control max-age', async () => {
+    const maxAge = 1;
+    const options: InjectOptions = {
+      method: HttpMethods.GET,
+      url: `${moviesEndpoint}?${pagination}`,
+      headers: { 'cache-control': `max-age=${maxAge}` }
+    };
+
+    expect(maxAge).toBeLessThan(AppConfigDefaults.cacheExpiration_s);
+
+    await waitFor(maxAge + 1);
+    const firstResponse = await fastifyInstance.inject(options);
+    await waitFor(maxAge + 1);
+    const secondResponse = await fastifyInstance.inject(options);
+
+    expectNotCachedResponse(firstResponse);
+    expectNotCachedResponse(secondResponse);
+  });
+
+  it('should fetch movies with HAL with caching', async () => {
+    const options: InjectOptions = {
+      method: HttpMethods.GET,
+      url: `${moviesEndpoint}?${pagination}`,
+      headers: { accept: HttpMediaTypes.HAL_JSON, 'cache-control': 'max-age=3600' }
+    };
+
+    const firstResponse = await fastifyInstance.inject({
+      ...options,
+      headers: { ...options.headers, 'cache-control': 'no-cache' }
+    });
+    const secondResponse = await fastifyInstance.inject(options);
+
+    expectHalResponse(firstResponse, FetchTypes.Collection);
+    expectHalResponse(secondResponse, FetchTypes.Collection);
+    expectNotCachedResponse(firstResponse);
+    expectCachedResponse(secondResponse);
+  });
+
+  it('should fetch movies and return a 304 if the request is fresh', async () => {
+    const options: InjectOptions = {
+      method: HttpMethods.GET,
+      url: `${moviesEndpoint}?${pagination}`
+    };
+
+    const firstResponse = await fastifyInstance.inject(options);
+    const eTag = firstResponse.headers.etag;
+    const secondResponse = await fastifyInstance.inject({
+      ...options,
+      headers: { ...options.headers, 'if-none-match': eTag }
+    });
+
+    expect(firstResponse.statusCode).toBe(HttpStatusCodes.OK);
+    expect(secondResponse.statusCode).toBe(HttpStatusCodes.NotModified);
   });
 
   it('should filter movies by title', async () => {
@@ -129,7 +220,7 @@ describe('API', () => {
       url: `${moviesEndpoint}/${testMovieId}`,
       headers: { accept: HttpMediaTypes.HAL_JSON }
     });
-    expect(response.statusCode).toBe(HttpStatusCodes.OK);
+    expectHalResponse(response, FetchTypes.Resource);
   });
 
   it(`should return a ${HttpStatusCodes.NotFound} when fetching a non-existent movie`, async () => {
@@ -210,6 +301,6 @@ describe('API', () => {
       url: `${moviesEndpoint}/${testMovieId}/comments?${pagination}`,
       headers: { accept: HttpMediaTypes.HAL_JSON }
     });
-    expect(response.statusCode).toBe(HttpStatusCodes.OK);
+    expectHalResponse(response, FetchTypes.Collection);
   });
 });

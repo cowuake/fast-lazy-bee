@@ -8,7 +8,7 @@ import {
 import { RouteTags } from '../../../../utils/constants/constants';
 import { HttpMediaTypes, HttpMethods, HttpStatusCodes } from '../../../../utils/constants/enums';
 import { addLinksToCollection } from '../../../../utils/hal-utils';
-import { genOptionsRoute } from '../../../../utils/routing-utils';
+import { acceptsHal, genOptionsRoute } from '../../../../utils/routing-utils';
 
 const url = '';
 
@@ -29,9 +29,8 @@ const routes: RouteOptions[] = [
         pageSize: Math.min(comments.length, totalCount),
         totalCount
       };
-      const isHalAccepted = request.headers.accept?.includes(HttpMediaTypes.HAL_JSON);
 
-      if (isHalAccepted !== undefined && isHalAccepted) {
+      if (acceptsHal(request)) {
         const halBody = addLinksToCollection<typeof MovieCommentSchema>(request, body);
         reply
           .code(HttpStatusCodes.OK)

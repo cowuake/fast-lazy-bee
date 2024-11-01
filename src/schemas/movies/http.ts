@@ -9,7 +9,6 @@ import {
 } from '../../utils/routing-utils';
 import {
   FilterStringSchema,
-  NoContentSchema,
   PaginationParamsSchema,
   ResourceSchema,
   SortStringSchema
@@ -77,6 +76,7 @@ const FetchMovieSchema: FastifySchema = {
   params: MovieIdObjectSchema,
   response: {
     ...createResponseSchema(HttpStatusCodes.OK, ResourceSchema(MovieSchema)),
+    ...createEmptyResponseSchema(HttpStatusCodes.NotModified),
     ...createErrorResponseSchemas([
       HttpStatusCodes.BadRequest,
       HttpStatusCodes.NotFound,
@@ -91,6 +91,7 @@ const FetchMovieCommentsSchema: FastifySchema = {
   querystring: PaginatedSearchSchema,
   response: {
     ...createResponseSchema(HttpStatusCodes.OK, ResourceSchema(MovieCommentSchema), true),
+    ...createEmptyResponseSchema(HttpStatusCodes.NotModified),
     ...createErrorResponseSchemas([
       HttpStatusCodes.BadRequest,
       HttpStatusCodes.NotFound,
@@ -104,7 +105,7 @@ const ReplaceMovieSchema: FastifySchema = {
   params: MovieIdObjectSchema,
   body: MovieSchema,
   response: {
-    ...createResponseSchema(HttpStatusCodes.NoContent, NoContentSchema),
+    ...createEmptyResponseSchema(HttpStatusCodes.NoContent),
     ...createErrorResponseSchemas([
       HttpStatusCodes.BadRequest,
       HttpStatusCodes.NotFound,

@@ -3,8 +3,6 @@ import { PaginationConstants } from '../utils/constants/constants';
 import { NaturalNumberSchema } from './data';
 import { IdSchema, KeySchema } from './movies/data';
 
-const NoContentSchema = Type.Object({});
-
 const ResourceSchema = <TData extends TObject>(dataSchema: TData): TObject =>
   Type.Object({ _id: IdSchema, ...dataSchema.properties });
 
@@ -94,7 +92,6 @@ type ResourceSchemaType<T extends TObject> = Static<ReturnType<typeof ResourceSc
 export {
   CollectionWithLinksSchema,
   FilterStringSchema,
-  NoContentSchema,
   PaginatedCollectionSchema,
   PaginatedCollectionWithLinksSchema,
   PaginationParamsSchema,

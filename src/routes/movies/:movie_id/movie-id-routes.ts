@@ -10,7 +10,7 @@ import {
 import { RouteTags } from '../../../utils/constants/constants';
 import { HttpMediaTypes, HttpMethods, HttpStatusCodes } from '../../../utils/constants/enums';
 import { addLinksToResource } from '../../../utils/hal-utils';
-import { genOptionsRoute } from '../../../utils/routing-utils';
+import { acceptsHal, genOptionsRoute } from '../../../utils/routing-utils';
 
 const url = '';
 
@@ -22,9 +22,8 @@ const routes: RouteOptions[] = [
     handler: async function fetchMovie(request, reply) {
       const params = request.params as MovieIdObjectSchemaType;
       const movie = await this.dataStore.fetchMovie(params.movie_id);
-      const acceptsHal = request.headers.accept?.includes(HttpMediaTypes.HAL_JSON);
 
-      if (acceptsHal !== undefined && acceptsHal) {
+      if (acceptsHal(request)) {
         const halMovie = addLinksToResource<typeof MovieSchema>(request, movie);
         reply
           .code(HttpStatusCodes.OK)

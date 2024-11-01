@@ -8,7 +8,7 @@ const AppConfigDefaults = {
   mongoPort: 27027,
   mongoDbName: 'sample_mflix',
   mongoUrl: 'mongodb://localhost:27027/sample_mflix',
-  cacheExpiration: 10000
+  cacheExpiration_s: 10
 } as const;
 
 const PaginationConstants = {
@@ -31,7 +31,7 @@ const TestConstants = {
   impossibleUrl: 'hifi://www.impossi.bru/nyan/cat?troll=lol',
   impossiblePath: '/quack/archive',
   mongoTestcontainersPort: 27028,
-  longTimeout: 120000,
+  longTimeout: 600000,
   v1Root: '/api/v1'
 } as const;
 
