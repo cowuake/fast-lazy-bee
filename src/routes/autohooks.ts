@@ -6,10 +6,10 @@ import {
   MovieSchema,
   type MovieCommentSchemaType,
   type MovieSchemaType
-} from '../../schemas/movies/data';
-import type { PaginatedSearchSchemaType } from '../../schemas/movies/http';
-import { HttpStatusCodes } from '../../utils/constants/enums';
-import { getMongoFilter, getMongoSort } from '../../utils/mongo-collection-utils';
+} from '../schemas/movies/data';
+import type { PaginatedSearchSchemaType } from '../schemas/movies/http';
+import { HttpStatusCodes } from '../utils/constants/enums';
+import { getMongoFilter, getMongoSort } from '../utils/mongo-collection-utils';
 
 const genNotFoundError = (id: string): FastifyError => ({
   statusCode: HttpStatusCodes.NotFound,
