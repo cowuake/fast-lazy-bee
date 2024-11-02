@@ -6,10 +6,10 @@ import {
   MovieSchema,
   type MovieCommentSchemaType,
   type MovieSchemaType
-} from '../../schemas/movies/data';
-import type { PaginatedSearchSchemaType } from '../../schemas/movies/http';
-import { HttpStatusCodes } from '../../utils/constants/enums';
-import { getMongoFilter, getMongoSort } from '../../utils/mongo-collection-utils';
+} from '../schemas/movies/data';
+import type { PaginatedSearchSchemaType } from '../schemas/movies/http';
+import { HttpStatusCodes } from '../utils/constants/enums';
+import { getMongoFilter, getMongoSort } from '../utils/mongo-collection-utils';
 
 const genNotFoundError = (id: string): FastifyError => ({
   statusCode: HttpStatusCodes.NotFound,
@@ -63,8 +63,7 @@ const autoHooks = fp(
           .find(condition, { limit: searchParams.pageSize, skip })
           .sort(sort)
           .toArray();
-        const output = docs.map((doc) => ({ ...doc, _id: doc._id.toString() }));
-        return output;
+        return docs;
       },
       async fetchMovieComments(movieId, searchParams) {
         const skip = (searchParams.page - 1) * searchParams.pageSize;
@@ -77,8 +76,7 @@ const autoHooks = fp(
           )
           .sort(sort)
           .toArray();
-        const output = docs.map((doc) => ({ ...doc, id: doc._id.toString() }));
-        return output;
+        return docs;
       },
       async createMovie(movie) {
         const matchingMovie = await movies.findOne({ title: movie.title, year: movie.year });
@@ -100,8 +98,7 @@ const autoHooks = fp(
         if (movie === null) {
           throw genNotFoundError(id);
         }
-        const output = { ...movie, _id: id };
-        return output;
+        return movie;
       },
       async replaceMovie(id, replacement) {
         const updated = await movies.updateOne(
