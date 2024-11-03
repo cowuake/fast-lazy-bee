@@ -11,7 +11,7 @@ Two different options are available for running Fast Lazy Bee in your local mach
 
 > N.B.: Regardless of the local run strategy you choose, you must be sure the Docker Engine is running before launching Fast Lazy Bee.
 
-### Common requirements
+### Requirements
 
 | Tool                           | Version        | Required by                                         |
 | ------------------------------ | -------------- | --------------------------------------------------- |
