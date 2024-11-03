@@ -4,6 +4,8 @@ import type { MovieCommentSchemaType, MovieSchemaType } from '../schemas/movies/
 import type { PaginatedSearchSchemaType, ResourceSchemaType } from '../schemas/movies/http';
 
 interface DataStore {
+  checkUser: (email: string, password: string) => Promise<ResourceSchemaType<UserSchemaType>>;
+  registerUser: (user: UserSchemaType) => Promise<void>;
   countMovies: (searchParams: PaginatedSearchSchemaType) => Promise<number>;
   countMovieComments: (movieId: string, searchParams: PaginatedSearchSchemaType) => Promise<number>;
   fetchMovies: (searchParams: PaginatedSearchSchemaType) => Promise<MovieSchemaType[]>;
@@ -13,6 +15,7 @@ interface DataStore {
   ) => Promise<Array<ResourceSchemaType<MovieCommentSchemaType>>>;
   fetchMovie: (id: string) => Promise<ResourceSchemaType<MovieSchemaType>>;
   createMovie: (movie: MovieSchemaType) => Promise<string>;
+  createMovieComment: (comment: MovieCommentSchemaType) => Promise<void>;
   replaceMovie: (id: string, replacement: MovieSchemaType) => Promise<void>;
   updateMovie: (id: string, update: MovieSchemaType) => Promise<void>;
   deleteMovie: (id: string) => Promise<void>;

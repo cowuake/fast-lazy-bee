@@ -1,5 +1,5 @@
 import type { TObject } from '@sinclair/typebox';
-import type { FastifyRequest, RouteOptions } from 'fastify';
+import type { FastifyError, FastifyRequest, RouteOptions } from 'fastify';
 import { ErrorSchema } from '../schemas/errors';
 import {
   PaginatedCollectionSchema,
@@ -78,10 +78,37 @@ const acceptsHal = (request: FastifyRequest): boolean => {
   return request.headers.accept?.includes(HttpMediaTypes.HAL_JSON) ?? false;
 };
 
+const genNotFoundError = (resourceType: string, id: string): FastifyError => ({
+  statusCode: HttpStatusCodes.NotFound,
+  message: `Could not find ${resourceType} corresponding to ${id}`,
+  name: `${resourceType} not found`,
+  code: 'ERR_NOT_FOUND'
+});
+
+const genConflictError = (
+  resourceType: string,
+  fieldsAndValues: Record<string, string>
+): FastifyError => ({
+  statusCode: HttpStatusCodes.Conflict,
+  message: `${resourceType} with ${JSON.stringify(fieldsAndValues)} already exists`,
+  name: `${resourceType} already exists`,
+  code: 'ERR_CONFLICT'
+});
+
+const genUnauthorizedError = (): FastifyError => ({
+  statusCode: HttpStatusCodes.Unauthorized,
+  message: 'Unauthorized',
+  name: 'Unauthorized',
+  code: 'ERR_UNAUTHORIZED'
+});
+
 export {
   acceptsHal,
   createEmptyResponseSchema,
   createErrorResponseSchemas,
   createResponseSchema,
-  genOptionsRoute
+  genConflictError,
+  genNotFoundError,
+  genOptionsRoute,
+  genUnauthorizedError
 };

@@ -1,6 +1,6 @@
 import type { FastifyRequest, RouteOptions } from 'fastify';
-import { AppConfigDefaults, RouteTags } from './constants/constants';
-import { HttpMediaTypes } from './constants/enums';
+import { AppConfigDefaults } from './constants/constants';
+import { HttpMediaTypes, RouteTags } from './constants/enums';
 
 const genCacheKey = (request: FastifyRequest): string => {
   const accept = request.headers.accept ?? HttpMediaTypes.JSON;
@@ -20,7 +20,7 @@ const isCacheable = (request: FastifyRequest): boolean => {
   if (routeOptions.schema?.tags == null) {
     return false;
   }
-  return routeOptions.schema.tags.includes(RouteTags.cache);
+  return routeOptions.schema.tags.includes(RouteTags.Cache);
 };
 
 export { genCacheKey, getExpirationDate, isCacheable };

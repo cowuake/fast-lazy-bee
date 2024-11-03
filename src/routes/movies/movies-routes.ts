@@ -6,8 +6,12 @@ import {
   type PaginatedSearchSchemaType
 } from '../../schemas/movies/http';
 import { getExpirationDate } from '../../utils/cache-utils';
-import { RouteTags } from '../../utils/constants/constants';
-import { HttpMediaTypes, HttpMethods, HttpStatusCodes } from '../../utils/constants/enums';
+import {
+  HttpMediaTypes,
+  HttpMethods,
+  HttpStatusCodes,
+  RouteTags
+} from '../../utils/constants/enums';
 import { addLinksToCollection } from '../../utils/hal-utils';
 import { acceptsHal, genOptionsRoute } from '../../utils/routing-utils';
 
@@ -52,7 +56,10 @@ const routes: RouteOptions[] = [
     handler: async function createMovie(request, reply) {
       const body = request.body as MovieSchemaType;
       const insertedId = await this.dataStore.createMovie(body);
-      reply.code(HttpStatusCodes.Created).send({ id: insertedId });
+      reply
+        .headers({ location: insertedId })
+        .code(HttpStatusCodes.Created)
+        .send({ _id: insertedId });
     }
   }
 ];
@@ -60,7 +67,7 @@ const routes: RouteOptions[] = [
 const baseMovieRoutes = async (fastify: FastifyInstance): Promise<void> => {
   const methods = routes.map((route) => route.method);
   const allowString = [HttpMethods.OPTIONS, ...methods].join(', ');
-  const optionsRoute: RouteOptions = genOptionsRoute(url, [RouteTags.movies], allowString);
+  const optionsRoute: RouteOptions = genOptionsRoute(url, [RouteTags.Movies], allowString);
 
   [optionsRoute, ...routes].forEach((route) => {
     fastify.route(route);

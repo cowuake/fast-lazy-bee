@@ -1,13 +1,12 @@
 import type { FastifyInstance, RouteOptions } from 'fastify';
-import { RouteTags } from '../../utils/constants/constants';
-import { HttpMethods, HttpStatusCodes } from '../../utils/constants/enums';
+import { HttpMethods, HttpStatusCodes, RouteTags } from '../../utils/constants/enums';
 
 const routes: RouteOptions[] = [
   {
     method: [HttpMethods.GET, HttpMethods.HEAD],
     url: '',
     schema: {
-      tags: [RouteTags.diagnostics],
+      tags: [RouteTags.Diagnostics],
       response: {
         [HttpStatusCodes.OK]: {
           type: 'string'
