@@ -1,8 +1,8 @@
 import { ObjectId } from '@fastify/mongodb';
 import type { FastifyInstance } from 'fastify';
 import buildInstance from '../../app';
-import autoloadOptions from '../../options/autoload-options';
-import { serverOptions } from '../../options/server-options';
+import autoloadOptions from '../../swappable-options/autoload-options';
+import { serverOptions } from '../../swappable-options/server-options';
 import { TestConstants } from '../constants/constants';
 
 function buildTestInstance(): FastifyInstance {

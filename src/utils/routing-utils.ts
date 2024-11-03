@@ -7,7 +7,7 @@ import {
   PaginatedCollectionWithLinksSchema,
   ResourceWithLinksSchema
 } from '../schemas/http';
-import { HttpMediaTypes, HttpMethods, HttpStatusCodes } from './constants/enums';
+import { HttpMediaTypes, HttpMethods, HttpStatusCodes, RouteTags } from './constants/enums';
 import { HttpCodesToDescriptions } from './constants/records';
 
 const createJsonResponseSchema = (
@@ -80,7 +80,7 @@ const genOptionsRoute = (url: string, allowString: string): RouteOptions => ({
   url,
   schema: {
     summary: 'Get all allowed methods for the endpoint',
-    tags: ['OPTIONS'],
+    tags: [RouteTags.OPTIONS],
     response: {
       ...createEmptyResponseSchema(HttpStatusCodes.NoContent)
     }

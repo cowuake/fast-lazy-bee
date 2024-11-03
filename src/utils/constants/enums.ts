@@ -20,18 +20,6 @@ enum HttpStatusCodes {
   InternalServerError = 500
 }
 
-enum HttpStatusCodeDescriptions {
-  OK = 'Success (OK)',
-  Created = 'Success (Created)',
-  NoContent = 'Client Error (No Content)',
-  NotModified = 'Redirection (Not Modified)',
-  BadRequest = 'Client Error (Bad Request)',
-  Unauthorized = 'Client Error (Unauthorized)',
-  NotFound = 'Client Error (Not Found)',
-  Conflict = 'Client Error (Conflict)',
-  InternalServerError = 'Server Error (Internal Server Error)'
-}
-
 enum MediaTypes {
   Movie = 'movie',
   Series = 'series'
@@ -59,21 +47,20 @@ enum SecuritySchemes {
 }
 
 enum RouteTags {
-  Auth = 'User registration/authentication/authorization',
+  Auth = 'User Registration/Authentication/Authorization',
   Cache = 'Cacheable Operations',
-  Comment = 'Movie Comment Resources',
   Comments = 'Movie Comment Collection',
   Diagnostics = 'Diagnostics',
   Movie = 'Movie Resources',
   Movies = 'Movie Collection',
-  Users = 'User Collection'
+  Users = 'User Collection',
+  OPTIONS = 'OPTIONS'
 }
 
 export {
   FetchTypes,
   HttpMediaTypes,
   HttpMethods,
-  HttpStatusCodeDescriptions,
   HttpStatusCodes,
   MediaTypes,
   ResourceTypes,

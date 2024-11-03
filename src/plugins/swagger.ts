@@ -3,24 +3,31 @@ import fastifySwaggerUi, { type FastifySwaggerUiOptions } from '@fastify/swagger
 import type { FastifyInstance } from 'fastify';
 import fp from 'fastify-plugin';
 import pkg from '../../package.json';
-import { RouteTags, SecuritySchemes } from '../utils/constants/enums';
+import { SecuritySchemes } from '../utils/constants/enums';
+import { RouteTagsToDescriptions } from '../utils/constants/records';
 
 const swaggerOptions: FastifyDynamicSwaggerOptions = {
   mode: 'dynamic',
   openapi: {
     info: {
       title: 'FastLazyBee API',
-      description: 'A sample API built with Fastify and TypeScript using MongoDB',
-      version: pkg.version
+      summary: 'A toy RESTful Web API built with Fastify and TypeScript ',
+      description: 'A toy RESTful Web API built with Fastify and TypeScript ',
+      version: pkg.version,
+      license: {
+        identifier: 'MIT',
+        name: 'MIT License',
+        url: 'https://opensource.org/licenses/MIT'
+      }
     },
-    tags: [
-      { name: RouteTags.Diagnostics, description: '' },
-      { name: RouteTags.Auth, description: '' },
-      { name: RouteTags.Movies, description: '' },
-      { name: RouteTags.Movie, description: '' },
-      { name: RouteTags.Comments, description: '' },
-      { name: RouteTags.Cache, description: '' }
-    ],
+    externalDocs: {
+      url: 'https://github.com/cowuake/fast-lazy-bee',
+      description: 'Find more info here (GitHub repository)'
+    },
+    tags: Object.entries(RouteTagsToDescriptions).map(([name, description]) => ({
+      name,
+      description
+    })),
     components: {
       securitySchemes: {
         [SecuritySchemes.BearerAuth]: {

@@ -1,8 +1,8 @@
 import type { FastifyInstance } from 'fastify';
 import buildInstance from './app';
-import autoloadOptions from './options/autoload-options';
-import { cacheOptions } from './options/cache-options';
-import { serverOptions } from './options/server-options';
+import autoloadOptions from './swappable-options/autoload-options';
+import { cacheOptions } from './swappable-options/cache-options';
+import { serverOptions } from './swappable-options/server-options';
 
 const fastifyApp: FastifyInstance = buildInstance(serverOptions, autoloadOptions, cacheOptions);
 

@@ -1,6 +1,6 @@
 import { type Static, Type } from '@sinclair/typebox';
 import type { FastifySchema } from 'fastify';
-import { HttpMediaTypes, HttpStatusCodes, SecuritySchemes } from '../../utils/constants/enums';
+import { HttpStatusCodes, SecuritySchemes } from '../../utils/constants/enums';
 import {
   createEmptyResponseSchema,
   createErrorResponseSchemas,
@@ -49,7 +49,6 @@ const MovieIdObjectSchema = Type.Object({
 
 const FetchMoviesSchema: FastifySchema = {
   summary: 'Fetch movies with pagination, filtering, and sorting',
-  produces: [HttpMediaTypes.JSON, HttpMediaTypes.HAL_JSON],
   querystring: PaginatedSearchSchema,
   response: {
     ...createJsonResponseSchema(HttpStatusCodes.OK, ResourceSchema(MovieSchema), true),
@@ -74,7 +73,7 @@ const CreateMovieSchema: FastifySchema = {
 };
 
 const FetchMovieSchema: FastifySchema = {
-  summary: 'Fetch a single movie by ID',
+  summary: 'Fetch a single movie from the ID location',
   params: MovieIdObjectSchema,
   response: {
     ...createJsonResponseSchema(HttpStatusCodes.OK, ResourceSchema(MovieSchema)),
@@ -119,7 +118,7 @@ const CreateMovieCommentSchema: FastifySchema = {
 };
 
 const ReplaceMovieSchema: FastifySchema = {
-  summary: 'Update a movie by ID with a new movie representation',
+  summary: 'Replace movie at the ID location with a new movie representation',
   params: MovieIdObjectSchema,
   body: MovieSchema,
   security: [{ [SecuritySchemes.BearerAuth]: [] }],
@@ -135,7 +134,7 @@ const ReplaceMovieSchema: FastifySchema = {
 };
 
 const UpdateMovieSchema: FastifySchema = {
-  summary: 'Update a movie by ID with a partial movie representation',
+  summary: 'Update movie at the ID location with a partial movie representation',
   params: MovieIdObjectSchema,
   body: PartialMovieSchema,
   security: [{ [SecuritySchemes.BearerAuth]: [] }],
@@ -151,7 +150,7 @@ const UpdateMovieSchema: FastifySchema = {
 };
 
 const DeleteMovieSchema: FastifySchema = {
-  summary: 'Delete a movie by ID',
+  summary: 'Delete movie at the ID location',
   params: MovieIdObjectSchema,
   security: [{ [SecuritySchemes.BearerAuth]: [] }],
   response: {
