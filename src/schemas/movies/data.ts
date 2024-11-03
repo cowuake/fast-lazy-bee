@@ -125,6 +125,10 @@ const MovieSchema = Type.Object({
 
 const PartialMovieSchema = Type.Partial(MovieSchema);
 
+const MovieCommentInputSchema = Type.Object({
+  text: StringSchema
+});
+
 const MovieCommentSchema = Type.Partial(
   Type.Object({
     name: {
@@ -134,8 +138,8 @@ const MovieCommentSchema = Type.Partial(
     },
     email: EmailSchema,
     movie_id: MovieIdSchema,
-    text: StringSchema,
-    date: DateSchema
+    date: DateSchema,
+    ...MovieCommentInputSchema.properties
   })
 );
 
@@ -146,17 +150,20 @@ const MovieCommentWithIdSchema = Type.Object({
 
 type MovieSchemaType = Static<typeof MovieSchema>;
 type MovieCommentSchemaType = Static<typeof MovieCommentSchema>;
+type MovieCommentInputSchemaType = Static<typeof MovieCommentInputSchema>;
 
 export {
   IdSchema,
   KeySchema,
   MovieCommentIdSchema,
+  MovieCommentInputSchema,
   MovieCommentSchema,
   MovieCommentWithIdSchema,
   MovieIdSchema,
   MovieSchema,
   MovieYearSchema,
   PartialMovieSchema,
+  type MovieCommentInputSchemaType,
   type MovieCommentSchemaType,
   type MovieSchemaType
 };

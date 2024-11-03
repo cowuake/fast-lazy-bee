@@ -1,6 +1,7 @@
-import type { FastifyError, FastifyInstance } from 'fastify';
+import type { FastifyInstance } from 'fastify';
 import fp from 'fastify-plugin';
 import type { Collection, Db, Sort } from 'mongodb';
+import type { UserSchemaType } from '../schemas/auth/data';
 import {
   MovieCommentSchema,
   MovieSchema,
@@ -8,22 +9,9 @@ import {
   type MovieSchemaType
 } from '../schemas/movies/data';
 import type { PaginatedSearchSchemaType } from '../schemas/movies/http';
-import { HttpStatusCodes } from '../utils/constants/enums';
+import { ResourceTypes } from '../utils/constants/enums';
 import { getMongoFilter, getMongoSort } from '../utils/mongo-collection-utils';
-
-const genNotFoundError = (id: string): FastifyError => ({
-  statusCode: HttpStatusCodes.NotFound,
-  message: `Could not find movie with id ${id}`,
-  name: 'Movie not found',
-  code: 'ERR_NOT_FOUND'
-});
-
-const genMovieConflictError = (title: string, year: number): FastifyError => ({
-  statusCode: HttpStatusCodes.Conflict,
-  message: `Movie with title ${title} and year ${year} already exists`,
-  name: 'Movie already exists',
-  code: 'ERR_CONFLICT'
-});
+import { genConflictError, genNotFoundError, genUnauthorizedError } from '../utils/routing-utils';
 
 const defaultMovieSort: Sort = { year: 1, title: 1 };
 const defaultMovieCommentSort: Sort = { date: -1, name: 1 };
@@ -42,6 +30,7 @@ const autoHooks = fp(
     }
     const movies: Collection<MovieSchemaType> = db.collection('movies');
     const comments: Collection<MovieCommentSchemaType> = db.collection('comments');
+    const users: Collection<UserSchemaType> = db.collection('users');
 
     fastify.decorate('dataStore', {
       async countMovies(searchParams) {
@@ -66,6 +55,13 @@ const autoHooks = fp(
         const output = docs.map((doc) => ({ ...doc, _id: doc._id.toString() }));
         return output;
       },
+      async checkUser(email, password) {
+        const user = await users.findOne({ email, password });
+        if (user === null) {
+          throw genUnauthorizedError();
+        }
+        return user;
+      },
       async fetchMovieComments(movieId, searchParams) {
         const skip = (searchParams.page - 1) * searchParams.pageSize;
         const condition = getMongoFilter(MovieCommentSchema, searchParams);
@@ -81,9 +77,13 @@ const autoHooks = fp(
         return output;
       },
       async createMovie(movie) {
-        const matchingMovie = await movies.findOne({ title: movie.title, year: movie.year });
+        const { title, year } = movie;
+        const matchingMovie = await movies.findOne({ title, year });
         if (matchingMovie !== null) {
-          throw genMovieConflictError(movie.title, movie.year);
+          throw genConflictError(ResourceTypes.Movie, {
+            title: movie.title,
+            year: movie.year.toString()
+          });
         }
         const movieDoc = {
           ...movie,
@@ -92,13 +92,30 @@ const autoHooks = fp(
         const { insertedId } = await movies.insertOne(movieDoc);
         return insertedId.toString();
       },
+      async createMovieComment(comment) {
+        const stringifiedId = comment.movie_id;
+        const movieId = new fastify.mongo.ObjectId(stringifiedId);
+        const movie = await movies.findOne({ _id: movieId });
+        if (movie === null) {
+          throw genNotFoundError(ResourceTypes.Movie, stringifiedId ?? 'the specified movie id');
+        }
+        await comments.insertOne({ ...comment, movie_id: movieId as unknown as string });
+      },
+      async registerUser(user) {
+        const { email, password } = user as UserSchemaType;
+        const existingUser = await users.findOne({ email, password });
+        if (existingUser !== null) {
+          throw genConflictError(ResourceTypes.User, { email });
+        }
+        await users.insertOne(user as UserSchemaType);
+      },
       async fetchMovie(id) {
         const movie = await movies.findOne(
           { _id: new fastify.mongo.ObjectId(id) },
           { projection: { _id: 0 } }
         );
         if (movie === null) {
-          throw genNotFoundError(id);
+          throw genNotFoundError(ResourceTypes.Movie, id);
         }
         const output = { ...movie, _id: id };
         return output;
@@ -114,7 +131,7 @@ const autoHooks = fp(
           }
         );
         if (updated.modifiedCount === 0) {
-          throw genNotFoundError(id);
+          throw genNotFoundError(ResourceTypes.Movie, id);
         }
       },
       async updateMovie(id, update) {
@@ -128,13 +145,13 @@ const autoHooks = fp(
           }
         );
         if (updated.matchedCount === 0) {
-          throw genNotFoundError(id);
+          throw genNotFoundError(ResourceTypes.Movie, id);
         }
       },
       async deleteMovie(id) {
         const deleted = await movies.deleteOne({ _id: new fastify.mongo.ObjectId(id) });
         if (deleted.deletedCount === 0) {
-          throw genNotFoundError(id);
+          throw genNotFoundError(ResourceTypes.Movie, id);
         }
       }
     });

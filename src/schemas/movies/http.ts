@@ -1,7 +1,11 @@
 import { type Static, Type } from '@sinclair/typebox';
 import type { FastifySchema } from 'fastify';
-import { RouteTags } from '../../utils/constants/constants';
-import { HttpMediaTypes, HttpStatusCodes } from '../../utils/constants/enums';
+import {
+  HttpMediaTypes,
+  HttpStatusCodes,
+  RouteTags,
+  SecuritySchemes
+} from '../../utils/constants/enums';
 import {
   createEmptyResponseSchema,
   createErrorResponseSchemas,
@@ -15,6 +19,7 @@ import {
 } from '../http';
 import {
   IdSchema,
+  MovieCommentInputSchema,
   MovieCommentSchema,
   MovieIdSchema,
   MovieSchema,
@@ -40,7 +45,7 @@ const PaginatedSearchSchema = Type.Object({
 });
 
 const IdObjectSchema = Type.Object({
-  id: IdSchema
+  _id: IdSchema
 });
 
 const MovieIdObjectSchema = Type.Object({
@@ -49,7 +54,7 @@ const MovieIdObjectSchema = Type.Object({
 
 const FetchMoviesSchema: FastifySchema = {
   produces: [HttpMediaTypes.JSON, HttpMediaTypes.HAL_JSON],
-  tags: [RouteTags.movies, RouteTags.cache],
+  tags: [RouteTags.Movies, RouteTags.Cache],
   querystring: PaginatedSearchSchema,
   response: {
     ...createResponseSchema(HttpStatusCodes.OK, ResourceSchema(MovieSchema), true),
@@ -59,12 +64,14 @@ const FetchMoviesSchema: FastifySchema = {
 };
 
 const CreateMovieSchema: FastifySchema = {
-  tags: [RouteTags.movies],
+  tags: [RouteTags.Movies],
   body: MovieSchema,
+  security: [{ [SecuritySchemes.BearerAuth]: [] }],
   response: {
     ...createResponseSchema(HttpStatusCodes.Created, IdObjectSchema),
     ...createErrorResponseSchemas([
       HttpStatusCodes.BadRequest,
+      HttpStatusCodes.Unauthorized,
       HttpStatusCodes.Conflict,
       HttpStatusCodes.InternalServerError
     ])
@@ -72,7 +79,7 @@ const CreateMovieSchema: FastifySchema = {
 };
 
 const FetchMovieSchema: FastifySchema = {
-  tags: [RouteTags.movie, RouteTags.cache],
+  tags: [RouteTags.Movie, RouteTags.Cache],
   params: MovieIdObjectSchema,
   response: {
     ...createResponseSchema(HttpStatusCodes.OK, ResourceSchema(MovieSchema)),
@@ -86,7 +93,7 @@ const FetchMovieSchema: FastifySchema = {
 };
 
 const FetchMovieCommentsSchema: FastifySchema = {
-  tags: [RouteTags.comments, RouteTags.cache],
+  tags: [RouteTags.Comments, RouteTags.Cache],
   params: MovieIdObjectSchema,
   querystring: PaginatedSearchSchema,
   response: {
@@ -100,14 +107,32 @@ const FetchMovieCommentsSchema: FastifySchema = {
   }
 };
 
+const CreateMovieCommentSchema: FastifySchema = {
+  tags: [RouteTags.Comments],
+  params: MovieIdObjectSchema,
+  body: MovieCommentInputSchema,
+  security: [{ [SecuritySchemes.BearerAuth]: [] }],
+  response: {
+    ...createEmptyResponseSchema(HttpStatusCodes.Created),
+    ...createErrorResponseSchemas([
+      HttpStatusCodes.BadRequest,
+      HttpStatusCodes.Unauthorized,
+      HttpStatusCodes.NotFound,
+      HttpStatusCodes.InternalServerError
+    ])
+  }
+};
+
 const ReplaceMovieSchema: FastifySchema = {
-  tags: [RouteTags.movie],
+  tags: [RouteTags.Movie],
   params: MovieIdObjectSchema,
   body: MovieSchema,
+  security: [{ [SecuritySchemes.BearerAuth]: [] }],
   response: {
     ...createEmptyResponseSchema(HttpStatusCodes.NoContent),
     ...createErrorResponseSchemas([
       HttpStatusCodes.BadRequest,
+      HttpStatusCodes.Unauthorized,
       HttpStatusCodes.NotFound,
       HttpStatusCodes.InternalServerError
     ])
@@ -115,13 +140,15 @@ const ReplaceMovieSchema: FastifySchema = {
 };
 
 const UpdateMovieSchema: FastifySchema = {
-  tags: [RouteTags.movie],
+  tags: [RouteTags.Movie],
   params: MovieIdObjectSchema,
   body: PartialMovieSchema,
+  security: [{ [SecuritySchemes.BearerAuth]: [] }],
   response: {
     ...createEmptyResponseSchema(HttpStatusCodes.NoContent),
     ...createErrorResponseSchemas([
       HttpStatusCodes.BadRequest,
+      HttpStatusCodes.Unauthorized,
       HttpStatusCodes.NotFound,
       HttpStatusCodes.InternalServerError
     ])
@@ -129,12 +156,14 @@ const UpdateMovieSchema: FastifySchema = {
 };
 
 const DeleteMovieSchema: FastifySchema = {
-  tags: [RouteTags.movie],
+  tags: [RouteTags.Movie],
   params: MovieIdObjectSchema,
+  security: [{ [SecuritySchemes.BearerAuth]: [] }],
   response: {
     ...createEmptyResponseSchema(HttpStatusCodes.NoContent),
     ...createErrorResponseSchemas([
       HttpStatusCodes.BadRequest,
+      HttpStatusCodes.Unauthorized,
       HttpStatusCodes.NotFound,
       HttpStatusCodes.InternalServerError
     ])
@@ -148,6 +177,7 @@ type MovieIdObjectSchemaType = Static<typeof MovieIdObjectSchema>;
 type MovieCommentIdObjectSchemaType = Static<typeof MovieIdObjectSchema>;
 
 export {
+  CreateMovieCommentSchema,
   CreateMovieSchema,
   DeleteMovieSchema,
   FetchMovieCommentsSchema,

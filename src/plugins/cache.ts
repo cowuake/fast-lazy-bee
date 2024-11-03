@@ -1,7 +1,8 @@
 import type { FastifyInstance, FastifyRequest, RouteOptions } from 'fastify';
 import fp from 'fastify-plugin';
 import * as CacheUtils from '../utils/cache-utils';
-import { AppConfigDefaults, RouteTags } from '../utils/constants/constants';
+import { AppConfigDefaults } from '../utils/constants/constants';
+import { RouteTags } from '../utils/constants/enums';
 import { hashValue as getKeySignature } from '../utils/crypto-utils';
 
 const isCacheable = (request: FastifyRequest): boolean => {
@@ -9,7 +10,7 @@ const isCacheable = (request: FastifyRequest): boolean => {
   if (routeOptions.schema?.tags == null) {
     return false;
   }
-  return routeOptions.schema.tags.includes(RouteTags.cache);
+  return routeOptions.schema.tags.includes(RouteTags.Cache);
 };
 
 const specifiesNoCache = (request: FastifyRequest): boolean =>

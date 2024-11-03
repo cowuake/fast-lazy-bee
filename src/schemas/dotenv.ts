@@ -6,8 +6,7 @@ const EnvSchema = Type.Object({
   APP_PORT: Type.Number({ default: AppConfigDefaults.port }),
   MONGO_IMAGE: Type.String({ default: AppConfigDefaults.mongoImage }),
   MONGO_URL: Type.String({ default: AppConfigDefaults.mongoUrl }),
-  MONGO_DB_NAME: Type.String({ default: AppConfigDefaults.mongoDbName }),
-  CACHE_EXPIRATION_S: Type.Number({ default: AppConfigDefaults.cacheExpiration_s })
+  MONGO_DB_NAME: Type.String({ default: AppConfigDefaults.mongoDbName })
 });
 
 type EnvSchemaType = Static<typeof EnvSchema>;

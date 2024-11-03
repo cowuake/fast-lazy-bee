@@ -1,5 +1,5 @@
 import type { FastifyError } from 'fastify';
-import { mapFastifyErrorToErrorSchemaType } from '../plugins/error-handling';
+import { mapFastifyErrorToErrorSchemaType } from '../plugins/errors';
 import { HttpStatusCodes } from '../utils/constants/enums';
 
 describe('mapFastifyErrorToErrorSchemaType', () => {

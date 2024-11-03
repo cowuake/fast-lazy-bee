@@ -3,7 +3,7 @@ import fastifySwaggerUi, { type FastifySwaggerUiOptions } from '@fastify/swagger
 import type { FastifyInstance } from 'fastify';
 import fp from 'fastify-plugin';
 import pkg from '../../package.json';
-import { RouteTags } from '../utils/constants/constants';
+import { RouteTags, SecuritySchemes } from '../utils/constants/enums';
 
 const swaggerOptions: FastifyDynamicSwaggerOptions = {
   mode: 'dynamic',
@@ -14,12 +14,22 @@ const swaggerOptions: FastifyDynamicSwaggerOptions = {
       version: pkg.version
     },
     tags: [
-      { name: RouteTags.diagnostics, description: 'Diagnostics' },
-      { name: RouteTags.movies, description: 'Movie Catalog' },
-      { name: RouteTags.movie, description: 'Single Movies' },
-      { name: RouteTags.comments, description: 'Movie Comments' },
-      { name: RouteTags.cache, description: 'Cache-enabled routes' }
-    ]
+      { name: RouteTags.Diagnostics, description: '' },
+      { name: RouteTags.Auth, description: '' },
+      { name: RouteTags.Movies, description: '' },
+      { name: RouteTags.Movie, description: '' },
+      { name: RouteTags.Comments, description: '' },
+      { name: RouteTags.Cache, description: '' }
+    ],
+    components: {
+      securitySchemes: {
+        [SecuritySchemes.BearerAuth]: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT'
+        }
+      }
+    }
   },
   hideUntagged: false
 };

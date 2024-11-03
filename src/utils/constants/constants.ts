@@ -30,18 +30,14 @@ const TestConstants = {
   mongoArchivePath: path.join(os.tmpdir(), 'sampledata.archive'),
   impossibleUrl: 'hifi://www.impossi.bru/nyan/cat?troll=lol',
   impossiblePath: '/quack/archive',
+  impossibleEmail: 'impossibru@nyan.cat.trollolol',
+  impossiblePassword: 'waddayamean?!?!',
   mongoTestcontainersPort: 27028,
   longTimeout: 600000,
-  v1Root: '/api/v1'
+  v1Root: '/api/v1',
+  userName: 'Tyrion Lannister',
+  userEmail: 'peter_dinklage@gameofthron.es',
+  userPassword: '$2b$12$xtHwQNXYlQzP2REobUDlzuQimjzBlXrTx1GnwP.xkfULeuuUpRxa2'
 } as const;
 
-const RouteTags = {
-  cache: 'Cache',
-  diagnostics: 'Diagnostics',
-  movies: 'Movie Catalog',
-  movie: 'Single Movies',
-  comments: 'Movie Comments',
-  comment: 'Single comments'
-} as const;
-
-export { AppConfigDefaults, PaginationConstants, RouteTags, TestConstants };
+export { AppConfigDefaults, PaginationConstants, TestConstants };
