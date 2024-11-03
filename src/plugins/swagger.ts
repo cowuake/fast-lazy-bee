@@ -6,13 +6,16 @@ import pkg from '../../package.json';
 import { SecuritySchemes } from '../utils/constants/enums';
 import { RouteTagsToDescriptions } from '../utils/constants/records';
 
+const shortDescription =
+  'A toy RESTful Web API built with Fastify and TypeScript for educational purposes';
+
 const swaggerOptions: FastifyDynamicSwaggerOptions = {
   mode: 'dynamic',
   openapi: {
     info: {
       title: 'FastLazyBee API',
-      summary: 'A toy RESTful Web API built with Fastify and TypeScript ',
-      description: 'A toy RESTful Web API built with Fastify and TypeScript ',
+      summary: shortDescription,
+      description: shortDescription,
       version: pkg.version,
       license: {
         identifier: 'MIT',
