@@ -1,5 +1,6 @@
 import type { TObject } from '@sinclair/typebox';
 import type { FastifyError, FastifyInstance, FastifyRequest, RouteOptions } from 'fastify';
+import { EmptyStringSchema, StringSchema } from '../schemas/data';
 import { ErrorSchema } from '../schemas/errors';
 import {
   PaginatedCollectionSchema,
@@ -9,7 +10,7 @@ import {
 import { HttpMediaTypes, HttpMethods, HttpStatusCodes } from './constants/enums';
 import { HttpCodesToDescriptions } from './constants/records';
 
-const createResponseSchema = (
+const createJsonResponseSchema = (
   statusCode: HttpStatusCodes,
   schema: TObject,
   collection = false
@@ -29,12 +30,29 @@ const createResponseSchema = (
   }
 });
 
+const createTextResponseSchema = (
+  statusCode: HttpStatusCodes
+): Partial<Record<HttpStatusCodes, TObject>> => ({
+  [statusCode]: {
+    description: HttpCodesToDescriptions[statusCode],
+    content: {
+      [HttpMediaTypes.TEXT_PLAIN]: {
+        schema: StringSchema
+      }
+    }
+  }
+});
+
 const createEmptyResponseSchema = (
   statusCode: HttpStatusCodes
 ): Partial<Record<HttpStatusCodes, TObject>> => ({
   [statusCode]: {
     description: HttpCodesToDescriptions[statusCode],
-    content: null
+    content: {
+      [HttpMediaTypes.TEXT_PLAIN]: {
+        schema: EmptyStringSchema
+      }
+    }
   }
 });
 
@@ -61,6 +79,7 @@ const genOptionsRoute = (url: string, allowString: string): RouteOptions => ({
   method: HttpMethods.OPTIONS,
   url,
   schema: {
+    summary: 'Get all allowed methods for the endpoint',
     tags: ['OPTIONS'],
     response: {
       ...createEmptyResponseSchema(HttpStatusCodes.NoContent)
@@ -118,7 +137,8 @@ export {
   acceptsHal,
   createEmptyResponseSchema,
   createErrorResponseSchemas,
-  createResponseSchema,
+  createJsonResponseSchema,
+  createTextResponseSchema,
   genConflictError,
   genNotFoundError,
   genOptionsRoute,

@@ -4,7 +4,7 @@ import { HttpMediaTypes, HttpStatusCodes, SecuritySchemes } from '../../utils/co
 import {
   createEmptyResponseSchema,
   createErrorResponseSchemas,
-  createResponseSchema
+  createJsonResponseSchema
 } from '../../utils/routing-utils';
 import {
   FilterStringSchema,
@@ -48,20 +48,22 @@ const MovieIdObjectSchema = Type.Object({
 });
 
 const FetchMoviesSchema: FastifySchema = {
+  summary: 'Fetch movies with pagination, filtering, and sorting',
   produces: [HttpMediaTypes.JSON, HttpMediaTypes.HAL_JSON],
   querystring: PaginatedSearchSchema,
   response: {
-    ...createResponseSchema(HttpStatusCodes.OK, ResourceSchema(MovieSchema), true),
+    ...createJsonResponseSchema(HttpStatusCodes.OK, ResourceSchema(MovieSchema), true),
     ...createEmptyResponseSchema(HttpStatusCodes.NotModified),
     ...createErrorResponseSchemas([HttpStatusCodes.BadRequest, HttpStatusCodes.InternalServerError])
   }
 };
 
 const CreateMovieSchema: FastifySchema = {
+  summary: 'Create a new movie',
   body: MovieSchema,
   security: [{ [SecuritySchemes.BearerAuth]: [] }],
   response: {
-    ...createResponseSchema(HttpStatusCodes.Created, IdObjectSchema),
+    ...createJsonResponseSchema(HttpStatusCodes.Created, IdObjectSchema),
     ...createErrorResponseSchemas([
       HttpStatusCodes.BadRequest,
       HttpStatusCodes.Unauthorized,
@@ -72,9 +74,10 @@ const CreateMovieSchema: FastifySchema = {
 };
 
 const FetchMovieSchema: FastifySchema = {
+  summary: 'Fetch a single movie by ID',
   params: MovieIdObjectSchema,
   response: {
-    ...createResponseSchema(HttpStatusCodes.OK, ResourceSchema(MovieSchema)),
+    ...createJsonResponseSchema(HttpStatusCodes.OK, ResourceSchema(MovieSchema)),
     ...createEmptyResponseSchema(HttpStatusCodes.NotModified),
     ...createErrorResponseSchemas([
       HttpStatusCodes.BadRequest,
@@ -85,10 +88,11 @@ const FetchMovieSchema: FastifySchema = {
 };
 
 const FetchMovieCommentsSchema: FastifySchema = {
+  summary: 'Fetch comments for a movie with pagination, filtering, and sorting',
   params: MovieIdObjectSchema,
   querystring: PaginatedSearchSchema,
   response: {
-    ...createResponseSchema(HttpStatusCodes.OK, ResourceSchema(MovieCommentSchema), true),
+    ...createJsonResponseSchema(HttpStatusCodes.OK, ResourceSchema(MovieCommentSchema), true),
     ...createEmptyResponseSchema(HttpStatusCodes.NotModified),
     ...createErrorResponseSchemas([
       HttpStatusCodes.BadRequest,
@@ -99,6 +103,7 @@ const FetchMovieCommentsSchema: FastifySchema = {
 };
 
 const CreateMovieCommentSchema: FastifySchema = {
+  summary: 'Create a new comment for a movie',
   params: MovieIdObjectSchema,
   body: MovieCommentInputSchema,
   security: [{ [SecuritySchemes.BearerAuth]: [] }],
@@ -114,6 +119,7 @@ const CreateMovieCommentSchema: FastifySchema = {
 };
 
 const ReplaceMovieSchema: FastifySchema = {
+  summary: 'Update a movie by ID with a new movie representation',
   params: MovieIdObjectSchema,
   body: MovieSchema,
   security: [{ [SecuritySchemes.BearerAuth]: [] }],
@@ -129,6 +135,7 @@ const ReplaceMovieSchema: FastifySchema = {
 };
 
 const UpdateMovieSchema: FastifySchema = {
+  summary: 'Update a movie by ID with a partial movie representation',
   params: MovieIdObjectSchema,
   body: PartialMovieSchema,
   security: [{ [SecuritySchemes.BearerAuth]: [] }],
@@ -144,6 +151,7 @@ const UpdateMovieSchema: FastifySchema = {
 };
 
 const DeleteMovieSchema: FastifySchema = {
+  summary: 'Delete a movie by ID',
   params: MovieIdObjectSchema,
   security: [{ [SecuritySchemes.BearerAuth]: [] }],
   response: {

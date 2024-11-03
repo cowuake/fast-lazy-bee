@@ -112,7 +112,11 @@ const MovieOptionalFieldsSchema = Type.Partial(
 );
 
 const IdSchema = Type.String({ description: 'The unique identifier of the resource' });
-const MovieIdSchema = { ...IdSchema, description: 'The unique identifier of the movie' };
+const MovieIdSchema = {
+  ...IdSchema,
+  description: 'The unique identifier of the movie',
+  examples: ['573a1395f29313caabce1bd0']
+};
 const MovieCommentIdSchema = {
   ...IdSchema,
   description: 'The unique identifier of the movie comment'

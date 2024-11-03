@@ -1,5 +1,6 @@
 import type { FastifyInstance, RouteOptions } from 'fastify';
-import { HttpMethods, HttpStatusCodes, RouteTags } from '../../utils/constants/enums';
+import { GetHealthSchema } from '../../schemas/diagnostics/http';
+import { HttpMethods, RouteTags } from '../../utils/constants/enums';
 import { registerEndpointRoutes } from '../../utils/routing-utils';
 
 const endpoint = '';
@@ -9,14 +10,15 @@ const routes: RouteOptions[] = [
   {
     method: [HttpMethods.GET, HttpMethods.HEAD],
     url: endpoint,
-    schema: {
-      tags,
-      response: {
-        [HttpStatusCodes.OK]: {
-          type: 'string'
-        }
-      }
-    },
+    // schema: {
+    //   tags,
+    //   response: {
+    //     [HttpStatusCodes.OK]: {
+    //       type: 'string'
+    //     }
+    //   }
+    // },
+    schema: { ...GetHealthSchema, tags },
     handler: async (request, reply) => {
       return "I'm alive!";
     }

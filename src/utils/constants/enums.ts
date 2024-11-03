@@ -38,6 +38,7 @@ enum MediaTypes {
 }
 
 enum HttpMediaTypes {
+  TEXT_PLAIN = 'text/plain',
   JSON = 'application/json',
   HAL_JSON = 'application/hal+json'
 }
