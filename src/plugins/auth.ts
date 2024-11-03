@@ -1,7 +1,7 @@
 import fastifyJwt from '@fastify/jwt';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import fp from 'fastify-plugin';
-import { HttpMethods } from '../utils/constants/enums';
+import { HttpMethods, RouteTags } from '../utils/constants/enums';
 
 const allowedMethods = [HttpMethods.OPTIONS, HttpMethods.GET, HttpMethods.HEAD].map((method) =>
   method.valueOf()
@@ -19,11 +19,9 @@ const authenticationPlugin = fp(async (fastify: FastifyInstance) => {
   });
 
   fastify.addHook('onRequest', async (request, reply) => {
-    if (
-      allowedMethods.includes(request.method) ||
-      request.url.includes('/login') ||
-      request.url.includes('/register')
-    ) {
+    const routeSchema = request.routeOptions.schema;
+    const tags = routeSchema?.tags ?? [];
+    if (allowedMethods.includes(request.method) || tags.includes(RouteTags.Auth)) {
       return;
     }
     await request.jwtVerify();

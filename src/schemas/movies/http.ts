@@ -1,11 +1,6 @@
 import { type Static, Type } from '@sinclair/typebox';
 import type { FastifySchema } from 'fastify';
-import {
-  HttpMediaTypes,
-  HttpStatusCodes,
-  RouteTags,
-  SecuritySchemes
-} from '../../utils/constants/enums';
+import { HttpMediaTypes, HttpStatusCodes, SecuritySchemes } from '../../utils/constants/enums';
 import {
   createEmptyResponseSchema,
   createErrorResponseSchemas,
@@ -54,7 +49,6 @@ const MovieIdObjectSchema = Type.Object({
 
 const FetchMoviesSchema: FastifySchema = {
   produces: [HttpMediaTypes.JSON, HttpMediaTypes.HAL_JSON],
-  tags: [RouteTags.Movies, RouteTags.Cache],
   querystring: PaginatedSearchSchema,
   response: {
     ...createResponseSchema(HttpStatusCodes.OK, ResourceSchema(MovieSchema), true),
@@ -64,7 +58,6 @@ const FetchMoviesSchema: FastifySchema = {
 };
 
 const CreateMovieSchema: FastifySchema = {
-  tags: [RouteTags.Movies],
   body: MovieSchema,
   security: [{ [SecuritySchemes.BearerAuth]: [] }],
   response: {
@@ -79,7 +72,6 @@ const CreateMovieSchema: FastifySchema = {
 };
 
 const FetchMovieSchema: FastifySchema = {
-  tags: [RouteTags.Movie, RouteTags.Cache],
   params: MovieIdObjectSchema,
   response: {
     ...createResponseSchema(HttpStatusCodes.OK, ResourceSchema(MovieSchema)),
@@ -93,7 +85,6 @@ const FetchMovieSchema: FastifySchema = {
 };
 
 const FetchMovieCommentsSchema: FastifySchema = {
-  tags: [RouteTags.Comments, RouteTags.Cache],
   params: MovieIdObjectSchema,
   querystring: PaginatedSearchSchema,
   response: {
@@ -108,7 +99,6 @@ const FetchMovieCommentsSchema: FastifySchema = {
 };
 
 const CreateMovieCommentSchema: FastifySchema = {
-  tags: [RouteTags.Comments],
   params: MovieIdObjectSchema,
   body: MovieCommentInputSchema,
   security: [{ [SecuritySchemes.BearerAuth]: [] }],
@@ -124,7 +114,6 @@ const CreateMovieCommentSchema: FastifySchema = {
 };
 
 const ReplaceMovieSchema: FastifySchema = {
-  tags: [RouteTags.Movie],
   params: MovieIdObjectSchema,
   body: MovieSchema,
   security: [{ [SecuritySchemes.BearerAuth]: [] }],
@@ -140,7 +129,6 @@ const ReplaceMovieSchema: FastifySchema = {
 };
 
 const UpdateMovieSchema: FastifySchema = {
-  tags: [RouteTags.Movie],
   params: MovieIdObjectSchema,
   body: PartialMovieSchema,
   security: [{ [SecuritySchemes.BearerAuth]: [] }],
@@ -156,7 +144,6 @@ const UpdateMovieSchema: FastifySchema = {
 };
 
 const DeleteMovieSchema: FastifySchema = {
-  tags: [RouteTags.Movie],
   params: MovieIdObjectSchema,
   security: [{ [SecuritySchemes.BearerAuth]: [] }],
   response: {

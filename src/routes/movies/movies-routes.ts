@@ -13,15 +13,16 @@ import {
   RouteTags
 } from '../../utils/constants/enums';
 import { addLinksToCollection } from '../../utils/hal-utils';
-import { acceptsHal, genOptionsRoute } from '../../utils/routing-utils';
+import { acceptsHal, registerEndpointRoutes } from '../../utils/routing-utils';
 
-const url = '';
+const endpoint = '';
+const tags: RouteTags[] = [RouteTags.Movies] as const;
 
 const routes: RouteOptions[] = [
   {
     method: [HttpMethods.GET, HttpMethods.HEAD],
-    url,
-    schema: FetchMoviesSchema,
+    url: endpoint,
+    schema: { ...FetchMoviesSchema, tags: [...tags, RouteTags.Cache] },
     handler: async function fetchMovies(request, reply) {
       const filter = request.query as PaginatedSearchSchemaType;
       const movies = await this.dataStore.fetchMovies(filter);
@@ -48,11 +49,11 @@ const routes: RouteOptions[] = [
         reply.code(HttpStatusCodes.OK).expires(getExpirationDate()).send(body);
       }
     }
-  },
+  } as const,
   {
     method: HttpMethods.POST,
-    url,
-    schema: CreateMovieSchema,
+    url: endpoint,
+    schema: { ...CreateMovieSchema, tags },
     handler: async function createMovie(request, reply) {
       const body = request.body as MovieSchemaType;
       const insertedId = await this.dataStore.createMovie(body);
@@ -61,17 +62,11 @@ const routes: RouteOptions[] = [
         .code(HttpStatusCodes.Created)
         .send({ _id: insertedId });
     }
-  }
+  } as const
 ];
 
-const baseMovieRoutes = async (fastify: FastifyInstance): Promise<void> => {
-  const methods = routes.map((route) => route.method);
-  const allowString = [HttpMethods.OPTIONS, ...methods].join(', ');
-  const optionsRoute: RouteOptions = genOptionsRoute(url, [RouteTags.Movies], allowString);
-
-  [optionsRoute, ...routes].forEach((route) => {
-    fastify.route(route);
-  });
+const moviesRoutes = async (fastify: FastifyInstance): Promise<void> => {
+  await registerEndpointRoutes(fastify, endpoint, routes);
 };
 
-export default baseMovieRoutes;
+export default moviesRoutes;

@@ -58,13 +58,14 @@ enum SecuritySchemes {
 }
 
 enum RouteTags {
-  Auth = 'User authentication/authorization',
+  Auth = 'User registration/authentication/authorization',
   Cache = 'Cacheable Operations',
   Comment = 'Movie Comment Resources',
   Comments = 'Movie Comment Collection',
   Diagnostics = 'Diagnostics',
   Movie = 'Movie Resources',
-  Movies = 'Movie Collection'
+  Movies = 'Movie Collection',
+  Users = 'User Collection'
 }
 
 export {

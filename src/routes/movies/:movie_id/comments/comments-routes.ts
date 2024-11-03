@@ -1,5 +1,4 @@
 import type { FastifyInstance, RouteOptions } from 'fastify';
-import type { UserSchemaType } from '../../../../schemas/auth/data';
 import type {
   MovieCommentInputSchemaType,
   MovieCommentSchema
@@ -10,6 +9,7 @@ import {
   type MovieIdObjectSchemaType,
   type PaginatedSearchSchemaType
 } from '../../../../schemas/movies/http';
+import type { UserSchemaType } from '../../../../schemas/users/data';
 import {
   HttpMediaTypes,
   HttpMethods,
@@ -17,15 +17,20 @@ import {
   RouteTags
 } from '../../../../utils/constants/enums';
 import { addLinksToCollection } from '../../../../utils/hal-utils';
-import { acceptsHal, genOptionsRoute, genUnauthorizedError } from '../../../../utils/routing-utils';
+import {
+  acceptsHal,
+  genUnauthorizedError,
+  registerEndpointRoutes
+} from '../../../../utils/routing-utils';
 
-const url = '';
+const endpoint = '';
+const tags: RouteTags[] = [RouteTags.Comments] as const;
 
 const routes: RouteOptions[] = [
   {
     method: [HttpMethods.GET, HttpMethods.HEAD],
-    url,
-    schema: FetchMovieCommentsSchema,
+    url: endpoint,
+    schema: { ...FetchMovieCommentsSchema, tags: [...tags, RouteTags.Cache] },
     handler: async function fetchMovieComments(request, reply) {
       const params = request.params as MovieIdObjectSchemaType;
       const movieId = params.movie_id;
@@ -49,11 +54,11 @@ const routes: RouteOptions[] = [
         reply.code(HttpStatusCodes.OK).send(body);
       }
     }
-  },
+  } as const,
   {
     method: HttpMethods.POST,
-    url,
-    schema: CreateMovieCommentSchema,
+    url: endpoint,
+    schema: { ...CreateMovieCommentSchema, tags },
     handler: async function createMovieComment(request, reply) {
       const token = request.headers.authorization?.split('Bearer ')[1];
       if (token === undefined) {
@@ -75,17 +80,11 @@ const routes: RouteOptions[] = [
       await this.dataStore.createMovieComment(movieComment);
       reply.code(HttpStatusCodes.Created);
     }
-  }
-];
+  } as const
+] as const;
 
-const movieCommentCollectionRoutes = async (fastify: FastifyInstance): Promise<void> => {
-  const methods = routes.map((route) => route.method);
-  const allowString = [HttpMethods.OPTIONS, ...methods].join(', ');
-  const optionsRoute: RouteOptions = genOptionsRoute(url, [RouteTags.Comments], allowString);
-
-  [optionsRoute, ...routes].forEach((route) => {
-    fastify.route(route);
-  });
+const movieCommentsRoutes = async (fastify: FastifyInstance): Promise<void> => {
+  await registerEndpointRoutes(fastify, endpoint, routes);
 };
 
-export default movieCommentCollectionRoutes;
+export default movieCommentsRoutes;

@@ -1,20 +1,19 @@
 import type { FastifySchema } from 'fastify';
 import { HttpMediaTypes, HttpStatusCodes } from '../../utils/constants/enums';
 import { createErrorResponseSchemas } from '../../utils/routing-utils';
-import { UserSchema } from '../users/data';
-import { JwtSchema } from './data';
+import { UserSchema } from './data';
 
-const LoginSchema: FastifySchema = {
+const CreateUserSchema: FastifySchema = {
   produces: [HttpMediaTypes.JSON],
   body: UserSchema,
   response: {
-    [HttpStatusCodes.OK]: JwtSchema,
+    [HttpStatusCodes.Created]: {},
     ...createErrorResponseSchemas([
       HttpStatusCodes.BadRequest,
-      HttpStatusCodes.Unauthorized,
+      HttpStatusCodes.Conflict,
       HttpStatusCodes.InternalServerError
     ])
   }
 };
 
-export { LoginSchema };
+export { CreateUserSchema };

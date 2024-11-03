@@ -14,15 +14,16 @@ import {
   RouteTags
 } from '../../../utils/constants/enums';
 import { addLinksToResource } from '../../../utils/hal-utils';
-import { acceptsHal, genOptionsRoute } from '../../../utils/routing-utils';
+import { acceptsHal, registerEndpointRoutes } from '../../../utils/routing-utils';
 
-const url = '';
+const endpoint = '';
+const tags: RouteTags[] = [RouteTags.Movie] as const;
 
 const routes: RouteOptions[] = [
   {
     method: [HttpMethods.GET, HttpMethods.HEAD],
-    url,
-    schema: FetchMovieSchema,
+    url: endpoint,
+    schema: { ...FetchMovieSchema, tags: [...tags, RouteTags.Cache] },
     handler: async function fetchMovie(request, reply) {
       const params = request.params as MovieIdObjectSchemaType;
       const movie = await this.dataStore.fetchMovie(params.movie_id);
@@ -37,33 +38,33 @@ const routes: RouteOptions[] = [
         reply.code(HttpStatusCodes.OK).send(movie);
       }
     }
-  },
+  } as const,
   {
     method: HttpMethods.PUT,
-    url,
-    schema: ReplaceMovieSchema,
+    url: endpoint,
+    schema: { ...ReplaceMovieSchema, tags },
     handler: async function replaceMovie(request, reply) {
       const params = request.params as MovieIdObjectSchemaType;
       const body = request.body as MovieSchemaType;
       await this.dataStore.replaceMovie(params.movie_id, body);
       reply.code(HttpStatusCodes.NoContent);
     }
-  },
+  } as const,
   {
     method: HttpMethods.PATCH,
-    url,
-    schema: UpdateMovieSchema,
+    url: endpoint,
+    schema: { ...UpdateMovieSchema, tags },
     handler: async function updateMovie(request, reply) {
       const params = request.params as MovieIdObjectSchemaType;
       const body = request.body as MovieSchemaType;
       await this.dataStore.updateMovie(params.movie_id, body);
       reply.code(HttpStatusCodes.NoContent);
     }
-  },
+  } as const,
   {
     method: HttpMethods.DELETE,
-    url,
-    schema: DeleteMovieSchema,
+    url: endpoint,
+    schema: { ...DeleteMovieSchema, tags },
     handler: async function deleteMovie(request, reply) {
       const params = request.params as MovieIdObjectSchemaType;
       await this.dataStore.deleteMovie(params.movie_id);
@@ -72,14 +73,8 @@ const routes: RouteOptions[] = [
   }
 ];
 
-const idMovieRoutes = async (fastify: FastifyInstance): Promise<void> => {
-  const methods = routes.map((route) => route.method);
-  const allowString = [HttpMethods.OPTIONS, ...methods].join(', ');
-  const optionsRoute: RouteOptions = genOptionsRoute(url, [RouteTags.Movie], allowString);
-
-  [optionsRoute, ...routes].forEach((route) => {
-    fastify.route(route);
-  });
+const movieRoutes = async (fastify: FastifyInstance): Promise<void> => {
+  await registerEndpointRoutes(fastify, endpoint, routes);
 };
 
-export default idMovieRoutes;
+export default movieRoutes;

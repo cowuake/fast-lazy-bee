@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify';
-import type { UserSchemaType } from '../schemas/auth/data';
+import type { UserSchemaType } from '../schemas/users/data';
 import { TestConstants } from './constants/constants';
 
 const waitFor = async (seconds: number): Promise<void> => {
