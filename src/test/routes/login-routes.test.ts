@@ -5,8 +5,7 @@ import buildTestInstance from '../../utils/testing/build-test-instance';
 
 describe('authAPI', () => {
   const fastifyInstance: FastifyInstance = buildTestInstance();
-  const authEndpoint = `${TestConstants.v1Root}/auth`;
-  const loginEndpoint = `${authEndpoint}/login`;
+  const loginEndpoint = `${TestConstants.v1Root}/login`;
   const allUrls = [loginEndpoint];
 
   it('should rely on a defined Fastify instance', () => {
