@@ -71,4 +71,6 @@ Install the project dependencies with `npm ci`, then run the command:
 NODE_ENV=test npm run dev
 ```
 
+You should now be able to access the API and interact with it at [http://localhost:3000/docs](http://localhost:3000/docs).
+
 You can stop the application and trigger container teardown at any time by simply pressing Ctrl+C in the terminal window whence you run the script.
