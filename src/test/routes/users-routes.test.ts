@@ -2,7 +2,7 @@ import type { FastifyInstance } from 'fastify';
 import { TestConstants } from '../../utils/constants/constants';
 import { HttpMethods, HttpStatusCodes } from '../../utils/constants/enums';
 import { genRandomEmail } from '../../utils/test-utils';
-import TestServer from '../../utils/testing/build-test-instance';
+import TestServer from '../../utils/testing/test-server';
 
 describe('usersAPI', () => {
   const fastifyInstance: FastifyInstance = TestServer.getInstance();

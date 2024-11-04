@@ -15,7 +15,7 @@ import {
   getValidToken,
   waitFor
 } from '../../utils/test-utils';
-import TestServer from '../../utils/testing/build-test-instance';
+import TestServer from '../../utils/testing/test-server';
 
 describe('moviesAPI', () => {
   const fastifyInstance: FastifyInstance = TestServer.getInstance();

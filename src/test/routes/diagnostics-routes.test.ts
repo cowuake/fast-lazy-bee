@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import { TestConstants } from '../../utils/constants/constants';
 import { HttpMediaTypes, HttpMethods, HttpStatusCodes } from '../../utils/constants/enums';
-import TestServer from '../../utils/testing/build-test-instance';
+import TestServer from '../../utils/testing/test-server';
 
 describe('diagnosticsApi', () => {
   const fastifyInstance: FastifyInstance = TestServer.getInstance();
