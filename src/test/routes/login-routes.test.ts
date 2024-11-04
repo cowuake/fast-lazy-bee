@@ -1,10 +1,10 @@
 import type { FastifyInstance } from 'fastify';
 import { TestConstants } from '../../utils/constants/constants';
 import { HttpMethods, HttpStatusCodes } from '../../utils/constants/enums';
-import buildTestInstance from '../../utils/testing/build-test-instance';
+import TestServer from '../../utils/testing/build-test-instance';
 
 describe('authAPI', () => {
-  const fastifyInstance: FastifyInstance = buildTestInstance();
+  const fastifyInstance: FastifyInstance = TestServer.getInstance();
   const loginEndpoint = `${TestConstants.v1Root}/login`;
   const allUrls = [loginEndpoint];
 

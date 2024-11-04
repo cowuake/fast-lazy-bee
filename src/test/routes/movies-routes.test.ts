@@ -15,10 +15,10 @@ import {
   getValidToken,
   waitFor
 } from '../../utils/test-utils';
-import buildTestInstance from '../../utils/testing/build-test-instance';
+import TestServer from '../../utils/testing/build-test-instance';
 
 describe('moviesAPI', () => {
-  const fastifyInstance: FastifyInstance = buildTestInstance();
+  const fastifyInstance: FastifyInstance = TestServer.getInstance();
   const moviesEndpoint = `${TestConstants.v1Root}/movies`;
   const movieIdEndpoint = `${moviesEndpoint}/:movie_id`;
   const pagination = 'page=1&size=10';

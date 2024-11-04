@@ -1,10 +1,10 @@
 import type { FastifyInstance } from 'fastify';
 import { TestConstants } from '../../utils/constants/constants';
 import { HttpMediaTypes, HttpMethods, HttpStatusCodes } from '../../utils/constants/enums';
-import buildTestInstance from '../../utils/testing/build-test-instance';
+import TestServer from '../../utils/testing/build-test-instance';
 
 describe('diagnosticsApi', () => {
-  const fastifyInstance: FastifyInstance = buildTestInstance();
+  const fastifyInstance: FastifyInstance = TestServer.getInstance();
   const healthEndpoint = `${TestConstants.v1Root}/health`;
   const allUrls = [healthEndpoint];
 

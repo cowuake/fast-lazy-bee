@@ -1,4 +1,5 @@
 import type { FastifyInstance } from 'fastify';
+import type { Response } from 'light-my-request';
 import type { UserSchemaType } from '../schemas/users/data';
 import { TestConstants } from './constants/constants';
 import { FetchTypes, HttpMediaTypes, HttpStatusCodes } from './constants/enums';
@@ -20,15 +21,15 @@ const getValidToken = (fastify: FastifyInstance): string => {
 const genRandomString = (): string => Math.random().toString(36).substring(2);
 const genRandomEmail = (): string => `${genRandomString()}@example.com`;
 
-const expectCachedResponse = (response: InjectResponse): void => {
+const expectCachedResponse = (response: Response): void => {
   expect(response.headers.age).toBeDefined();
 };
 
-const expectNotCachedResponse = (response: InjectResponse): void => {
+const expectNotCachedResponse = (response: Response): void => {
   expect(response.headers.age).toBeUndefined();
 };
 
-const expectHalResponse = (response: InjectResponse, type: FetchTypes): void => {
+const expectHalResponse = (response: Response, type: FetchTypes): void => {
   expect(response.statusCode).toBe(HttpStatusCodes.OK);
   expect(response.headers).toHaveProperty('content-type');
   expect(response.headers['content-type']).toMatch(HttpMediaTypes.HAL_JSON.valueOf());

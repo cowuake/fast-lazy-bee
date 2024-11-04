@@ -2,10 +2,10 @@ import type { FastifyInstance } from 'fastify';
 import { TestConstants } from '../../utils/constants/constants';
 import { HttpMethods, HttpStatusCodes } from '../../utils/constants/enums';
 import { genRandomEmail } from '../../utils/test-utils';
-import buildTestInstance from '../../utils/testing/build-test-instance';
+import TestServer from '../../utils/testing/build-test-instance';
 
 describe('usersAPI', () => {
-  const fastifyInstance: FastifyInstance = buildTestInstance();
+  const fastifyInstance: FastifyInstance = TestServer.getInstance();
   const usersEndpoint = `${TestConstants.v1Root}/users`;
   const allUrls = [usersEndpoint];
 

@@ -1,10 +1,10 @@
 import type { FastifyInstance } from 'fastify';
 import { TestConstants } from '../../utils/constants/constants';
 import { HttpMethods, HttpStatusCodes } from '../../utils/constants/enums';
-import buildTestInstance from '../../utils/testing/build-test-instance';
+import TestServer from '../../utils/testing/build-test-instance';
 
 describe('API entry point', () => {
-  const fastifyInstance: FastifyInstance = buildTestInstance();
+  const fastifyInstance: FastifyInstance = TestServer.getInstance();
   const entryPoint = `${TestConstants.v1Root}/`;
 
   it('should rely on a defined Fastify instance', () => {
