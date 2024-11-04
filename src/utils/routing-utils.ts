@@ -18,13 +18,13 @@ const createJsonResponseSchema = (
   [statusCode]: {
     description: HttpCodesToDescriptions[statusCode],
     content: {
-      [HttpMediaTypes.JSON]: {
-        schema: collection ? PaginatedCollectionSchema(schema) : schema
-      },
       [HttpMediaTypes.HAL_JSON]: {
         schema: collection
           ? PaginatedCollectionWithLinksSchema(schema)
           : ResourceWithLinksSchema(schema)
+      },
+      [HttpMediaTypes.JSON]: {
+        schema: collection ? PaginatedCollectionSchema(schema) : schema
       }
     }
   }
@@ -98,7 +98,7 @@ const acceptsHal = (request: FastifyRequest): boolean => {
 const genNotFoundError = (resourceType: string, id: string): FastifyError => ({
   statusCode: HttpStatusCodes.NotFound,
   message: `Could not find ${resourceType} corresponding to ${id}`,
-  name: `${resourceType} not found`,
+  name: `Resource of type <${resourceType}> not found`,
   code: 'ERR_NOT_FOUND'
 });
 

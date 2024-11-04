@@ -7,6 +7,7 @@ import type {
   ResourceSchemaType
 } from '../schemas/http';
 import { PaginationConstants } from './constants/constants';
+import { ResourceCollections } from './constants/enums';
 
 const expandResourceLinks = (
   links: LinksSchemaType,
@@ -74,14 +75,20 @@ const addLinksToCollection = <TData extends TObject>(
 const addLinksToResource = <TData extends TObject>(
   request: FastifyRequest,
   resource: ResourceSchemaType<TData>,
-  resourceLinks: LinksSchemaType[] = []
+  resourceLinks: LinksSchemaType = {}
 ): ResourceSchemaType<TData> => {
   const url = request.url.split('?')[0];
+  const split = url.split('/');
+  const precedingNode = split[split.length - 2];
+  const hasCollection = Object.values(ResourceCollections).includes(
+    precedingNode as ResourceCollections
+  );
+
   return {
     ...resource,
     _links: {
       self: { href: url },
-      collection: { href: url.split('/').slice(0, -1).join('/') },
+      ...(hasCollection && { collection: { href: url.replace(`/${resource._id as string}`, '') } }),
       ...resourceLinks
     }
   };

@@ -1,7 +1,14 @@
 import type { FastifyInstance, RouteOptions } from 'fastify';
+import type { HealthReportSchema, HealthReportSchemaType } from '../../schemas/diagnostics/data';
 import { GetHealthSchema } from '../../schemas/diagnostics/http';
-import { HttpMethods, RouteTags } from '../../utils/constants/enums';
-import { registerEndpointRoutes } from '../../utils/routing-utils';
+import {
+  HttpMediaTypes,
+  HttpMethods,
+  HttpStatusCodes,
+  RouteTags
+} from '../../utils/constants/enums';
+import { addLinksToResource } from '../../utils/hal-utils';
+import { acceptsHal, registerEndpointRoutes } from '../../utils/routing-utils';
 
 const endpoint = '';
 const tags: RouteTags[] = [RouteTags.Diagnostics] as const;
@@ -10,17 +17,19 @@ const routes: RouteOptions[] = [
   {
     method: [HttpMethods.GET, HttpMethods.HEAD],
     url: endpoint,
-    // schema: {
-    //   tags,
-    //   response: {
-    //     [HttpStatusCodes.OK]: {
-    //       type: 'string'
-    //     }
-    //   }
-    // },
     schema: { ...GetHealthSchema, tags },
     handler: async (request, reply) => {
-      return "I'm alive!";
+      const body: HealthReportSchemaType = { _id: '0', status: 'I am alive!' };
+
+      if (acceptsHal(request)) {
+        const halBody = addLinksToResource<typeof HealthReportSchema>(request, body);
+        reply
+          .code(HttpStatusCodes.OK)
+          .header('Content-Type', HttpMediaTypes.HAL_JSON)
+          .send(halBody);
+      } else {
+        reply.code(HttpStatusCodes.OK).send(body);
+      }
     }
   } as const
 ] as const;

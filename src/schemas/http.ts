@@ -77,6 +77,10 @@ const PaginatedCollectionWithLinksSchema = <TData extends TObject>(dataSchema: T
     ...CollectionWithLinksSchema(ResourceWithLinksSchema(dataSchema)).properties
   });
 
+const RootSchema = Type.Object({
+  _id: { ...IdSchema, default: '0' }
+});
+
 type LinksSchemaType = Static<typeof LinksSchema>;
 type CollectionWithLinksSchemaType<T extends TObject> = Static<
   ReturnType<typeof CollectionWithLinksSchema<T>>
@@ -97,6 +101,7 @@ export {
   PaginationParamsSchema,
   ResourceSchema,
   ResourceWithLinksSchema,
+  RootSchema,
   SortStringSchema,
   type CollectionWithLinksSchemaType,
   type LinksSchemaType,

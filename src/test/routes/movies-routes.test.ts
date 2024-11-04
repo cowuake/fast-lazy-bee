@@ -1,6 +1,5 @@
 import type { FastifyInstance, InjectOptions } from 'fastify';
-import type { Response as InjectReponse } from 'light-my-request';
-import { MovieCommentSchemaType } from '../../schemas/movies/data';
+import type { MovieCommentSchemaType } from '../../schemas/movies/data';
 import { AppConfigDefaults, TestConstants } from '../../utils/constants/constants';
 import {
   FetchTypes,
@@ -8,24 +7,15 @@ import {
   HttpMethods,
   HttpStatusCodes
 } from '../../utils/constants/enums';
-import { genRandomString, getValidToken, waitFor } from '../../utils/test-utils';
+import {
+  expectCachedResponse,
+  expectHalResponse,
+  expectNotCachedResponse,
+  genRandomString,
+  getValidToken,
+  waitFor
+} from '../../utils/test-utils';
 import buildTestInstance from '../../utils/testing/build-test-instance';
-
-const expectHalResponse = (response: InjectReponse, type: FetchTypes): void => {
-  expect(response.statusCode).toBe(HttpStatusCodes.OK);
-  expect(response.headers).toHaveProperty('content-type');
-  expect(response.headers['content-type']).toMatch(HttpMediaTypes.HAL_JSON.valueOf());
-  expect(response.json()).toHaveProperty(type === FetchTypes.Collection ? 'data' : '_id');
-  expect(response.json()).toHaveProperty('_links');
-};
-
-const expectCachedResponse = (response: InjectReponse): void => {
-  expect(response.headers.age).toBeDefined();
-};
-
-const expectNotCachedResponse = (response: InjectReponse): void => {
-  expect(response.headers.age).toBeUndefined();
-};
 
 describe('moviesAPI', () => {
   const fastifyInstance: FastifyInstance = buildTestInstance();

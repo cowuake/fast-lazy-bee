@@ -1,11 +1,12 @@
 import type { FastifySchema } from 'fastify';
 import { HttpStatusCodes } from '../../utils/constants/enums';
-import { createTextResponseSchema } from '../../utils/routing-utils';
+import { createJsonResponseSchema } from '../../utils/routing-utils';
+import { HealthReportSchema } from './data';
 
 const GetHealthSchema: FastifySchema = {
-  summary: 'Get the health status of the API',
+  summary: 'Get the health status report for the API',
   response: {
-    ...createTextResponseSchema(HttpStatusCodes.OK)
+    ...createJsonResponseSchema(HttpStatusCodes.OK, HealthReportSchema, false)
   }
 };
 

@@ -28,6 +28,7 @@ const EmptyStringSchema = Type.String({
   default: '',
   examples: ['']
 });
+const EmptySchema = Type.Object({});
 const UriSchema = Type.String({
   format: 'uri',
   description: 'A valid URI',
@@ -44,6 +45,7 @@ const StringArraySchema = Type.Array(StringSchema, {
 export {
   DateSchema,
   EmailSchema,
+  EmptySchema,
   EmptyStringSchema,
   FloatSchema,
   NaturalNumberSchema,

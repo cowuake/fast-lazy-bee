@@ -1,4 +1,4 @@
-import { HttpStatusCodes, RouteTags } from './enums';
+import { HttpStatusCodes, ResourceCollections, ResourceTypes, RouteTags } from './enums';
 
 const HttpCodesToDescriptions: Record<HttpStatusCodes, string> = {
   [HttpStatusCodes.OK]: 'Success (OK)',
@@ -13,6 +13,7 @@ const HttpCodesToDescriptions: Record<HttpStatusCodes, string> = {
 } as const;
 
 const RouteTagsToDescriptions: Record<RouteTags, string> = {
+  [RouteTags.EntryPoint]: 'The entry point of the API',
   [RouteTags.Diagnostics]: 'GET routes for getting API diagnostics info',
   [RouteTags.Auth]: 'Routes for user registration, authentication, and authorization',
   [RouteTags.Movies]: 'Routes for manipulating the movie collection',
@@ -23,4 +24,19 @@ const RouteTagsToDescriptions: Record<RouteTags, string> = {
   [RouteTags.OPTIONS]: 'Auto-generated OPTIONS routes, allowing CORS preflight checks'
 } as const;
 
-export { HttpCodesToDescriptions, RouteTagsToDescriptions };
+const ResourcesToCollections: Record<ResourceTypes, ResourceCollections> = {
+  [ResourceTypes.Movie]: ResourceCollections.Movies,
+  [ResourceTypes.MovieComment]: ResourceCollections.MovieComments,
+  [ResourceTypes.User]: ResourceCollections.Users
+} as const;
+
+const CollectionsToResources: Record<ResourceCollections, ResourceTypes> = Object.fromEntries(
+  Object.entries(ResourcesToCollections).map(([key, value]) => [value, key])
+) as Record<ResourceCollections, ResourceTypes>;
+
+export {
+  CollectionsToResources,
+  HttpCodesToDescriptions,
+  ResourcesToCollections,
+  RouteTagsToDescriptions
+};

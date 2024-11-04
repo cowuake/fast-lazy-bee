@@ -37,16 +37,28 @@ enum FetchTypes {
 }
 
 enum ResourceTypes {
-  Movie = 'Movie',
-  MovieComment = 'MovieComment',
-  User = 'User'
+  Movie = 'movie',
+  MovieComment = 'comment',
+  User = 'user'
 }
 
 enum SecuritySchemes {
   BearerAuth = 'BearerAuth'
 }
 
+enum IsolatedResourceTypes {
+  Login = 'login',
+  Health = 'health'
+}
+
+enum ResourceCollections {
+  Movies = 'movies',
+  MovieComments = 'comments',
+  Users = 'users'
+}
+
 enum RouteTags {
+  EntryPoint = 'API Entry Point',
   Auth = 'User Registration/Authentication/Authorization',
   Cache = 'Cacheable Operations',
   Comments = 'Movie Comment Collection',
@@ -62,7 +74,9 @@ export {
   HttpMediaTypes,
   HttpMethods,
   HttpStatusCodes,
+  IsolatedResourceTypes,
   MediaTypes,
+  ResourceCollections,
   ResourceTypes,
   RouteTags,
   SecuritySchemes
