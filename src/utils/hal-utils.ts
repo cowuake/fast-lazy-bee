@@ -35,12 +35,11 @@ const addLinksToCollection = <TData extends TObject>(
   const pageSizeQuery = `${PaginationConstants.pageSizeKey}=${pageSize}`;
   const previousPage =
     page > 1
-      ? `${urlNoQuery}?${PaginationConstants.pageNumberKey}=${page - 1}&` +
-        `${PaginationConstants.pageSizeKey}=${pageSize}`
+      ? `${urlNoQuery}?${PaginationConstants.pageNumberKey}=${page - 1}&` + pageSizeQuery
       : null;
   const nextPage =
     page * pageSize < collection.totalCount
-      ? `${request.url}?${PaginationConstants.pageNumberKey}=${page + 1}&` + pageSizeQuery
+      ? `${urlNoQuery}?${PaginationConstants.pageNumberKey}=${page + 1}&` + pageSizeQuery
       : null;
   const firstPage = `${urlNoQuery}?${PaginationConstants.pageNumberKey}=1&` + pageSizeQuery;
   const lastPage =
