@@ -8,8 +8,8 @@ import { HttpStatusCodes } from './constants/enums';
 const allowedSearchNumericTypes = ['integer', 'float', 'number'] as const;
 const allowedSearchTypes = [...allowedSearchNumericTypes, 'string', 'array', 'Date'] as const;
 
-const validatePropertyKey = (key: string, schema: TSchema): void => {
-  if (schema !== Type.Undefined()) {
+const validatePropertyKey = (key: string, schema: TSchema | undefined): void => {
+  if (schema !== Type.Undefined() && schema !== undefined) {
     return;
   }
   const error: FastifyError = {
