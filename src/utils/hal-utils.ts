@@ -23,30 +23,45 @@ const expandResourceLinks = (
     return { ...acc, [key]: expandedLink };
   }, {});
 
+const getPreviousPage = (page: number, pageSize: number, url: string): string | null =>
+  page > 1
+    ? `${url}?${PaginationConstants.pageNumberKey}=${page - 1}&${PaginationConstants.pageSizeKey}=${pageSize}`
+    : null;
+
+const getNextPage = (
+  page: number,
+  pageSize: number,
+  totalCount: number,
+  url: string
+): string | null =>
+  page * pageSize < totalCount
+    ? `${url}?${PaginationConstants.pageNumberKey}=${page + 1}&${PaginationConstants.pageSizeKey}=${pageSize}`
+    : null;
+
+const getFirstPage = (pageSize: number, url: string): string =>
+  `${url}?${PaginationConstants.pageNumberKey}=1&${PaginationConstants.pageSizeKey}=${pageSize}`;
+
+const getLastPage = (pageSize: number, totalCount: number, url: string): string => {
+  const lastPageNumber = pageSize > 0 ? Math.ceil(totalCount / pageSize) : 0;
+  return `${url}?${PaginationConstants.pageNumberKey}=${lastPageNumber}&${PaginationConstants.pageSizeKey}=${pageSize}`;
+};
+
 const addLinksToCollection = <TData extends TObject>(
   request: FastifyRequest,
   collection: PaginatedCollectionSchemaType<TData> & Pagination,
   collectionLinks: LinksSchemaType = {},
   resourceLinks: LinksSchemaType = {}
 ): PaginatedCollectionWithLinksSchemaType<TData> => {
-  const page = collection.page;
-  const pageSize = collection.pageSize;
+  const { page, pageSize, totalCount } = collection;
   const urlNoQuery = request.url.split('?')[0];
-  const pageSizeQuery = `${PaginationConstants.pageSizeKey}=${pageSize}`;
-  const previousPage =
-    page > 1
-      ? `${urlNoQuery}?${PaginationConstants.pageNumberKey}=${page - 1}&` + pageSizeQuery
-      : null;
-  const nextPage =
-    page * pageSize < collection.totalCount
-      ? `${urlNoQuery}?${PaginationConstants.pageNumberKey}=${page + 1}&` + pageSizeQuery
-      : null;
-  const firstPage = `${urlNoQuery}?${PaginationConstants.pageNumberKey}=1&` + pageSizeQuery;
-  const lastPage =
-    `${urlNoQuery}?${PaginationConstants.pageNumberKey}=${pageSize > 1 ? Math.ceil(collection.totalCount / pageSize) : 0}&` +
-    pageSizeQuery;
+
+  const previousPage = getPreviousPage(page, pageSize, urlNoQuery);
+  const nextPage = getNextPage(page, pageSize, totalCount, urlNoQuery);
+  const firstPage = getFirstPage(pageSize, urlNoQuery);
+  const lastPage = getLastPage(pageSize, totalCount, urlNoQuery);
 
   const rawData = collection.data as Array<ResourceSchemaType<TData> & Resource>;
+
   const data = rawData.map((resource) => ({
     ...resource,
     _links: {
