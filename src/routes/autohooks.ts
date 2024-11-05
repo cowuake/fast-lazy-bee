@@ -41,7 +41,7 @@ const autoHooks = fp(
 
       async countMovieComments(movieId, searchParams) {
         const condition = getMongoFilter(MovieCommentSchema, searchParams);
-        condition['movie_id'] = new fastify.mongo.ObjectId(movieId) as unknown as string;
+        condition.movie_id = new fastify.mongo.ObjectId(movieId) as unknown as string;
         const totalCount = await comments.countDocuments(condition);
         return totalCount;
       },

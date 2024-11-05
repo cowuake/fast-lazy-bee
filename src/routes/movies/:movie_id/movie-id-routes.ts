@@ -26,7 +26,7 @@ const routes: RouteOptions[] = [
     schema: { ...FetchMovieSchema, tags: [...tags, RouteTags.Cache] },
     handler: async function fetchMovie(request, reply) {
       const params = request.params as MovieIdObjectSchemaType;
-      const movie = await this.dataStore.fetchMovie(params.movie_id);
+      const movie = (await this.dataStore.fetchMovie(params.movie_id)) as MovieSchemaType;
 
       if (acceptsHal(request)) {
         const halMovie = addLinksToResource<typeof MovieSchema>(request, movie);

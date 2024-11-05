@@ -65,7 +65,8 @@ const routes: RouteOptions[] = [
         throw genUnauthorizedError();
       }
 
-      const { name, email } = this.jwt.decode(token) as UserSchemaType;
+      const decodedToken = this.jwt.decode(token) as unknown as UserSchemaType;
+      const { name, email } = decodedToken;
       const movieCommentInput = request.body as MovieCommentInputSchemaType;
       const params = request.params as MovieIdObjectSchemaType;
       const movieId = params.movie_id;

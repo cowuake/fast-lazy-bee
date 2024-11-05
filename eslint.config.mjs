@@ -1,6 +1,5 @@
-import loveConfig from 'eslint-config-love';
 import typescriptParser from '@typescript-eslint/parser';
-import typescriptPlugin from '@typescript-eslint/eslint-plugin';
+import loveConfig from 'eslint-config-love';
 
 import importPlugin from 'eslint-plugin-import';
 import nodePlugin from 'eslint-plugin-node';
@@ -31,7 +30,8 @@ export default [
     languageOptions,
     plugins,
     rules: {
-      '@typescript-eslint/no-magic-numbers': 'warn'
+      '@typescript-eslint/no-magic-numbers': 'warn',
+      '@typescript-eslint/no-extraneous-class': 'warn'
     }
   },
   {
