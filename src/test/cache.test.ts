@@ -36,7 +36,9 @@ describe('Cache plugin', () => {
   it('should not cache an error response', async () => {
     const request = genMockRequest(HttpMethods.GET, true);
 
-    for (const status of Object.entries(HttpStatusCodes).filter(([, value]) => value >= 400)) {
+    for (const status of Object.values(HttpStatusCodes).filter(
+      (value) => (value.valueOf() as number) >= 400
+    )) {
       const reply = genMockReply(status as unknown as number);
       const hasBeenCached = await putInCache(fastifyInstance, request, reply, {});
 
