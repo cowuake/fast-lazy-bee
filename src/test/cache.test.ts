@@ -40,7 +40,7 @@ describe('Cache plugin', () => {
       (value) => (value.valueOf() as number) >= 400
     )) {
       const reply = genMockReply(status as unknown as number);
-      const hasBeenCached = await putInCache(fastifyInstance, request, reply, {});
+      const hasBeenCached = putInCache(fastifyInstance, request, reply, {});
 
       expect(hasBeenCached).toBeFalsy();
     }
@@ -49,7 +49,7 @@ describe('Cache plugin', () => {
   it('should not cache a non-cacheable route', async () => {
     const request = genMockRequest(HttpMethods.GET, false);
     const reply = genMockReply(HttpStatusCodes.OK);
-    const hasBeenCached = await putInCache(fastifyInstance, request, reply, {});
+    const hasBeenCached = putInCache(fastifyInstance, request, reply, {});
 
     expect(hasBeenCached).toBeFalsy();
   });
@@ -57,7 +57,7 @@ describe('Cache plugin', () => {
   it('should cache a successful response for a cacheable route', async () => {
     const request = genMockRequest(HttpMethods.GET, true);
     const reply = genMockReply(HttpStatusCodes.OK);
-    const hasBeenCached = await putInCache(fastifyInstance, request, reply, {});
+    const hasBeenCached = putInCache(fastifyInstance, request, reply, {});
 
     expect(hasBeenCached).toBeTruthy();
   });
@@ -66,7 +66,7 @@ describe('Cache plugin', () => {
     const request = genMockRequest(HttpMethods.GET, true);
     request.headers['cache-control'] = 'no-cache';
     const reply = genMockReply(HttpStatusCodes.OK);
-    const hasBeenCached = await putInCache(fastifyInstance, request, reply, {});
+    const hasBeenCached = putInCache(fastifyInstance, request, reply, {});
 
     expect(hasBeenCached).toBeFalsy();
   });
@@ -74,7 +74,7 @@ describe('Cache plugin', () => {
   it('should retrieve a response from the cache', async () => {
     const request = genMockRequest(HttpMethods.GET, true);
     const reply = genMockReply(HttpStatusCodes.OK);
-    const hasGotFromCache = await getFromCache(fastifyInstance, request, reply);
+    const hasGotFromCache = getFromCache(fastifyInstance, request, reply);
 
     expect(hasGotFromCache).toBeTruthy();
   });
@@ -82,7 +82,7 @@ describe('Cache plugin', () => {
   it('should not retrieve a response from the cache for a non-cacheable route', async () => {
     const request = genMockRequest(HttpMethods.GET, false);
     const reply = genMockReply(HttpStatusCodes.OK);
-    const hasGotFromCache = await getFromCache(fastifyInstance, request, reply);
+    const hasGotFromCache = getFromCache(fastifyInstance, request, reply);
 
     expect(hasGotFromCache).toBeFalsy();
   });
@@ -91,7 +91,7 @@ describe('Cache plugin', () => {
     const request = genMockRequest(HttpMethods.GET, true);
     request.headers['cache-control'] = 'no-cache';
     const reply = genMockReply(HttpStatusCodes.OK);
-    const hasGotFromCache = await getFromCache(fastifyInstance, request, reply);
+    const hasGotFromCache = getFromCache(fastifyInstance, request, reply);
 
     expect(hasGotFromCache).toBeFalsy();
   });

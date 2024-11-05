@@ -1,9 +1,22 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest, RouteOptions } from 'fastify';
 import fp from 'fastify-plugin';
-import * as CacheUtils from '../utils/cache-utils';
 import { AppConfigDefaults } from '../utils/constants/constants';
-import { RouteTags } from '../utils/constants/enums';
+import { HttpMediaTypes, RouteTags } from '../utils/constants/enums';
 import { hashValue as getKeySignature } from '../utils/crypto-utils';
+
+const genCacheKey = (request: FastifyRequest): string => {
+  const accept = request.headers.accept ?? HttpMediaTypes.JSON;
+  const { method, url, params } = request;
+  const keySource = { method, url, params, accept };
+  return JSON.stringify(keySource);
+};
+
+const getExpirationDate = (): Date => {
+  const expirationDate = new Date();
+  expirationDate.setSeconds(expirationDate.getSeconds() + AppConfigDefaults.cacheExpiration_s);
+
+  return expirationDate;
+};
 
 const isCacheable = (request: FastifyRequest, reply: FastifyReply | null = null): boolean => {
   const routeOptions = request.routeOptions as RouteOptions;
@@ -26,12 +39,12 @@ const getMaxAge = (request: FastifyRequest): number =>
       AppConfigDefaults.cacheExpiration_s.toString()
   );
 
-const putInCache = async (
+const putInCache = (
   fastify: FastifyInstance,
   request: FastifyRequest,
   reply: FastifyReply,
   payload: unknown
-): Promise<boolean> => {
+): boolean => {
   if (!isCacheable(request, reply) || doesNotAllowCache(request)) {
     fastify.log.info(
       `Caching bypassed based on ${reply.statusCode}@${request.method}@${request.url}`
@@ -39,7 +52,7 @@ const putInCache = async (
     return false;
   }
 
-  const cacheKey = CacheUtils.genCacheKey(request);
+  const cacheKey = genCacheKey(request);
 
   fastify.cache.get(cacheKey, (err, value) => {
     if (err != null) {
@@ -68,11 +81,11 @@ const putInCache = async (
   return true;
 };
 
-const getFromCache = async (
+const getFromCache = (
   fastify: FastifyInstance,
   request: FastifyRequest,
   reply: FastifyReply
-): Promise<boolean> => {
+): boolean => {
   if (!isCacheable(request)) {
     fastify.log.info(`Route ${request.method}@${request.url} is not cacheable`);
     return false;
@@ -83,7 +96,7 @@ const getFromCache = async (
     return false;
   }
 
-  const cacheKey = CacheUtils.genCacheKey(request);
+  const cacheKey = genCacheKey(request);
 
   fastify.cache.get(cacheKey, (err, value) => {
     if (err != null) {
@@ -127,15 +140,15 @@ const getFromCache = async (
 const cachePlugin = fp(
   async (fastify: FastifyInstance) => {
     fastify.addHook('onRequest', async (request, reply) => {
-      await getFromCache(fastify, request, reply);
+      getFromCache(fastify, request, reply);
     });
 
     fastify.addHook('onSend', async (request, reply, payload) => {
-      await putInCache(fastify, request, reply, payload);
+      putInCache(fastify, request, reply, payload);
     });
   },
   { name: 'cache', dependencies: ['server-config'] }
 );
 
 export default cachePlugin;
-export { doesNotAllowCache, getFromCache, getMaxAge, isCacheable, putInCache };
+export { doesNotAllowCache, getExpirationDate, getFromCache, getMaxAge, isCacheable, putInCache };

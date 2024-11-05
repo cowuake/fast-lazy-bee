@@ -1,11 +1,11 @@
 import type { FastifyInstance, RouteOptions } from 'fastify';
+import { getExpirationDate } from '../../plugins/cache';
 import type { MovieSchema, MovieSchemaType } from '../../schemas/movies/data';
 import {
   CreateMovieSchema,
   FetchMoviesSchema,
   type PaginatedSearchSchemaType
 } from '../../schemas/movies/http';
-import { getExpirationDate } from '../../utils/cache-utils';
 import {
   HttpMediaTypes,
   HttpMethods,

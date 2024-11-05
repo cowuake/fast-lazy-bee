@@ -8,6 +8,7 @@ import type {
 } from '../schemas/http';
 import { PaginationConstants } from './constants/constants';
 import { ResourceCollections } from './constants/enums';
+import { getFirstPage, getLastPage, getNextPage, getPreviousPage } from './pagination-utils';
 
 const expandResourceLinks = (
   links: LinksSchemaType,
@@ -23,27 +24,38 @@ const expandResourceLinks = (
     return { ...acc, [key]: expandedLink };
   }, {});
 
-const getPreviousPage = (page: number, pageSize: number, url: string): string | null =>
-  page > 1
-    ? `${url}?${PaginationConstants.pageNumberKey}=${page - 1}&${PaginationConstants.pageSizeKey}=${pageSize}`
-    : null;
+const getPreviousPageLink = (page: number, pageSize: number, url: string): string | null => {
+  const previousPage = getPreviousPage(page, pageSize);
+  const link =
+    previousPage !== null
+      ? `${url}?${PaginationConstants.pageNumberKey}=${previousPage}&${PaginationConstants.pageSizeKey}=${pageSize}`
+      : null;
+  return link;
+};
 
-const getNextPage = (
+const getNextPageLink = (
   page: number,
   pageSize: number,
   totalCount: number,
   url: string
-): string | null =>
-  page * pageSize < totalCount
-    ? `${url}?${PaginationConstants.pageNumberKey}=${page + 1}&${PaginationConstants.pageSizeKey}=${pageSize}`
-    : null;
+): string | null => {
+  const nextPage = getNextPage(page, pageSize, totalCount);
+  const link =
+    nextPage !== null
+      ? `${url}?${PaginationConstants.pageNumberKey}=${nextPage}&${PaginationConstants.pageSizeKey}=${pageSize}`
+      : null;
+  return link;
+};
 
-const getFirstPage = (pageSize: number, url: string): string =>
-  `${url}?${PaginationConstants.pageNumberKey}=1&${PaginationConstants.pageSizeKey}=${pageSize}`;
+const getFirstPageLink = (pageSize: number, url: string): string => {
+  const firstpage = getFirstPage();
+  const link = `${url}?${PaginationConstants.pageNumberKey}=${firstpage}&${PaginationConstants.pageSizeKey}=${pageSize}`;
+  return link;
+};
 
-const getLastPage = (pageSize: number, totalCount: number, url: string): string => {
-  const lastPageNumber = pageSize > 0 ? Math.ceil(totalCount / pageSize) : 0;
-  return `${url}?${PaginationConstants.pageNumberKey}=${lastPageNumber}&${PaginationConstants.pageSizeKey}=${pageSize}`;
+const getLastPageLink = (pageSize: number, totalCount: number, url: string): string => {
+  const lastPage = getLastPage(pageSize, totalCount);
+  return `${url}?${PaginationConstants.pageNumberKey}=${lastPage}&${PaginationConstants.pageSizeKey}=${pageSize}`;
 };
 
 const addLinksToCollection = <TData extends TObject>(
@@ -55,10 +67,10 @@ const addLinksToCollection = <TData extends TObject>(
   const { page, pageSize, totalCount } = collection;
   const urlNoQuery = request.url.split('?')[0];
 
-  const previousPage = getPreviousPage(page, pageSize, urlNoQuery);
-  const nextPage = getNextPage(page, pageSize, totalCount, urlNoQuery);
-  const firstPage = getFirstPage(pageSize, urlNoQuery);
-  const lastPage = getLastPage(pageSize, totalCount, urlNoQuery);
+  const previousPage = getPreviousPageLink(page, pageSize, urlNoQuery);
+  const nextPage = getNextPageLink(page, pageSize, totalCount, urlNoQuery);
+  const firstPage = getFirstPageLink(pageSize, urlNoQuery);
+  const lastPage = getLastPageLink(pageSize, totalCount, urlNoQuery);
 
   const rawData = collection.data as Array<ResourceSchemaType<TData> & Resource>;
 
@@ -108,4 +120,11 @@ const addLinksToResource = <TData extends TObject>(
   };
 };
 
-export { addLinksToCollection, addLinksToResource };
+export {
+  addLinksToCollection,
+  addLinksToResource,
+  getFirstPageLink,
+  getLastPageLink,
+  getNextPageLink,
+  getPreviousPageLink
+};

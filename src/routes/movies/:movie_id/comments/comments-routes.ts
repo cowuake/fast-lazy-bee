@@ -61,6 +61,7 @@ const routes: RouteOptions[] = [
     schema: { ...CreateMovieCommentSchema, tags },
     handler: async function createMovieComment(request, reply) {
       const token = request.headers.authorization?.split('Bearer ')[1];
+
       if (token === undefined) {
         throw genUnauthorizedError();
       }
