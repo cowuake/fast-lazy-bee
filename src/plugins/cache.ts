@@ -1,19 +1,23 @@
-import type { FastifyInstance, FastifyRequest, RouteOptions } from 'fastify';
+import type { FastifyInstance, FastifyReply, FastifyRequest, RouteOptions } from 'fastify';
 import fp from 'fastify-plugin';
 import * as CacheUtils from '../utils/cache-utils';
 import { AppConfigDefaults } from '../utils/constants/constants';
 import { RouteTags } from '../utils/constants/enums';
 import { hashValue as getKeySignature } from '../utils/crypto-utils';
 
-const isCacheable = (request: FastifyRequest): boolean => {
+const isCacheable = (request: FastifyRequest, reply: FastifyReply | null = null): boolean => {
   const routeOptions = request.routeOptions as RouteOptions;
   if (routeOptions.schema?.tags == null) {
     return false;
   }
-  return routeOptions.schema.tags.includes(RouteTags.Cache);
+
+  const isRouteCacheable = routeOptions.schema.tags.includes(RouteTags.Cache);
+  const isSuccess = reply == null || reply.statusCode < 300;
+
+  return isRouteCacheable && isSuccess;
 };
 
-const specifiesNoCache = (request: FastifyRequest): boolean =>
+const doesNotAllowCache = (request: FastifyRequest): boolean =>
   request.headers['cache-control']?.match(/no-cache/i) != null;
 
 const getMaxAge = (request: FastifyRequest): number =>
@@ -26,11 +30,11 @@ const cachePlugin = fp(
   async (fastify: FastifyInstance) => {
     fastify.addHook('onRequest', async (request, reply) => {
       if (!isCacheable(request)) {
-        fastify.log.info(`Route ${request.method}~${request.url} is not cacheable`);
+        fastify.log.info(`Route ${request.method}@${request.url} is not cacheable`);
         return;
       }
 
-      if (specifiesNoCache(request)) {
+      if (doesNotAllowCache(request)) {
         fastify.log.info('Cache bypassed due to no-cache directive');
         return;
       }
@@ -70,6 +74,13 @@ const cachePlugin = fp(
     });
 
     fastify.addHook('onSend', async (request, reply, payload) => {
+      if (!isCacheable(request, reply) || doesNotAllowCache(request)) {
+        fastify.log.info(
+          `Caching bypassed based on ${reply.statusCode}@${request.method}@${request.url}`
+        );
+        return;
+      }
+
       const cacheKey = CacheUtils.genCacheKey(request);
 
       fastify.cache.get(cacheKey, (err, value) => {
