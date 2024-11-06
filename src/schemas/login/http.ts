@@ -1,12 +1,14 @@
 import type { FastifySchema } from 'fastify';
 import { HttpStatusCodes } from '../../utils/constants/enums';
-import { createErrorResponseSchemas } from '../../utils/routing-utils';
+import { createErrorResponseSchemas, createJsonResponseSchema } from '../../utils/routing-utils';
+import { UserSchema } from '../users/data';
 import { JwtSchema } from './data';
 
 const LoginSchema: FastifySchema = {
   summary: 'Generate login data for the user',
+  body: UserSchema,
   response: {
-    [HttpStatusCodes.OK]: JwtSchema,
+    ...createJsonResponseSchema(HttpStatusCodes.OK, JwtSchema),
     ...createErrorResponseSchemas([
       HttpStatusCodes.BadRequest,
       HttpStatusCodes.Unauthorized,
