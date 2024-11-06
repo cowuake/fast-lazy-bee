@@ -36,7 +36,7 @@
     "@babel/core": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
     "@babel/preset-typescript": "^7.26.0",
-    "@testcontainers/mongodb": "^10.13.2",
+    "@testcontainers/mongodb": "^10.14.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.9.0",
     "@typescript-eslint/eslint-plugin": "^8.13.0",
