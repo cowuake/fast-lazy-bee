@@ -33,7 +33,7 @@ const TestConstants = {
   impossibleEmail: 'impossibru@nyan.cat.trollolol',
   impossiblePassword: 'waddayamean?!?!',
   mongoTestcontainersPort: 27028,
-  longTimeout: 600000,
+  longTimeout: 120000,
   v1Root: '/api/v1',
   userName: 'Tyrion Lannister',
   userEmail: 'peter_dinklage@gameofthron.es',
@@ -53,10 +53,16 @@ const APIEndpoints = {
   MovieComments: '/movies/:movie_id/comments'
 } as const;
 
+const MovieEndpoint = (id: string): string => APIEndpoints.Movie.replace(':movie_id', id);
+const MovieCommentsEndpoint = (id: string): string =>
+  APIEndpoints.MovieComments.replace(':movie_id', id);
+
 export {
   APIEndpoints,
   APIV1Prefix,
   AppConfigDefaults,
+  MovieCommentsEndpoint,
+  MovieEndpoint,
   OpenAPIDocsPrefix,
   PaginationConstants,
   TestConstants

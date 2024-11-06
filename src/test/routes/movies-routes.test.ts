@@ -1,6 +1,13 @@
 import type { FastifyInstance, InjectOptions } from 'fastify';
 import type { MovieCommentSchemaType } from '../../schemas/movies/data';
-import { AppConfigDefaults, TestConstants } from '../../utils/constants/constants';
+import {
+  APIEndpoints,
+  APIV1Prefix,
+  AppConfigDefaults,
+  MovieCommentsEndpoint,
+  MovieEndpoint,
+  TestConstants
+} from '../../utils/constants/constants';
 import {
   FetchTypes,
   HttpMediaTypes,
@@ -19,32 +26,51 @@ import buildTestInstance from '../../utils/testing/test-server';
 
 describe('moviesAPI', () => {
   const fastifyInstance: FastifyInstance = buildTestInstance();
-  const moviesEndpoint = `${TestConstants.v1Root}/movies`;
-  const movieIdEndpoint = `${moviesEndpoint}/:movie_id`;
+  const moviesEndpoint = APIV1Prefix + APIEndpoints.Movies;
+  const plainMovieIdEndpoint = APIV1Prefix + APIEndpoints.Movie;
+  const plainCommentsEndpoint = APIV1Prefix + APIEndpoints.MovieComments;
   const pagination = 'page=1&size=10';
-  const allUrls = [moviesEndpoint, movieIdEndpoint];
 
-  const testMovieId = TestConstants.magicId;
   const testMovie = TestConstants.testMovie;
+  const testMovieId = TestConstants.magicId;
+  const fakeMovieId = TestConstants.fakeId;
+
+  const testMovieIdEndpoint = APIV1Prefix + MovieEndpoint(testMovieId);
+  const testCommentsEndpoint = APIV1Prefix + MovieCommentsEndpoint(testMovieId);
+  const fakeMovieIdEndpoint = APIV1Prefix + MovieEndpoint(fakeMovieId);
+  const fakeCommentsEndpoint = APIV1Prefix + MovieCommentsEndpoint(fakeMovieId);
+
+  const allMovieUrls = [moviesEndpoint, plainMovieIdEndpoint];
+  const allCommentsUrls = [plainCommentsEndpoint];
+  const allUrls = [...allMovieUrls, ...allCommentsUrls];
 
   it('should rely on a defined Fastify instance', () => {
     expect(fastifyInstance).toBeDefined();
   });
 
-  it('should include all expected endpoints', () => {
-    allUrls.forEach((url) => {
+  it('should include all expected movie endpoints', () => {
+    allMovieUrls.forEach((url) => {
       expect(fastifyInstance.hasRoute({ method: HttpMethods.GET, url })).toBeTruthy();
       expect(fastifyInstance.hasRoute({ method: HttpMethods.OPTIONS, url })).toBeTruthy();
     });
 
     [
       { method: HttpMethods.POST, url: moviesEndpoint },
-      { method: HttpMethods.PUT, url: movieIdEndpoint },
-      { method: HttpMethods.PATCH, url: movieIdEndpoint },
-      { method: HttpMethods.DELETE, url: movieIdEndpoint }
+      { method: HttpMethods.PUT, url: plainMovieIdEndpoint },
+      { method: HttpMethods.PATCH, url: plainMovieIdEndpoint },
+      { method: HttpMethods.DELETE, url: plainMovieIdEndpoint }
     ].forEach((route) => {
       expect(fastifyInstance.hasRoute(route)).toBeTruthy();
     });
+  });
+
+  it('should include all expected comment endpoints', () => {
+    expect(
+      fastifyInstance.hasRoute({ method: HttpMethods.GET, url: plainCommentsEndpoint })
+    ).toBeTruthy();
+    expect(
+      fastifyInstance.hasRoute({ method: HttpMethods.POST, url: plainCommentsEndpoint })
+    ).toBeTruthy();
   });
 
   it('should return the available HTTP methods', async () => {
@@ -213,7 +239,7 @@ describe('moviesAPI', () => {
   it('should fetch a movie by id', async () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.GET,
-      url: `${moviesEndpoint}/${testMovieId}`
+      url: testMovieIdEndpoint
     });
     expect(response.statusCode).toBe(HttpStatusCodes.OK);
   });
@@ -221,7 +247,7 @@ describe('moviesAPI', () => {
   it('should fetch a movie by id with HAL', async () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.GET,
-      url: `${moviesEndpoint}/${testMovieId}`,
+      url: testMovieIdEndpoint,
       headers: { accept: HttpMediaTypes.HAL_JSON }
     });
     expectHalResponse(response, FetchTypes.Resource);
@@ -230,7 +256,7 @@ describe('moviesAPI', () => {
   it(`should return a ${HttpStatusCodes.NotFound} when fetching a non-existent movie`, async () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.GET,
-      url: `${moviesEndpoint}/${TestConstants.fakeId}`
+      url: fakeMovieIdEndpoint
     });
     expect(response.statusCode).toBe(HttpStatusCodes.NotFound);
   });
@@ -238,7 +264,7 @@ describe('moviesAPI', () => {
   it('should not replace a movie if unauthorized', async () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.PUT,
-      url: `${moviesEndpoint}/${testMovieId}`,
+      url: testMovieIdEndpoint,
       payload: testMovie
     });
     expect(response.statusCode).toBe(HttpStatusCodes.Unauthorized);
@@ -248,7 +274,7 @@ describe('moviesAPI', () => {
     const token = getValidToken(fastifyInstance);
     const response = await fastifyInstance.inject({
       method: HttpMethods.PUT,
-      url: `${moviesEndpoint}/${testMovieId}`,
+      url: testMovieIdEndpoint,
       payload: testMovie,
       headers: { authorization: `Bearer ${token}` }
     });
@@ -259,7 +285,7 @@ describe('moviesAPI', () => {
     const token = getValidToken(fastifyInstance);
     const response = await fastifyInstance.inject({
       method: HttpMethods.PUT,
-      url: `${moviesEndpoint}/${TestConstants.fakeId}`,
+      url: fakeMovieIdEndpoint,
       payload: testMovie,
       headers: { authorization: `Bearer ${token}` }
     });
@@ -270,7 +296,7 @@ describe('moviesAPI', () => {
     const token = getValidToken(fastifyInstance);
     const response = await fastifyInstance.inject({
       method: HttpMethods.PATCH,
-      url: `${moviesEndpoint}/${testMovieId}`,
+      url: testMovieIdEndpoint,
       payload: {
         type: 'movie'
       },
@@ -283,7 +309,7 @@ describe('moviesAPI', () => {
     const token = getValidToken(fastifyInstance);
     const response = await fastifyInstance.inject({
       method: HttpMethods.PATCH,
-      url: `${moviesEndpoint}/${TestConstants.fakeId}`,
+      url: fakeMovieIdEndpoint,
       payload: {
         type: 'movie'
       },
@@ -295,7 +321,7 @@ describe('moviesAPI', () => {
   it('should not delete a movie if unauthorized', async () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.DELETE,
-      url: `${moviesEndpoint}/${testMovieId}`
+      url: testMovieIdEndpoint
     });
     expect(response.statusCode).toBe(HttpStatusCodes.Unauthorized);
   });
@@ -304,7 +330,7 @@ describe('moviesAPI', () => {
     const token = getValidToken(fastifyInstance);
     const response = await fastifyInstance.inject({
       method: HttpMethods.DELETE,
-      url: `${moviesEndpoint}/${testMovieId}`,
+      url: testMovieIdEndpoint,
       headers: { authorization: `Bearer ${token}` }
     });
     expect(response.statusCode).toBe(HttpStatusCodes.NoContent);
@@ -314,7 +340,7 @@ describe('moviesAPI', () => {
     const token = getValidToken(fastifyInstance);
     const response = await fastifyInstance.inject({
       method: HttpMethods.DELETE,
-      url: `${moviesEndpoint}/${TestConstants.fakeId}`,
+      url: fakeMovieIdEndpoint,
       headers: { authorization: `Bearer ${token}` }
     });
     expect(response.statusCode).toBe(HttpStatusCodes.NotFound);
@@ -323,15 +349,26 @@ describe('moviesAPI', () => {
   it('should fetch movie comments', async () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.GET,
-      url: `${moviesEndpoint}/${testMovieId}/comments?${pagination}`
+      url: `${testCommentsEndpoint}?${pagination}`
     });
     expect(response.statusCode).toBe(HttpStatusCodes.OK);
   });
 
-  it('should fetch movie comments with HAL', async () => {
+  it(`should return a ${HttpStatusCodes.NotFound} when fetching a non-existent movie's comments`, async () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.GET,
-      url: `${moviesEndpoint}/${testMovieId}/comments?${pagination}`,
+      url: fakeCommentsEndpoint
+    });
+    expect(response.statusCode).toBe(HttpStatusCodes.NotFound);
+  });
+
+  it('should fetch movie comments with HAL', async () => {
+    fastifyInstance.log.warn(
+      '######################' + testCommentsEndpoint + '######################'
+    );
+    const response = await fastifyInstance.inject({
+      method: HttpMethods.GET,
+      url: `${testCommentsEndpoint}?${pagination}`,
       headers: { accept: HttpMediaTypes.HAL_JSON }
     });
     expectHalResponse(response, FetchTypes.Collection);
@@ -342,7 +379,7 @@ describe('moviesAPI', () => {
     const text = genRandomString();
     const response = await fastifyInstance.inject({
       method: HttpMethods.POST,
-      url: `${moviesEndpoint}/${testMovieId}/comments`,
+      url: testCommentsEndpoint,
       payload: { text },
       headers: { authorization: `Bearer ${token}` }
     });
@@ -350,7 +387,7 @@ describe('moviesAPI', () => {
 
     const commentFetchResponse = await fastifyInstance.inject({
       method: HttpMethods.GET,
-      url: `${moviesEndpoint}/${testMovieId}/comments`
+      url: testCommentsEndpoint
     });
 
     expect(commentFetchResponse.statusCode).toBe(HttpStatusCodes.OK);
@@ -365,7 +402,7 @@ describe('moviesAPI', () => {
   it('should not create a movie comment if unauthorized', async () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.POST,
-      url: `${moviesEndpoint}/${testMovieId}/comments`,
+      url: testCommentsEndpoint,
       payload: {
         text: 'This is a test comment'
       }

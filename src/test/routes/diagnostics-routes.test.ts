@@ -1,11 +1,11 @@
 import type { FastifyInstance } from 'fastify';
-import { TestConstants } from '../../utils/constants/constants';
+import { APIEndpoints, APIV1Prefix } from '../../utils/constants/constants';
 import { HttpMediaTypes, HttpMethods, HttpStatusCodes } from '../../utils/constants/enums';
 import buildTestInstance from '../../utils/testing/test-server';
 
 describe('diagnosticsApi', () => {
   const fastifyInstance: FastifyInstance = buildTestInstance();
-  const healthEndpoint = `${TestConstants.v1Root}/health`;
+  const healthEndpoint = APIV1Prefix + APIEndpoints.Health;
   const allUrls = [healthEndpoint];
 
   it('should rely on a defined Fastify instance', () => {

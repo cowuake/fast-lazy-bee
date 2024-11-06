@@ -1,12 +1,12 @@
 import type { FastifyInstance } from 'fastify';
-import { TestConstants } from '../../utils/constants/constants';
+import { APIEndpoints, APIV1Prefix, TestConstants } from '../../utils/constants/constants';
 import { HttpMethods, HttpStatusCodes } from '../../utils/constants/enums';
 import { genRandomEmail } from '../../utils/test-utils';
 import buildTestInstance from '../../utils/testing/test-server';
 
 describe('usersAPI', () => {
   const fastifyInstance: FastifyInstance = buildTestInstance();
-  const usersEndpoint = `${TestConstants.v1Root}/users`;
+  const usersEndpoint = APIV1Prefix + APIEndpoints.Users;
   const allUrls = [usersEndpoint];
 
   it('should rely on a defined Fastify instance', () => {

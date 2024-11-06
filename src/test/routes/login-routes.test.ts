@@ -1,11 +1,11 @@
 import type { FastifyInstance } from 'fastify';
-import { TestConstants } from '../../utils/constants/constants';
+import { APIEndpoints, APIV1Prefix, TestConstants } from '../../utils/constants/constants';
 import { HttpMethods, HttpStatusCodes } from '../../utils/constants/enums';
 import buildTestInstance from '../../utils/testing/test-server';
 
 describe('authAPI', () => {
   const fastifyInstance: FastifyInstance = buildTestInstance();
-  const loginEndpoint = `${TestConstants.v1Root}/login`;
+  const loginEndpoint = APIV1Prefix + APIEndpoints.Login;
   const allUrls = [loginEndpoint];
 
   it('should rely on a defined Fastify instance', () => {

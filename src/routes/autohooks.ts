@@ -67,6 +67,11 @@ const autoHooks = fp(
       },
 
       async fetchMovieComments(movieId, searchParams) {
+        const movie = await movies.findOne({ _id: new fastify.mongo.ObjectId(movieId) });
+        if (movie === null) {
+          throw genNotFoundError(ResourceTypes.Movie, movieId);
+        }
+
         const skip = (searchParams.page - 1) * searchParams.pageSize;
         const condition = getMongoFilter(MovieCommentSchema, searchParams);
         const sort: Sort = getMovieCommentSort(searchParams);
@@ -77,6 +82,7 @@ const autoHooks = fp(
           )
           .sort(sort)
           .toArray();
+
         const output = docs.map((doc) => ({ ...doc, id: doc._id.toString() }));
         return output;
       },

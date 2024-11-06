@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify';
-import { TestConstants } from '../../utils/constants/constants';
+import { APIEndpoints, APIV1Prefix } from '../../utils/constants/constants';
 import {
   FetchTypes,
   HttpMediaTypes,
@@ -11,7 +11,7 @@ import buildTestInstance from '../../utils/testing/test-server';
 
 describe('API entry point', () => {
   const fastifyInstance: FastifyInstance = buildTestInstance();
-  const entryPoint = `${TestConstants.v1Root}/`;
+  const entryPoint = APIV1Prefix + APIEndpoints.EntryPoint;
 
   it('should rely on a defined Fastify instance', () => {
     expect(fastifyInstance).toBeDefined();
