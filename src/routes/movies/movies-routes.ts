@@ -6,6 +6,7 @@ import {
   FetchMoviesSchema,
   type PaginatedSearchSchemaType
 } from '../../schemas/movies/http';
+import { APIEndpoints } from '../../utils/constants/constants';
 import {
   HttpMediaTypes,
   HttpMethods,
@@ -15,7 +16,7 @@ import {
 import { addLinksToCollection } from '../../utils/hal-utils';
 import { acceptsHal, registerEndpointRoutes } from '../../utils/routing-utils';
 
-const endpoint = '';
+const endpoint = APIEndpoints.Movies;
 const tags: RouteTags[] = [RouteTags.Movies] as const;
 
 const routes: RouteOptions[] = [

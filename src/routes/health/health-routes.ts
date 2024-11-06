@@ -1,6 +1,7 @@
 import type { FastifyInstance, RouteOptions } from 'fastify';
 import type { HealthReportSchema, HealthReportSchemaType } from '../../schemas/diagnostics/data';
 import { GetHealthSchema } from '../../schemas/diagnostics/http';
+import { APIEndpoints } from '../../utils/constants/constants';
 import {
   HttpMediaTypes,
   HttpMethods,
@@ -10,7 +11,7 @@ import {
 import { addLinksToResource } from '../../utils/hal-utils';
 import { acceptsHal, registerEndpointRoutes } from '../../utils/routing-utils';
 
-const endpoint = '';
+const endpoint = APIEndpoints.Health;
 const tags: RouteTags[] = [RouteTags.Diagnostics] as const;
 
 const routes: RouteOptions[] = [

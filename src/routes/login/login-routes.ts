@@ -1,10 +1,11 @@
 import type { FastifyInstance, RouteOptions } from 'fastify';
 import { LoginSchema } from '../../schemas/login/http';
 import type { UserSchemaType } from '../../schemas/users/data';
+import { APIEndpoints } from '../../utils/constants/constants';
 import { HttpMethods, HttpStatusCodes, RouteTags } from '../../utils/constants/enums';
 import { registerEndpointRoutes } from '../../utils/routing-utils';
 
-const endpoint = '';
+const endpoint = APIEndpoints.Login;
 const tags: RouteTags[] = [RouteTags.Auth] as const;
 
 const routes: RouteOptions[] = [

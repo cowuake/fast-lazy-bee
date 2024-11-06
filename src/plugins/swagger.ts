@@ -3,6 +3,7 @@ import fastifySwaggerUi, { type FastifySwaggerUiOptions } from '@fastify/swagger
 import type { FastifyInstance } from 'fastify';
 import fp from 'fastify-plugin';
 import pkg from '../../package.json';
+import { OpenAPIDocsPrefix } from '../utils/constants/constants';
 import { SecuritySchemes } from '../utils/constants/enums';
 import { RouteTagsToDescriptions } from '../utils/constants/records';
 
@@ -45,7 +46,7 @@ const swaggerOptions: FastifyDynamicSwaggerOptions = {
 };
 
 const swaggerUIOptions: FastifySwaggerUiOptions = {
-  routePrefix: '/docs',
+  routePrefix: OpenAPIDocsPrefix,
   uiConfig: {
     deepLinking: true,
     defaultModelExpandDepth: 10,
@@ -59,7 +60,7 @@ const swaggerUIOptions: FastifySwaggerUiOptions = {
 const swaggerPlugin = fp(
   async (fastify: FastifyInstance) => {
     fastify.get('/', async (request, reply) => {
-      reply.redirect('/docs');
+      reply.redirect(OpenAPIDocsPrefix);
     });
     await fastify.register(fastifySwagger, swaggerOptions);
     await fastify.register(fastifySwaggerUi, swaggerUIOptions);

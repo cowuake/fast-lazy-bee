@@ -40,4 +40,24 @@ const TestConstants = {
   userPassword: '$2b$12$xtHwQNXYlQzP2REobUDlzuQimjzBlXrTx1GnwP.xkfULeuuUpRxa2'
 } as const;
 
-export { AppConfigDefaults, PaginationConstants, TestConstants };
+const APIV1Prefix = '/api/v1';
+const OpenAPIDocsPrefix = '/docs';
+
+const APIEndpoints = {
+  EntryPoint: '/',
+  Login: '/login',
+  Health: '/health',
+  Users: '/users',
+  Movies: '/movies',
+  Movie: '/movies/:movie_id',
+  MovieComments: '/movies/:movie_id/comments'
+} as const;
+
+export {
+  APIEndpoints,
+  APIV1Prefix,
+  AppConfigDefaults,
+  OpenAPIDocsPrefix,
+  PaginationConstants,
+  TestConstants
+};

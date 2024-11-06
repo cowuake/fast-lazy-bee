@@ -10,6 +10,7 @@ import {
   type PaginatedSearchSchemaType
 } from '../../../../schemas/movies/http';
 import type { UserSchemaType } from '../../../../schemas/users/data';
+import { APIEndpoints } from '../../../../utils/constants/constants';
 import {
   HttpMediaTypes,
   HttpMethods,
@@ -23,7 +24,7 @@ import {
   registerEndpointRoutes
 } from '../../../../utils/routing-utils';
 
-const endpoint = '';
+const endpoint = APIEndpoints.MovieComments;
 const tags: RouteTags[] = [RouteTags.Comments] as const;
 
 const routes: RouteOptions[] = [

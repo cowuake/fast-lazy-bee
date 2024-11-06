@@ -7,6 +7,7 @@ import {
   ReplaceMovieSchema,
   UpdateMovieSchema
 } from '../../../schemas/movies/http';
+import { APIEndpoints } from '../../../utils/constants/constants';
 import {
   HttpMediaTypes,
   HttpMethods,
@@ -16,7 +17,7 @@ import {
 import { addLinksToResource } from '../../../utils/hal-utils';
 import { acceptsHal, registerEndpointRoutes } from '../../../utils/routing-utils';
 
-const endpoint = '';
+const endpoint = APIEndpoints.Movie;
 const tags: RouteTags[] = [RouteTags.Movie] as const;
 
 const routes: RouteOptions[] = [

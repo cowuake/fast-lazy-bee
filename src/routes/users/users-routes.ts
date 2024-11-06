@@ -1,10 +1,11 @@
 import type { FastifyInstance, RouteOptions } from 'fastify';
 import type { UserSchemaType } from '../../schemas/users/data';
 import { CreateUserSchema } from '../../schemas/users/http';
+import { APIEndpoints } from '../../utils/constants/constants';
 import { HttpMethods, HttpStatusCodes, RouteTags } from '../../utils/constants/enums';
 import { registerEndpointRoutes } from '../../utils/routing-utils';
 
-const endpoint = '';
+const endpoint = APIEndpoints.Users;
 const tags: RouteTags[] = [RouteTags.Users] as const;
 
 const routes: RouteOptions[] = [

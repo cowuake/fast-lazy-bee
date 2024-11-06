@@ -2,6 +2,7 @@ import type { FastifyInstance, RouteOptions } from 'fastify';
 import type { EmptySchema } from '../schemas/data';
 import { EntryPointSchema } from '../schemas/entrypoint-http';
 import type { LinksSchemaType } from '../schemas/http';
+import { APIEndpoints } from '../utils/constants/constants';
 import {
   HttpMediaTypes,
   HttpMethods,
@@ -13,13 +14,7 @@ import {
 import { addLinksToResource } from '../utils/hal-utils';
 import { acceptsHal, registerEndpointRoutes } from '../utils/routing-utils';
 
-const endpoint = '/';
-// const getCollectionLinks = (uri: string): LinksSchemaType =>
-//   Object.values(ResourceCollections).reduce((acc, collectionName) => {
-//     const link: LinksSchemaType = { [collectionName]: { href: `${uri}${collectionName}` } };
-//     return { ...acc, ...link };
-//   }, {});
-
+const endpoint = APIEndpoints.EntryPoint;
 const tags = [RouteTags.EntryPoint] as const;
 
 const route: RouteOptions = {
