@@ -363,9 +363,6 @@ describe('moviesAPI', () => {
   });
 
   it('should fetch movie comments with HAL', async () => {
-    fastifyInstance.log.warn(
-      '######################' + testCommentsEndpoint + '######################'
-    );
     const response = await fastifyInstance.inject({
       method: HttpMethods.GET,
       url: `${testCommentsEndpoint}?${pagination}`,
