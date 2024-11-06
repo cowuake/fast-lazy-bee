@@ -10,7 +10,7 @@ import {
   type PaginatedSearchSchemaType
 } from '../../../../schemas/movies/http';
 import type { UserSchemaType } from '../../../../schemas/users/data';
-import { APIEndpoints } from '../../../../utils/constants/constants';
+import { API_ENDPOINTS } from '../../../../utils/constants/constants';
 import {
   HttpMediaTypes,
   HttpMethods,
@@ -24,14 +24,14 @@ import {
   registerEndpointRoutes
 } from '../../../../utils/routing-utils';
 
-const endpoint = APIEndpoints.MovieComments;
-const tags: RouteTags[] = [RouteTags.Comments] as const;
+const endpoint = API_ENDPOINTS.MOVIE_COMMENTS;
+const tags: RouteTags[] = [RouteTags.COMMENTS] as const;
 
 const routes: RouteOptions[] = [
   {
     method: [HttpMethods.GET, HttpMethods.HEAD],
     url: endpoint,
-    schema: { ...FetchMovieCommentsSchema, tags: [...tags, RouteTags.Cache] },
+    schema: { ...FetchMovieCommentsSchema, tags: [...tags, RouteTags.CACHE] },
     handler: async function fetchMovieComments(request, reply) {
       const params = request.params as MovieIdObjectSchemaType;
       const movieId = params.movie_id;
@@ -81,7 +81,7 @@ const routes: RouteOptions[] = [
       };
 
       await this.dataStore.createMovieComment(movieComment);
-      reply.code(HttpStatusCodes.Created);
+      reply.code(HttpStatusCodes.CREATED);
     }
   } as const
 ] as const;

@@ -2,7 +2,7 @@ import type { FastifyInstance, RouteOptions } from 'fastify';
 import type { EmptySchema } from '../schemas/data';
 import { EntryPointSchema } from '../schemas/entrypoint-http';
 import type { LinksSchemaType } from '../schemas/http';
-import { APIEndpoints } from '../utils/constants/constants';
+import { API_ENDPOINTS } from '../utils/constants/constants';
 import {
   HttpMediaTypes,
   HttpMethods,
@@ -14,8 +14,8 @@ import {
 import { addLinksToResource } from '../utils/hal-utils';
 import { acceptsHal, registerEndpointRoutes } from '../utils/routing-utils';
 
-const endpoint = APIEndpoints.EntryPoint;
-const tags = [RouteTags.EntryPoint] as const;
+const endpoint = API_ENDPOINTS.ENTRY_POINT;
+const tags = [RouteTags.ENTRY_POINT] as const;
 
 const route: RouteOptions = {
   method: [HttpMethods.GET, HttpMethods.HEAD],
@@ -27,10 +27,10 @@ const route: RouteOptions = {
 
     if (acceptsHal(request)) {
       const links: LinksSchemaType = {
-        login: { href: `${uri}${IsolatedResourceTypes.Login}` },
-        health: { href: `${uri}${IsolatedResourceTypes.Health}` },
-        movies: { href: `${uri}${ResourceCollections.Movies}` },
-        users: { href: `${uri}${ResourceCollections.Users}` }
+        login: { href: `${uri}${IsolatedResourceTypes.LOGIN}` },
+        health: { href: `${uri}${IsolatedResourceTypes.HEALTH}` },
+        movies: { href: `${uri}${ResourceCollections.MOVIES}` },
+        users: { href: `${uri}${ResourceCollections.USERS}` }
       };
 
       const halMovie = addLinksToResource<typeof EmptySchema>(request, content, links);

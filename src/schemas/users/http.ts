@@ -7,11 +7,11 @@ const CreateUserSchema: FastifySchema = {
   summary: 'Create a new user',
   body: UserSchema,
   response: {
-    [HttpStatusCodes.Created]: {},
+    [HttpStatusCodes.CREATED]: {},
     ...createErrorResponseSchemas([
-      HttpStatusCodes.BadRequest,
-      HttpStatusCodes.Conflict,
-      HttpStatusCodes.InternalServerError
+      HttpStatusCodes.BAD_REQUEST,
+      HttpStatusCodes.CONFLICT,
+      HttpStatusCodes.INTERNAL_SERVER_ERROR
     ])
   }
 };

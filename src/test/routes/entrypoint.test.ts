@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify';
-import { APIEndpoints, APIV1Prefix } from '../../utils/constants/constants';
+import { API_ENDPOINTS, API_V1_PREFIX } from '../../utils/constants/constants';
 import {
   FetchTypes,
   HttpMediaTypes,
@@ -11,7 +11,7 @@ import buildTestInstance from '../../utils/testing/test-server';
 
 describe('API entry point', () => {
   const fastifyInstance: FastifyInstance = buildTestInstance();
-  const entryPoint = APIV1Prefix + APIEndpoints.EntryPoint;
+  const entryPoint = API_V1_PREFIX + API_ENDPOINTS.ENTRY_POINT;
 
   it('should rely on a defined Fastify instance', () => {
     expect(fastifyInstance).toBeDefined();
@@ -23,7 +23,7 @@ describe('API entry point', () => {
       url: entryPoint
     });
 
-    expect(response.statusCode).toBe(HttpStatusCodes.NoContent);
+    expect(response.statusCode).toBe(HttpStatusCodes.NO_CONTENT);
     expect(response.headers).toHaveProperty('allow');
   });
 
@@ -45,6 +45,6 @@ describe('API entry point', () => {
     });
 
     expect(response.statusCode).toBe(HttpStatusCodes.OK);
-    expectHalResponse(response, FetchTypes.Resource);
+    expectHalResponse(response, FetchTypes.RESOURCE);
   });
 });

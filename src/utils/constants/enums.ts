@@ -10,19 +10,19 @@ enum HttpMethods {
 
 enum HttpStatusCodes {
   OK = 200,
-  Created = 201,
-  NoContent = 204,
-  NotModified = 304,
-  BadRequest = 400,
-  Unauthorized = 401,
-  NotFound = 404,
-  Conflict = 409,
-  InternalServerError = 500
+  CREATED = 201,
+  NO_CONTENT = 204,
+  NOT_MODIFIED = 304,
+  BAD_REQUEST = 400,
+  UNAUTHORIZED = 401,
+  NOT_FOUND = 404,
+  CONFLICT = 409,
+  INTERNAL_SERVER_ERROR = 500
 }
 
 enum MediaTypes {
-  Movie = 'movie',
-  Series = 'series'
+  MOVIE = 'movie',
+  SERIES = 'series'
 }
 
 enum HttpMediaTypes {
@@ -32,40 +32,40 @@ enum HttpMediaTypes {
 }
 
 enum FetchTypes {
-  Resource = 'resource',
-  Collection = 'collection'
+  RESOURCE = 'resource',
+  COLLECTION = 'collection'
 }
 
 enum ResourceTypes {
-  Movie = 'movie',
-  MovieComment = 'comment',
-  User = 'user'
+  MOVIE = 'movie',
+  MOVIE_COMMENT = 'comment',
+  USER = 'user'
 }
 
 enum SecuritySchemes {
-  BearerAuth = 'BearerAuth'
+  BEARER_AUTH = 'BearerAuth'
 }
 
 enum IsolatedResourceTypes {
-  Login = 'login',
-  Health = 'health'
+  LOGIN = 'login',
+  HEALTH = 'health'
 }
 
 enum ResourceCollections {
-  Movies = 'movies',
-  MovieComments = 'comments',
-  Users = 'users'
+  MOVIES = 'movies',
+  MOVIE_COMMENTS = 'comments',
+  USERS = 'users'
 }
 
 enum RouteTags {
-  EntryPoint = 'API Entry Point',
-  Auth = 'User Registration/Authentication/Authorization',
-  Cache = 'Cacheable Operations',
-  Comments = 'Movie Comment Collection',
-  Diagnostics = 'Diagnostics',
-  Movie = 'Movie Resources',
-  Movies = 'Movie Collection',
-  Users = 'User Collection',
+  ENTRY_POINT = 'API Entry Point',
+  AUTH = 'User Registration/Authentication/Authorization',
+  CACHE = 'Cacheable Operations',
+  COMMENTS = 'Movie Comment Collection',
+  DIAGNOSTICS = 'Diagnostics',
+  MOVIE = 'Movie Resources',
+  MOVIES = 'Movie Collection',
+  USERS = 'User Collection',
   OPTIONS = 'OPTIONS'
 }
 

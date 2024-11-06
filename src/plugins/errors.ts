@@ -5,7 +5,7 @@ import { HttpStatusCodes } from '../utils/constants/enums';
 
 const mapFastifyErrorToErrorSchemaType = (error: FastifyError): ErrorSchemaType => {
   return {
-    status: error.statusCode ?? HttpStatusCodes.InternalServerError,
+    status: error.statusCode ?? HttpStatusCodes.INTERNAL_SERVER_ERROR,
     detail: error.message,
     code: error.code,
     errors: error.validation?.map((validationError) => ({

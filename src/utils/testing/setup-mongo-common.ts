@@ -1,15 +1,15 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { TestConstants } from '../constants/constants';
+import { TEST } from '../constants/constants';
 
 const genRandomPath = (): string => {
   return path.join(os.tmpdir(), Math.random().toString(36).substring(7));
 };
 
 const downloadMongoArchive = async (
-  archiveUrl: string = TestConstants.mongoArchiveUrl,
-  archivePath: string = TestConstants.mongoArchivePath
+  archiveUrl: string = TEST.MONGO_ARCHIVE_URL,
+  archivePath: string = TEST.MONGO_ARCHIVE_PATH
 ): Promise<string> => {
   if (!fs.existsSync(archivePath)) {
     try {

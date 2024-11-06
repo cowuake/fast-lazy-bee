@@ -1,6 +1,6 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest, RouteOptions } from 'fastify';
 import fp from 'fastify-plugin';
-import { AppConfigDefaults } from '../utils/constants/constants';
+import { CONFIG_DEFAULTS } from '../utils/constants/constants';
 import { HttpMediaTypes, RouteTags } from '../utils/constants/enums';
 import { hashValue as getKeySignature } from '../utils/crypto-utils';
 
@@ -13,7 +13,7 @@ const genCacheKey = (request: FastifyRequest): string => {
 
 const getExpirationDate = (): Date => {
   const expirationDate = new Date();
-  expirationDate.setSeconds(expirationDate.getSeconds() + AppConfigDefaults.cacheExpiration_s);
+  expirationDate.setSeconds(expirationDate.getSeconds() + CONFIG_DEFAULTS.CACHE_EXPIRATION_S);
 
   return expirationDate;
 };
@@ -24,7 +24,7 @@ const isCacheable = (request: FastifyRequest, reply: FastifyReply | null = null)
     return false;
   }
 
-  const isRouteCacheable = routeOptions.schema.tags.includes(RouteTags.Cache);
+  const isRouteCacheable = routeOptions.schema.tags.includes(RouteTags.CACHE);
   const isSuccess = reply == null || reply.statusCode < 300;
 
   return isRouteCacheable && isSuccess;
@@ -36,7 +36,7 @@ const doesNotAllowCache = (request: FastifyRequest): boolean =>
 const getMaxAge = (request: FastifyRequest): number =>
   Number.parseInt(
     request.headers['cache-control']?.match(/max-age=(\d+)/i)?.[1] ??
-      AppConfigDefaults.cacheExpiration_s.toString()
+      CONFIG_DEFAULTS.CACHE_EXPIRATION_S.toString()
   );
 
 const putInCache = (
@@ -68,7 +68,7 @@ const putInCache = (
     const cachedAt = Date.now();
     const cacheValue = { headers, payload, cachedAt };
 
-    fastify.cache.set(cacheKey, cacheValue, AppConfigDefaults.cacheExpiration_s * 1000, (err) => {
+    fastify.cache.set(cacheKey, cacheValue, CONFIG_DEFAULTS.CACHE_EXPIRATION_S * 1000, (err) => {
       if (err != null) {
         fastify.log.error(err);
       }

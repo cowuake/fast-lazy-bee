@@ -10,9 +10,9 @@ const LoginSchema: FastifySchema = {
   response: {
     ...createJsonResponseSchema(HttpStatusCodes.OK, JwtSchema),
     ...createErrorResponseSchemas([
-      HttpStatusCodes.BadRequest,
-      HttpStatusCodes.Unauthorized,
-      HttpStatusCodes.InternalServerError
+      HttpStatusCodes.BAD_REQUEST,
+      HttpStatusCodes.UNAUTHORIZED,
+      HttpStatusCodes.INTERNAL_SERVER_ERROR
     ])
   }
 };

@@ -13,7 +13,7 @@ const validatePropertyKey = (key: string, schema: TSchema | undefined): void => 
     return;
   }
   const error: FastifyError = {
-    statusCode: HttpStatusCodes.BadRequest,
+    statusCode: HttpStatusCodes.BAD_REQUEST,
     message: `Invalid property key: ${key}`,
     name: 'Bad Request',
     code: 'ERR_BAD_REQUEST'
@@ -27,7 +27,7 @@ const validateSearchType = (key: string, valueType: string): void => {
     return;
   }
   const error: FastifyError = {
-    statusCode: HttpStatusCodes.BadRequest,
+    statusCode: HttpStatusCodes.BAD_REQUEST,
     message: `Unsupported search property: ${key} (type: ${valueType})`,
     name: 'Bad Request',
     code: 'ERR_BAD_REQUEST'

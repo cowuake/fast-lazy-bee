@@ -6,7 +6,7 @@ describe('MovieSchema', () => {
   const validate = TypeCompiler.Compile(MovieSchema);
 
   const movieTitle = 'Yet Another Movie';
-  const mediaType = MediaTypes.Movie;
+  const mediaType = MediaTypes.MOVIE;
   const movieYear = 2022;
 
   const movieWithMandatoryFields: MovieSchemaType = {

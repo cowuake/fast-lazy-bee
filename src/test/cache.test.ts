@@ -9,7 +9,7 @@ const genMockRequest = (method: string, isCacheableRoute: boolean): FastifyReque
     headers: {},
     routeOptions: {
       schema: {
-        tags: isCacheableRoute ? [RouteTags.Cache] : []
+        tags: isCacheableRoute ? [RouteTags.CACHE] : []
       }
     }
   }) as unknown as FastifyRequest;

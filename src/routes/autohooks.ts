@@ -69,7 +69,7 @@ const autoHooks = fp(
       async fetchMovieComments(movieId, searchParams) {
         const movie = await movies.findOne({ _id: new fastify.mongo.ObjectId(movieId) });
         if (movie === null) {
-          throw genNotFoundError(ResourceTypes.Movie, movieId);
+          throw genNotFoundError(ResourceTypes.MOVIE, movieId);
         }
 
         const skip = (searchParams.page - 1) * searchParams.pageSize;
@@ -91,7 +91,7 @@ const autoHooks = fp(
         const { title, year } = movie;
         const matchingMovie = await movies.findOne({ title, year });
         if (matchingMovie !== null) {
-          throw genConflictError(ResourceTypes.Movie, {
+          throw genConflictError(ResourceTypes.MOVIE, {
             title: movie.title,
             year: movie.year.toString()
           });
@@ -109,7 +109,7 @@ const autoHooks = fp(
         const movieId = new fastify.mongo.ObjectId(stringifiedId);
         const movie = await movies.findOne({ _id: movieId });
         if (movie === null) {
-          throw genNotFoundError(ResourceTypes.Movie, stringifiedId ?? 'the specified movie id');
+          throw genNotFoundError(ResourceTypes.MOVIE, stringifiedId ?? 'the specified movie id');
         }
         await comments.insertOne({ ...comment, movie_id: movieId as unknown as string });
       },
@@ -118,7 +118,7 @@ const autoHooks = fp(
         const { email, password } = user as UserSchemaType;
         const existingUser = await users.findOne({ email, password });
         if (existingUser !== null) {
-          throw genConflictError(ResourceTypes.User, { email });
+          throw genConflictError(ResourceTypes.USER, { email });
         }
         await users.insertOne(user as UserSchemaType);
       },
@@ -129,7 +129,7 @@ const autoHooks = fp(
           { projection: { _id: 0 } }
         );
         if (movie === null) {
-          throw genNotFoundError(ResourceTypes.Movie, id);
+          throw genNotFoundError(ResourceTypes.MOVIE, id);
         }
         const output = { ...movie, _id: id };
         return output;
@@ -146,7 +146,7 @@ const autoHooks = fp(
           }
         );
         if (updated.modifiedCount === 0) {
-          throw genNotFoundError(ResourceTypes.Movie, id);
+          throw genNotFoundError(ResourceTypes.MOVIE, id);
         }
       },
 
@@ -161,14 +161,14 @@ const autoHooks = fp(
           }
         );
         if (updated.matchedCount === 0) {
-          throw genNotFoundError(ResourceTypes.Movie, id);
+          throw genNotFoundError(ResourceTypes.MOVIE, id);
         }
       },
 
       async deleteMovie(id) {
         const deleted = await movies.deleteOne({ _id: new fastify.mongo.ObjectId(id) });
         if (deleted.deletedCount === 0) {
-          throw genNotFoundError(ResourceTypes.Movie, id);
+          throw genNotFoundError(ResourceTypes.MOVIE, id);
         }
       }
     });

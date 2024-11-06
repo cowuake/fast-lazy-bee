@@ -21,7 +21,7 @@ const authenticationPlugin = fp(async (fastify: FastifyInstance) => {
   fastify.addHook('onRequest', async (request, reply) => {
     const routeSchema = request.routeOptions.schema;
     const tags = routeSchema?.tags ?? [];
-    if (allowedMethods.includes(request.method) || tags.includes(RouteTags.Auth)) {
+    if (allowedMethods.includes(request.method) || tags.includes(RouteTags.AUTH)) {
       return;
     }
     await request.jwtVerify();

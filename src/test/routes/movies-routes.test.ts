@@ -1,12 +1,12 @@
 import type { FastifyInstance, InjectOptions } from 'fastify';
 import type { MovieCommentSchemaType } from '../../schemas/movies/data';
 import {
-  APIEndpoints,
-  APIV1Prefix,
-  AppConfigDefaults,
-  MovieCommentsEndpoint,
-  MovieEndpoint,
-  TestConstants
+  API_ENDPOINTS,
+  API_V1_PREFIX,
+  CONFIG_DEFAULTS,
+  MOVIE_COMMENTS_ENDPOINT,
+  MOVIE_ENDPOINT,
+  TEST
 } from '../../utils/constants/constants';
 import {
   FetchTypes,
@@ -26,19 +26,19 @@ import buildTestInstance from '../../utils/testing/test-server';
 
 describe('moviesAPI', () => {
   const fastifyInstance: FastifyInstance = buildTestInstance();
-  const moviesEndpoint = APIV1Prefix + APIEndpoints.Movies;
-  const plainMovieIdEndpoint = APIV1Prefix + APIEndpoints.Movie;
-  const plainCommentsEndpoint = APIV1Prefix + APIEndpoints.MovieComments;
+  const moviesEndpoint = API_V1_PREFIX + API_ENDPOINTS.MOVIES;
+  const plainMovieIdEndpoint = API_V1_PREFIX + API_ENDPOINTS.MOVIE;
+  const plainCommentsEndpoint = API_V1_PREFIX + API_ENDPOINTS.MOVIE_COMMENTS;
   const pagination = 'page=1&size=10';
 
-  const testMovie = TestConstants.testMovie;
-  const testMovieId = TestConstants.magicId;
-  const fakeMovieId = TestConstants.fakeId;
+  const testMovie = TEST.TEST_MOVIE;
+  const testMovieId = TEST.MAGIC_MOVIE_ID;
+  const fakeMovieId = TEST.FAKE_MOVIE_ID;
 
-  const testMovieIdEndpoint = APIV1Prefix + MovieEndpoint(testMovieId);
-  const testCommentsEndpoint = APIV1Prefix + MovieCommentsEndpoint(testMovieId);
-  const fakeMovieIdEndpoint = APIV1Prefix + MovieEndpoint(fakeMovieId);
-  const fakeCommentsEndpoint = APIV1Prefix + MovieCommentsEndpoint(fakeMovieId);
+  const testMovieIdEndpoint = API_V1_PREFIX + MOVIE_ENDPOINT(testMovieId);
+  const testCommentsEndpoint = API_V1_PREFIX + MOVIE_COMMENTS_ENDPOINT(testMovieId);
+  const fakeMovieIdEndpoint = API_V1_PREFIX + MOVIE_ENDPOINT(fakeMovieId);
+  const fakeCommentsEndpoint = API_V1_PREFIX + MOVIE_COMMENTS_ENDPOINT(fakeMovieId);
 
   const allMovieUrls = [moviesEndpoint, plainMovieIdEndpoint];
   const allCommentsUrls = [plainCommentsEndpoint];
@@ -79,7 +79,7 @@ describe('moviesAPI', () => {
         method: HttpMethods.OPTIONS,
         url
       });
-      expect(response.statusCode).toBe(HttpStatusCodes.NoContent);
+      expect(response.statusCode).toBe(HttpStatusCodes.NO_CONTENT);
       expect(response.headers).toHaveProperty('allow');
     }
   });
@@ -98,7 +98,7 @@ describe('moviesAPI', () => {
       url: `${moviesEndpoint}?${pagination}`,
       headers: { accept: HttpMediaTypes.HAL_JSON }
     });
-    expectHalResponse(response, FetchTypes.Collection);
+    expectHalResponse(response, FetchTypes.COLLECTION);
   });
 
   it('should fetch movies with caching', async () => {
@@ -126,7 +126,7 @@ describe('moviesAPI', () => {
       headers: { 'cache-control': `max-age=${maxAge}` }
     };
 
-    expect(maxAge).toBeLessThan(AppConfigDefaults.cacheExpiration_s);
+    expect(maxAge).toBeLessThan(CONFIG_DEFAULTS.CACHE_EXPIRATION_S);
 
     await waitFor(maxAge + 1);
     const firstResponse = await fastifyInstance.inject(options);
@@ -150,8 +150,8 @@ describe('moviesAPI', () => {
     });
     const secondResponse = await fastifyInstance.inject(options);
 
-    expectHalResponse(firstResponse, FetchTypes.Collection);
-    expectHalResponse(secondResponse, FetchTypes.Collection);
+    expectHalResponse(firstResponse, FetchTypes.COLLECTION);
+    expectHalResponse(secondResponse, FetchTypes.COLLECTION);
     expectNotCachedResponse(firstResponse);
     expectCachedResponse(secondResponse);
   });
@@ -170,7 +170,7 @@ describe('moviesAPI', () => {
     });
 
     expect(firstResponse.statusCode).toBe(HttpStatusCodes.OK);
-    expect(secondResponse.statusCode).toBe(HttpStatusCodes.NotModified);
+    expect(secondResponse.statusCode).toBe(HttpStatusCodes.NOT_MODIFIED);
   });
 
   it('should filter movies by title', async () => {
@@ -211,7 +211,7 @@ describe('moviesAPI', () => {
       url: moviesEndpoint,
       payload: { ...testMovie, year: 1899 }
     });
-    expect(response.statusCode).toBe(HttpStatusCodes.Unauthorized);
+    expect(response.statusCode).toBe(HttpStatusCodes.UNAUTHORIZED);
   });
 
   it('should create a movie when authorized', async () => {
@@ -222,7 +222,7 @@ describe('moviesAPI', () => {
       payload: { ...testMovie, year: 1899 },
       headers: { authorization: `Bearer ${token}` }
     });
-    expect(response.statusCode).toBe(HttpStatusCodes.Created);
+    expect(response.statusCode).toBe(HttpStatusCodes.CREATED);
   });
 
   it('should report a conflict when trying to create a movie replica', async () => {
@@ -233,7 +233,7 @@ describe('moviesAPI', () => {
       payload: testMovie,
       headers: { authorization: `Bearer ${token}` }
     });
-    expect(response.statusCode).toBe(HttpStatusCodes.Conflict);
+    expect(response.statusCode).toBe(HttpStatusCodes.CONFLICT);
   });
 
   it('should fetch a movie by id', async () => {
@@ -250,15 +250,15 @@ describe('moviesAPI', () => {
       url: testMovieIdEndpoint,
       headers: { accept: HttpMediaTypes.HAL_JSON }
     });
-    expectHalResponse(response, FetchTypes.Resource);
+    expectHalResponse(response, FetchTypes.RESOURCE);
   });
 
-  it(`should return a ${HttpStatusCodes.NotFound} when fetching a non-existent movie`, async () => {
+  it(`should return a ${HttpStatusCodes.NOT_FOUND} when fetching a non-existent movie`, async () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.GET,
       url: fakeMovieIdEndpoint
     });
-    expect(response.statusCode).toBe(HttpStatusCodes.NotFound);
+    expect(response.statusCode).toBe(HttpStatusCodes.NOT_FOUND);
   });
 
   it('should not replace a movie if unauthorized', async () => {
@@ -267,7 +267,7 @@ describe('moviesAPI', () => {
       url: testMovieIdEndpoint,
       payload: testMovie
     });
-    expect(response.statusCode).toBe(HttpStatusCodes.Unauthorized);
+    expect(response.statusCode).toBe(HttpStatusCodes.UNAUTHORIZED);
   });
 
   it('should replace a movie when authorized', async () => {
@@ -278,10 +278,10 @@ describe('moviesAPI', () => {
       payload: testMovie,
       headers: { authorization: `Bearer ${token}` }
     });
-    expect(response.statusCode).toBe(HttpStatusCodes.NoContent);
+    expect(response.statusCode).toBe(HttpStatusCodes.NO_CONTENT);
   });
 
-  it(`should return a ${HttpStatusCodes.NotFound} when replacing a non-existent movie`, async () => {
+  it(`should return a ${HttpStatusCodes.NOT_FOUND} when replacing a non-existent movie`, async () => {
     const token = getValidToken(fastifyInstance);
     const response = await fastifyInstance.inject({
       method: HttpMethods.PUT,
@@ -289,7 +289,7 @@ describe('moviesAPI', () => {
       payload: testMovie,
       headers: { authorization: `Bearer ${token}` }
     });
-    expect(response.statusCode).toBe(HttpStatusCodes.NotFound);
+    expect(response.statusCode).toBe(HttpStatusCodes.NOT_FOUND);
   });
 
   it('should update a movie', async () => {
@@ -302,10 +302,10 @@ describe('moviesAPI', () => {
       },
       headers: { authorization: `Bearer ${token}` }
     });
-    expect(response.statusCode).toBe(HttpStatusCodes.NoContent);
+    expect(response.statusCode).toBe(HttpStatusCodes.NO_CONTENT);
   });
 
-  it(`should return a ${HttpStatusCodes.NotFound} when updating a non-existent movie`, async () => {
+  it(`should return a ${HttpStatusCodes.NOT_FOUND} when updating a non-existent movie`, async () => {
     const token = getValidToken(fastifyInstance);
     const response = await fastifyInstance.inject({
       method: HttpMethods.PATCH,
@@ -315,7 +315,7 @@ describe('moviesAPI', () => {
       },
       headers: { authorization: `Bearer ${token}` }
     });
-    expect(response.statusCode).toBe(HttpStatusCodes.NotFound);
+    expect(response.statusCode).toBe(HttpStatusCodes.NOT_FOUND);
   });
 
   it('should not delete a movie if unauthorized', async () => {
@@ -323,7 +323,7 @@ describe('moviesAPI', () => {
       method: HttpMethods.DELETE,
       url: testMovieIdEndpoint
     });
-    expect(response.statusCode).toBe(HttpStatusCodes.Unauthorized);
+    expect(response.statusCode).toBe(HttpStatusCodes.UNAUTHORIZED);
   });
 
   it('should delete a movie when authorized', async () => {
@@ -333,17 +333,17 @@ describe('moviesAPI', () => {
       url: testMovieIdEndpoint,
       headers: { authorization: `Bearer ${token}` }
     });
-    expect(response.statusCode).toBe(HttpStatusCodes.NoContent);
+    expect(response.statusCode).toBe(HttpStatusCodes.NO_CONTENT);
   });
 
-  it(`should return a ${HttpStatusCodes.NotFound} when deleting a non-existent movie`, async () => {
+  it(`should return a ${HttpStatusCodes.NOT_FOUND} when deleting a non-existent movie`, async () => {
     const token = getValidToken(fastifyInstance);
     const response = await fastifyInstance.inject({
       method: HttpMethods.DELETE,
       url: fakeMovieIdEndpoint,
       headers: { authorization: `Bearer ${token}` }
     });
-    expect(response.statusCode).toBe(HttpStatusCodes.NotFound);
+    expect(response.statusCode).toBe(HttpStatusCodes.NOT_FOUND);
   });
 
   it('should fetch movie comments', async () => {
@@ -354,12 +354,12 @@ describe('moviesAPI', () => {
     expect(response.statusCode).toBe(HttpStatusCodes.OK);
   });
 
-  it(`should return a ${HttpStatusCodes.NotFound} when fetching a non-existent movie's comments`, async () => {
+  it(`should return a ${HttpStatusCodes.NOT_FOUND} when fetching a non-existent movie's comments`, async () => {
     const response = await fastifyInstance.inject({
       method: HttpMethods.GET,
       url: fakeCommentsEndpoint
     });
-    expect(response.statusCode).toBe(HttpStatusCodes.NotFound);
+    expect(response.statusCode).toBe(HttpStatusCodes.NOT_FOUND);
   });
 
   it('should fetch movie comments with HAL', async () => {
@@ -368,7 +368,7 @@ describe('moviesAPI', () => {
       url: `${testCommentsEndpoint}?${pagination}`,
       headers: { accept: HttpMediaTypes.HAL_JSON }
     });
-    expectHalResponse(response, FetchTypes.Collection);
+    expectHalResponse(response, FetchTypes.COLLECTION);
   });
 
   it('should create a movie comment', async () => {
@@ -380,7 +380,7 @@ describe('moviesAPI', () => {
       payload: { text },
       headers: { authorization: `Bearer ${token}` }
     });
-    expect(response.statusCode).toBe(HttpStatusCodes.Created);
+    expect(response.statusCode).toBe(HttpStatusCodes.CREATED);
 
     const commentFetchResponse = await fastifyInstance.inject({
       method: HttpMethods.GET,
@@ -404,6 +404,6 @@ describe('moviesAPI', () => {
         text: 'This is a test comment'
       }
     });
-    expect(response.statusCode).toBe(HttpStatusCodes.Unauthorized);
+    expect(response.statusCode).toBe(HttpStatusCodes.UNAUTHORIZED);
   });
 });

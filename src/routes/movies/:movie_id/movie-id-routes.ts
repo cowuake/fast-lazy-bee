@@ -7,7 +7,7 @@ import {
   ReplaceMovieSchema,
   UpdateMovieSchema
 } from '../../../schemas/movies/http';
-import { APIEndpoints } from '../../../utils/constants/constants';
+import { API_ENDPOINTS } from '../../../utils/constants/constants';
 import {
   HttpMediaTypes,
   HttpMethods,
@@ -17,14 +17,14 @@ import {
 import { addLinksToResource } from '../../../utils/hal-utils';
 import { acceptsHal, registerEndpointRoutes } from '../../../utils/routing-utils';
 
-const endpoint = APIEndpoints.Movie;
-const tags: RouteTags[] = [RouteTags.Movie] as const;
+const endpoint = API_ENDPOINTS.MOVIE;
+const tags: RouteTags[] = [RouteTags.MOVIE] as const;
 
 const routes: RouteOptions[] = [
   {
     method: [HttpMethods.GET, HttpMethods.HEAD],
     url: endpoint,
-    schema: { ...FetchMovieSchema, tags: [...tags, RouteTags.Cache] },
+    schema: { ...FetchMovieSchema, tags: [...tags, RouteTags.CACHE] },
     handler: async function fetchMovie(request, reply) {
       const params = request.params as MovieIdObjectSchemaType;
       const movie = (await this.dataStore.fetchMovie(params.movie_id)) as MovieSchemaType;
@@ -48,7 +48,7 @@ const routes: RouteOptions[] = [
       const params = request.params as MovieIdObjectSchemaType;
       const body = request.body as MovieSchemaType;
       await this.dataStore.replaceMovie(params.movie_id, body);
-      reply.code(HttpStatusCodes.NoContent);
+      reply.code(HttpStatusCodes.NO_CONTENT);
     }
   } as const,
   {
@@ -59,7 +59,7 @@ const routes: RouteOptions[] = [
       const params = request.params as MovieIdObjectSchemaType;
       const body = request.body as MovieSchemaType;
       await this.dataStore.updateMovie(params.movie_id, body);
-      reply.code(HttpStatusCodes.NoContent);
+      reply.code(HttpStatusCodes.NO_CONTENT);
     }
   } as const,
   {
@@ -69,7 +69,7 @@ const routes: RouteOptions[] = [
     handler: async function deleteMovie(request, reply) {
       const params = request.params as MovieIdObjectSchemaType;
       await this.dataStore.deleteMovie(params.movie_id);
-      reply.code(HttpStatusCodes.NoContent);
+      reply.code(HttpStatusCodes.NO_CONTENT);
     }
   }
 ];

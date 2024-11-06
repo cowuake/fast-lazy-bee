@@ -1,5 +1,5 @@
 import { type Static, type TObject, Type } from '@sinclair/typebox';
-import { PaginationConstants } from '../utils/constants/constants';
+import { PAGINATION } from '../utils/constants/constants';
 import { NaturalNumberSchema } from './data';
 import { IdSchema, KeySchema } from './movies/data';
 
@@ -23,14 +23,14 @@ const PaginatedCollectionSchema = <TData extends TObject>(dataSchema: TData): TO
 const PaginationParamsSchema = Type.Object({
   page: Type.Integer({
     description: 'The page number to retrieve',
-    default: PaginationConstants.defaultPageNumber,
-    minimum: PaginationConstants.minimumPageNumber
+    default: PAGINATION.DEFAULT_PAGE_NUMBER,
+    minimum: PAGINATION.MINIMUM_PAGE_NUMBER
   }),
   pageSize: Type.Integer({
     description: 'The number of items to retrieve per page',
-    default: PaginationConstants.defaultPageSize,
-    minimum: PaginationConstants.minimumPageSize,
-    maximum: PaginationConstants.maximumPageSize
+    default: PAGINATION.DEFAULT_PAGE_SIZE,
+    minimum: PAGINATION.MINIMUM_PAGE_SIZE,
+    maximum: PAGINATION.MAXIMUM_PAGE_SIZE
   })
 });
 

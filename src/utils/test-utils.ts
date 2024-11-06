@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import type { Response } from 'light-my-request';
 import type { UserSchemaType } from '../schemas/users/data';
-import { TestConstants } from './constants/constants';
+import { TEST } from './constants/constants';
 import { FetchTypes, HttpMediaTypes, HttpStatusCodes } from './constants/enums';
 
 const waitFor = async (seconds: number): Promise<void> => {
@@ -10,9 +10,9 @@ const waitFor = async (seconds: number): Promise<void> => {
 
 const getValidToken = (fastify: FastifyInstance): string => {
   const user: UserSchemaType = {
-    name: TestConstants.userName,
-    email: TestConstants.userEmail,
-    password: TestConstants.userPassword
+    name: TEST.USER_NAME,
+    email: TEST.USER_EMAIL,
+    password: TEST.USER_PASSWORD
   };
 
   return fastify.jwt.sign(user, { expiresIn: '1m' });
@@ -33,7 +33,7 @@ const expectHalResponse = (response: Response, type: FetchTypes): void => {
   expect(response.statusCode).toBe(HttpStatusCodes.OK);
   expect(response.headers).toHaveProperty('content-type');
   expect(response.headers['content-type']).toMatch(HttpMediaTypes.HAL_JSON.valueOf());
-  expect(response.json()).toHaveProperty(type === FetchTypes.Collection ? 'data' : '_id');
+  expect(response.json()).toHaveProperty(type === FetchTypes.COLLECTION ? 'data' : '_id');
   expect(response.json()).toHaveProperty('_links');
 };
 

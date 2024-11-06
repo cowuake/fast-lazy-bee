@@ -3,7 +3,7 @@ import fastifySwaggerUi, { type FastifySwaggerUiOptions } from '@fastify/swagger
 import type { FastifyInstance } from 'fastify';
 import fp from 'fastify-plugin';
 import pkg from '../../package.json';
-import { OpenAPIDocsPrefix } from '../utils/constants/constants';
+import { OPENAPI_DOCS_PREFIX } from '../utils/constants/constants';
 import { SecuritySchemes } from '../utils/constants/enums';
 import { RouteTagsToDescriptions } from '../utils/constants/records';
 
@@ -34,7 +34,7 @@ const swaggerOptions: FastifyDynamicSwaggerOptions = {
     })),
     components: {
       securitySchemes: {
-        [SecuritySchemes.BearerAuth]: {
+        [SecuritySchemes.BEARER_AUTH]: {
           type: 'http',
           scheme: 'bearer',
           bearerFormat: 'JWT'
@@ -46,7 +46,7 @@ const swaggerOptions: FastifyDynamicSwaggerOptions = {
 };
 
 const swaggerUIOptions: FastifySwaggerUiOptions = {
-  routePrefix: OpenAPIDocsPrefix,
+  routePrefix: OPENAPI_DOCS_PREFIX,
   uiConfig: {
     deepLinking: true,
     defaultModelExpandDepth: 10,
@@ -60,7 +60,7 @@ const swaggerUIOptions: FastifySwaggerUiOptions = {
 const swaggerPlugin = fp(
   async (fastify: FastifyInstance) => {
     fastify.get('/', async (request, reply) => {
-      reply.redirect(OpenAPIDocsPrefix);
+      reply.redirect(OPENAPI_DOCS_PREFIX);
     });
     await fastify.register(fastifySwagger, swaggerOptions);
     await fastify.register(fastifySwaggerUi, swaggerUIOptions);

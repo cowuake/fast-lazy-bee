@@ -82,12 +82,12 @@ const genOptionsRoute = (url: string, allowString: string): RouteOptions => ({
     summary: 'Get all allowed methods for the endpoint',
     tags: [RouteTags.OPTIONS],
     response: {
-      ...createEmptyResponseSchema(HttpStatusCodes.NoContent)
+      ...createEmptyResponseSchema(HttpStatusCodes.NO_CONTENT)
     }
   },
   handler: async function options(_, reply) {
-    reply.header('Allow', allowString).code(HttpStatusCodes.NoContent);
-    reply.send(HttpStatusCodes.NoContent);
+    reply.header('Allow', allowString).code(HttpStatusCodes.NO_CONTENT);
+    reply.send(HttpStatusCodes.NO_CONTENT);
   }
 });
 
@@ -96,7 +96,7 @@ const acceptsHal = (request: FastifyRequest): boolean => {
 };
 
 const genNotFoundError = (resourceType: string, id: string): FastifyError => ({
-  statusCode: HttpStatusCodes.NotFound,
+  statusCode: HttpStatusCodes.NOT_FOUND,
   message: `Could not find ${resourceType} corresponding to ${id}`,
   name: `Resource of type <${resourceType}> not found`,
   code: 'ERR_NOT_FOUND'
@@ -106,14 +106,14 @@ const genConflictError = (
   resourceType: string,
   fieldsAndValues: Record<string, string>
 ): FastifyError => ({
-  statusCode: HttpStatusCodes.Conflict,
+  statusCode: HttpStatusCodes.CONFLICT,
   message: `${resourceType} with ${JSON.stringify(fieldsAndValues)} already exists`,
   name: `${resourceType} already exists`,
   code: 'ERR_CONFLICT'
 });
 
 const genUnauthorizedError = (): FastifyError => ({
-  statusCode: HttpStatusCodes.Unauthorized,
+  statusCode: HttpStatusCodes.UNAUTHORIZED,
   message: 'Unauthorized',
   name: 'Unauthorized',
   code: 'ERR_UNAUTHORIZED'

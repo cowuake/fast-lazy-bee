@@ -1,12 +1,12 @@
 import type { FastifyInstance } from 'fastify';
-import { APIEndpoints, APIV1Prefix, TestConstants } from '../../utils/constants/constants';
+import { API_ENDPOINTS, API_V1_PREFIX, TEST } from '../../utils/constants/constants';
 import { HttpMethods, HttpStatusCodes } from '../../utils/constants/enums';
 import { genRandomEmail } from '../../utils/test-utils';
 import buildTestInstance from '../../utils/testing/test-server';
 
 describe('usersAPI', () => {
   const fastifyInstance: FastifyInstance = buildTestInstance();
-  const usersEndpoint = APIV1Prefix + APIEndpoints.Users;
+  const usersEndpoint = API_V1_PREFIX + API_ENDPOINTS.USERS;
   const allUrls = [usersEndpoint];
 
   it('should rely on a defined Fastify instance', () => {
@@ -19,7 +19,7 @@ describe('usersAPI', () => {
         method: HttpMethods.OPTIONS,
         url
       });
-      expect(response.statusCode).toBe(HttpStatusCodes.NoContent);
+      expect(response.statusCode).toBe(HttpStatusCodes.NO_CONTENT);
       expect(response.headers).toHaveProperty('allow');
     }
   });
@@ -29,12 +29,12 @@ describe('usersAPI', () => {
       method: HttpMethods.POST,
       url: usersEndpoint,
       payload: {
-        name: TestConstants.userName,
+        name: TEST.USER_NAME,
         email: genRandomEmail(),
-        password: TestConstants.userPassword
+        password: TEST.USER_PASSWORD
       }
     });
-    expect(response.statusCode).toBe(HttpStatusCodes.Created);
+    expect(response.statusCode).toBe(HttpStatusCodes.CREATED);
   });
 
   it('should return a 409 status code when registering an existing user', async () => {
@@ -42,11 +42,11 @@ describe('usersAPI', () => {
       method: HttpMethods.POST,
       url: usersEndpoint,
       payload: {
-        name: TestConstants.userName,
-        email: TestConstants.userEmail,
-        password: TestConstants.userPassword
+        name: TEST.USER_NAME,
+        email: TEST.USER_EMAIL,
+        password: TEST.USER_PASSWORD
       }
     });
-    expect(response.statusCode).toBe(HttpStatusCodes.Conflict);
+    expect(response.statusCode).toBe(HttpStatusCodes.CONFLICT);
   });
 });

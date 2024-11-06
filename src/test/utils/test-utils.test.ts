@@ -1,6 +1,6 @@
 import type { FastifyMongodbOptions } from '@fastify/mongodb';
 import * as fs from 'fs';
-import { TestConstants } from '../../utils/constants/constants';
+import { TEST } from '../../utils/constants/constants';
 import { downloadMongoArchive, genRandomPath } from '../../utils/testing/setup-mongo-common';
 import setupMongoTestcontainers from '../../utils/testing/setup-mongo-testcontainers';
 
@@ -9,33 +9,31 @@ describe('downloadMongoArchive', () => {
     'should return the path where the archive was stored',
     async () => {
       const path = genRandomPath();
-      const result = await downloadMongoArchive(TestConstants.mongoArchiveUrl, path);
+      const result = await downloadMongoArchive(TEST.MONGO_ARCHIVE_URL, path);
       expect(path).not.toBeNull();
       expect(path).toEqual(result);
       expect(fs.existsSync(result)).toBeTruthy();
       fs.rmSync(result);
     },
-    TestConstants.longTimeout
+    TEST.LONG_TIMEOUT
   );
 
   it(
     'should fail to download the archive from a wrong URL',
     async () => {
-      await expect(
-        downloadMongoArchive(TestConstants.impossibleUrl, genRandomPath())
-      ).rejects.toThrow();
+      await expect(downloadMongoArchive(TEST.IMPOSSIBILE_URL, genRandomPath())).rejects.toThrow();
     },
-    TestConstants.longTimeout
+    TEST.LONG_TIMEOUT
   );
 
   it(
     'should fail to download the archive to a wrong path',
     async () => {
       await expect(
-        downloadMongoArchive(TestConstants.mongoArchiveUrl, TestConstants.impossiblePath)
+        downloadMongoArchive(TEST.MONGO_ARCHIVE_URL, TEST.IMPOSSIBLE_PATH)
       ).rejects.toThrow();
     },
-    TestConstants.longTimeout
+    TEST.LONG_TIMEOUT
   );
 });
 
@@ -46,6 +44,6 @@ describe('setupMongoTestcontainers', () => {
       const options: FastifyMongodbOptions = await setupMongoTestcontainers();
       expect(options).not.toBeNull();
     },
-    TestConstants.longTimeout
+    TEST.LONG_TIMEOUT
   );
 });

@@ -6,7 +6,7 @@ import {
   FetchMoviesSchema,
   type PaginatedSearchSchemaType
 } from '../../schemas/movies/http';
-import { APIEndpoints } from '../../utils/constants/constants';
+import { API_ENDPOINTS } from '../../utils/constants/constants';
 import {
   HttpMediaTypes,
   HttpMethods,
@@ -16,14 +16,14 @@ import {
 import { addLinksToCollection } from '../../utils/hal-utils';
 import { acceptsHal, registerEndpointRoutes } from '../../utils/routing-utils';
 
-const endpoint = APIEndpoints.Movies;
-const tags: RouteTags[] = [RouteTags.Movies] as const;
+const endpoint = API_ENDPOINTS.MOVIES;
+const tags: RouteTags[] = [RouteTags.MOVIES] as const;
 
 const routes: RouteOptions[] = [
   {
     method: [HttpMethods.GET, HttpMethods.HEAD],
     url: endpoint,
-    schema: { ...FetchMoviesSchema, tags: [...tags, RouteTags.Cache] },
+    schema: { ...FetchMoviesSchema, tags: [...tags, RouteTags.CACHE] },
     handler: async function fetchMovies(request, reply) {
       const filter = request.query as PaginatedSearchSchemaType;
       const movies = await this.dataStore.fetchMovies(filter);
@@ -60,7 +60,7 @@ const routes: RouteOptions[] = [
       const insertedId = await this.dataStore.createMovie(body);
       reply
         .headers({ location: insertedId })
-        .code(HttpStatusCodes.Created)
+        .code(HttpStatusCodes.CREATED)
         .send({ _id: insertedId });
     }
   } as const

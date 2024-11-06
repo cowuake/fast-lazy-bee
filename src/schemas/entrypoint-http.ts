@@ -7,7 +7,10 @@ const EntryPointSchema: FastifySchema = {
   summary: 'The entry point of the API',
   response: {
     ...createJsonResponseSchema(HttpStatusCodes.OK, ResourceSchema(RootSchema)),
-    ...createErrorResponseSchemas([HttpStatusCodes.BadRequest, HttpStatusCodes.InternalServerError])
+    ...createErrorResponseSchemas([
+      HttpStatusCodes.BAD_REQUEST,
+      HttpStatusCodes.INTERNAL_SERVER_ERROR
+    ])
   }
 };
 

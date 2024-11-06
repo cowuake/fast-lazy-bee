@@ -52,22 +52,25 @@ const FetchMoviesSchema: FastifySchema = {
   querystring: PaginatedSearchSchema,
   response: {
     ...createJsonResponseSchema(HttpStatusCodes.OK, ResourceSchema(MovieSchema), true),
-    ...createEmptyResponseSchema(HttpStatusCodes.NotModified),
-    ...createErrorResponseSchemas([HttpStatusCodes.BadRequest, HttpStatusCodes.InternalServerError])
+    ...createEmptyResponseSchema(HttpStatusCodes.NOT_MODIFIED),
+    ...createErrorResponseSchemas([
+      HttpStatusCodes.BAD_REQUEST,
+      HttpStatusCodes.INTERNAL_SERVER_ERROR
+    ])
   }
 };
 
 const CreateMovieSchema: FastifySchema = {
   summary: 'Create a new movie',
   body: MovieSchema,
-  security: [{ [SecuritySchemes.BearerAuth]: [] }],
+  security: [{ [SecuritySchemes.BEARER_AUTH]: [] }],
   response: {
-    ...createJsonResponseSchema(HttpStatusCodes.Created, IdObjectSchema),
+    ...createJsonResponseSchema(HttpStatusCodes.CREATED, IdObjectSchema),
     ...createErrorResponseSchemas([
-      HttpStatusCodes.BadRequest,
-      HttpStatusCodes.Unauthorized,
-      HttpStatusCodes.Conflict,
-      HttpStatusCodes.InternalServerError
+      HttpStatusCodes.BAD_REQUEST,
+      HttpStatusCodes.UNAUTHORIZED,
+      HttpStatusCodes.CONFLICT,
+      HttpStatusCodes.INTERNAL_SERVER_ERROR
     ])
   }
 };
@@ -77,11 +80,11 @@ const FetchMovieSchema: FastifySchema = {
   params: MovieIdObjectSchema,
   response: {
     ...createJsonResponseSchema(HttpStatusCodes.OK, ResourceSchema(MovieSchema)),
-    ...createEmptyResponseSchema(HttpStatusCodes.NotModified),
+    ...createEmptyResponseSchema(HttpStatusCodes.NOT_MODIFIED),
     ...createErrorResponseSchemas([
-      HttpStatusCodes.BadRequest,
-      HttpStatusCodes.NotFound,
-      HttpStatusCodes.InternalServerError
+      HttpStatusCodes.BAD_REQUEST,
+      HttpStatusCodes.NOT_FOUND,
+      HttpStatusCodes.INTERNAL_SERVER_ERROR
     ])
   }
 };
@@ -92,11 +95,11 @@ const FetchMovieCommentsSchema: FastifySchema = {
   querystring: PaginatedSearchSchema,
   response: {
     ...createJsonResponseSchema(HttpStatusCodes.OK, ResourceSchema(MovieCommentSchema), true),
-    ...createEmptyResponseSchema(HttpStatusCodes.NotModified),
+    ...createEmptyResponseSchema(HttpStatusCodes.NOT_MODIFIED),
     ...createErrorResponseSchemas([
-      HttpStatusCodes.BadRequest,
-      HttpStatusCodes.NotFound,
-      HttpStatusCodes.InternalServerError
+      HttpStatusCodes.BAD_REQUEST,
+      HttpStatusCodes.NOT_FOUND,
+      HttpStatusCodes.INTERNAL_SERVER_ERROR
     ])
   }
 };
@@ -105,14 +108,14 @@ const CreateMovieCommentSchema: FastifySchema = {
   summary: 'Create a new comment for a movie',
   params: MovieIdObjectSchema,
   body: MovieCommentInputSchema,
-  security: [{ [SecuritySchemes.BearerAuth]: [] }],
+  security: [{ [SecuritySchemes.BEARER_AUTH]: [] }],
   response: {
-    ...createEmptyResponseSchema(HttpStatusCodes.Created),
+    ...createEmptyResponseSchema(HttpStatusCodes.CREATED),
     ...createErrorResponseSchemas([
-      HttpStatusCodes.BadRequest,
-      HttpStatusCodes.Unauthorized,
-      HttpStatusCodes.NotFound,
-      HttpStatusCodes.InternalServerError
+      HttpStatusCodes.BAD_REQUEST,
+      HttpStatusCodes.UNAUTHORIZED,
+      HttpStatusCodes.NOT_FOUND,
+      HttpStatusCodes.INTERNAL_SERVER_ERROR
     ])
   }
 };
@@ -121,14 +124,14 @@ const ReplaceMovieSchema: FastifySchema = {
   summary: 'Replace movie at the ID location with a new movie representation',
   params: MovieIdObjectSchema,
   body: MovieSchema,
-  security: [{ [SecuritySchemes.BearerAuth]: [] }],
+  security: [{ [SecuritySchemes.BEARER_AUTH]: [] }],
   response: {
-    ...createEmptyResponseSchema(HttpStatusCodes.NoContent),
+    ...createEmptyResponseSchema(HttpStatusCodes.NO_CONTENT),
     ...createErrorResponseSchemas([
-      HttpStatusCodes.BadRequest,
-      HttpStatusCodes.Unauthorized,
-      HttpStatusCodes.NotFound,
-      HttpStatusCodes.InternalServerError
+      HttpStatusCodes.BAD_REQUEST,
+      HttpStatusCodes.UNAUTHORIZED,
+      HttpStatusCodes.NOT_FOUND,
+      HttpStatusCodes.INTERNAL_SERVER_ERROR
     ])
   }
 };
@@ -137,14 +140,14 @@ const UpdateMovieSchema: FastifySchema = {
   summary: 'Update movie at the ID location with a partial movie representation',
   params: MovieIdObjectSchema,
   body: PartialMovieSchema,
-  security: [{ [SecuritySchemes.BearerAuth]: [] }],
+  security: [{ [SecuritySchemes.BEARER_AUTH]: [] }],
   response: {
-    ...createEmptyResponseSchema(HttpStatusCodes.NoContent),
+    ...createEmptyResponseSchema(HttpStatusCodes.NO_CONTENT),
     ...createErrorResponseSchemas([
-      HttpStatusCodes.BadRequest,
-      HttpStatusCodes.Unauthorized,
-      HttpStatusCodes.NotFound,
-      HttpStatusCodes.InternalServerError
+      HttpStatusCodes.BAD_REQUEST,
+      HttpStatusCodes.UNAUTHORIZED,
+      HttpStatusCodes.NOT_FOUND,
+      HttpStatusCodes.INTERNAL_SERVER_ERROR
     ])
   }
 };
@@ -152,14 +155,14 @@ const UpdateMovieSchema: FastifySchema = {
 const DeleteMovieSchema: FastifySchema = {
   summary: 'Delete movie at the ID location',
   params: MovieIdObjectSchema,
-  security: [{ [SecuritySchemes.BearerAuth]: [] }],
+  security: [{ [SecuritySchemes.BEARER_AUTH]: [] }],
   response: {
-    ...createEmptyResponseSchema(HttpStatusCodes.NoContent),
+    ...createEmptyResponseSchema(HttpStatusCodes.NO_CONTENT),
     ...createErrorResponseSchemas([
-      HttpStatusCodes.BadRequest,
-      HttpStatusCodes.Unauthorized,
-      HttpStatusCodes.NotFound,
-      HttpStatusCodes.InternalServerError
+      HttpStatusCodes.BAD_REQUEST,
+      HttpStatusCodes.UNAUTHORIZED,
+      HttpStatusCodes.NOT_FOUND,
+      HttpStatusCodes.INTERNAL_SERVER_ERROR
     ])
   }
 };
