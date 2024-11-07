@@ -33,6 +33,13 @@ jobs:
           chmod +x run.sh
           ./run.sh
 
+      - name: Wait for ${{ env.APP_NAME }} to be ready
+        run: |
+          while ! curl -s ${{ env.TEST_ENDPOINT }}; do
+            echo "Waiting for ${{ env.APP_NAME }}..."
+            sleep 1
+          done
+
       - name: Run basic test (workshop scenario)
         run: |
           Sending a request to ${{ env.TEST_ENDPOINT }}
