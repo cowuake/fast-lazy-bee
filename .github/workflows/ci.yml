@@ -35,7 +35,9 @@ jobs:
 
       - name: Run basic test (workshop scenario)
         run: |
+          Sending a request to ${{ env.TEST_ENDPOINT }}
           RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" ${{ env.TEST_ENDPOINT }})
+          echo "Response status code: $RESPONSE_CODE"
           if [ $RESPONSE_CODE -eq 200 ]; then
             echo "Basic health check PASSED!"
           else
