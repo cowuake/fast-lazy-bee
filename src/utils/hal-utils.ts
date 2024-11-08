@@ -24,12 +24,16 @@ const expandResourceLinks = (
     return { ...acc, [key]: expandedLink };
   }, {});
 
+const pagePattern = new RegExp(
+  `([?&]${PAGINATION.PAGE_NUMBER_KEY}=)(\\d+)([&?]${PAGINATION.PAGE_SIZE_KEY}=\\d+)`
+);
+
+const replacePageNumber = (url: string, pageNumber: number): string =>
+  url.replace(pagePattern, `$1${pageNumber}$3`);
+
 const getPreviousPageLink = (page: number, pageSize: number, url: string): string | null => {
   const previousPage = getPreviousPage(page, pageSize);
-  const link =
-    previousPage !== null
-      ? `${url}?${PAGINATION.PAGE_NUMBER_KEY}=${previousPage}&${PAGINATION.PAGE_SIZE_KEY}=${pageSize}`
-      : null;
+  const link = previousPage !== null ? replacePageNumber(url, previousPage) : null;
   return link;
 };
 
@@ -40,22 +44,20 @@ const getNextPageLink = (
   url: string
 ): string | null => {
   const nextPage = getNextPage(page, pageSize, totalCount);
-  const link =
-    nextPage !== null
-      ? `${url}?${PAGINATION.PAGE_NUMBER_KEY}=${nextPage}&${PAGINATION.PAGE_SIZE_KEY}=${pageSize}`
-      : null;
+  const link = nextPage !== null ? replacePageNumber(url, nextPage) : null;
   return link;
 };
 
 const getFirstPageLink = (pageSize: number, url: string): string => {
-  const firstpage = getFirstPage();
-  const link = `${url}?${PAGINATION.PAGE_NUMBER_KEY}=${firstpage}&${PAGINATION.PAGE_SIZE_KEY}=${pageSize}`;
+  const firstPage = getFirstPage();
+  const link = replacePageNumber(url, firstPage);
   return link;
 };
 
 const getLastPageLink = (pageSize: number, totalCount: number, url: string): string => {
   const lastPage = getLastPage(pageSize, totalCount);
-  return `${url}?${PAGINATION.PAGE_NUMBER_KEY}=${lastPage}&${PAGINATION.PAGE_SIZE_KEY}=${pageSize}`;
+  const link = replacePageNumber(url, lastPage);
+  return link;
 };
 
 const addLinksToCollection = <TData extends TObject>(
@@ -67,10 +69,10 @@ const addLinksToCollection = <TData extends TObject>(
   const { page, pageSize, totalCount } = collection;
   const urlNoQuery = request.url.split('?')[0];
 
-  const previousPage = getPreviousPageLink(page, pageSize, urlNoQuery);
-  const nextPage = getNextPageLink(page, pageSize, totalCount, urlNoQuery);
-  const firstPage = getFirstPageLink(pageSize, urlNoQuery);
-  const lastPage = getLastPageLink(pageSize, totalCount, urlNoQuery);
+  const previousPage = getPreviousPageLink(page, pageSize, request.url);
+  const nextPage = getNextPageLink(page, pageSize, totalCount, request.url);
+  const firstPage = getFirstPageLink(pageSize, request.url);
+  const lastPage = getLastPageLink(pageSize, totalCount, request.url);
 
   const rawData = collection.data as Array<ResourceSchemaType<TData> & Resource>;
 
