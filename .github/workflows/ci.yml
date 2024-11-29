@@ -58,6 +58,7 @@ jobs:
 
       - name: Run unit/integration tests
         run: |
+          set -e
           npm ci
           npm run test
 
