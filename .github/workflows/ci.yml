@@ -59,7 +59,7 @@ jobs:
 
       - name: Run unit/integration tests
         run: |
-          npm  || { echo "npm ci failed"; exit 1; }
+          npm ci || { echo "npm ci failed"; exit 1; }
           npm run test || { echo "npm ci failed"; exit 1; }
 
       - name: Report coverage to Coveralls
