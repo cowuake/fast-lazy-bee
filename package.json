@@ -24,13 +24,13 @@
     "@fastify/autoload": "^6.0.3",
     "@fastify/caching": "^9.0.3",
     "@fastify/env": "^5.0.2",
-    "@fastify/etag": "^6.0.2",
+    "@fastify/etag": "^6.0.3",
     "@fastify/jwt": "^9.0.2",
     "@fastify/mongodb": "^9.0.1",
     "@fastify/swagger": "^9.4.0",
     "@fastify/swagger-ui": "^5.2.0",
     "@sinclair/typebox": "^0.34.13",
-    "fastify": "^5.2.0"
+    "fastify": "^5.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
@@ -39,8 +39,8 @@
     "@testcontainers/mongodb": "^10.16.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.10.5",
-    "@typescript-eslint/eslint-plugin": "^8.19.0",
-    "@typescript-eslint/parser": "^8.19.0",
+    "@typescript-eslint/eslint-plugin": "^8.19.1",
+    "@typescript-eslint/parser": "^8.19.1",
     "babel-jest": "^29.7.0",
     "eslint": "^9.17.0",
     "eslint-config-love": "^114.0.0",
