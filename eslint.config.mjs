@@ -1,9 +1,7 @@
-// @ts-check
-
 import typescriptParser from '@typescript-eslint/parser';
 import loveConfig from 'eslint-config-love';
 
-import { rules as importRules } from 'eslint-plugin-import';
+import importPlugin from 'eslint-plugin-import';
 import nodePlugin from 'eslint-plugin-node';
 import prettierPlugin from 'eslint-plugin-prettier';
 
@@ -16,20 +14,17 @@ const languageOptions = {
 };
 
 const plugins = {
-  import: {
-    rules: importRules
-  },
+  import: importPlugin,
   node: nodePlugin,
   prettier: prettierPlugin
   // '@typescript-eslint': typescriptPlugin
 };
 
 export default [
-  // Leave this first
-  {
-    ignores: ['node_modules/*', 'dist/*', 'coverage/*', 'eslint.config.mjs']
-  },
   loveConfig,
+  {
+    ignores: ['node_modules/*', 'dist/*', 'coverage/*']
+  },
   {
     files: ['src/**/*.ts'],
     languageOptions,
