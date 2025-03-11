@@ -21,7 +21,7 @@
   "author": "Riccardo Mura",
   "license": "MIT",
   "dependencies": {
-    "@fastify/autoload": "^6.1.0",
+    "@fastify/autoload": "^6.2.0",
     "@fastify/caching": "^9.0.3",
     "@fastify/env": "^5.0.2",
     "@fastify/etag": "^6.0.3",
@@ -29,7 +29,7 @@
     "@fastify/mongodb": "^9.0.2",
     "@fastify/swagger": "^9.4.2",
     "@fastify/swagger-ui": "^5.2.2",
-    "@sinclair/typebox": "^0.34.28",
+    "@sinclair/typebox": "^0.34.29",
     "fastify": "^5.2.1"
   },
   "devDependencies": {
@@ -39,8 +39,8 @@
     "@testcontainers/mongodb": "^10.18.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.13.10",
-    "@typescript-eslint/eslint-plugin": "^8.26.0",
-    "@typescript-eslint/parser": "^8.26.0",
+    "@typescript-eslint/eslint-plugin": "^8.26.1",
+    "@typescript-eslint/parser": "^8.26.1",
     "babel-jest": "^29.7.0",
     "eslint": "^9.22.0",
     "eslint-config-love": "^119.0.0",
