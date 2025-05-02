@@ -33,10 +33,10 @@
     "fastify": "^5.3.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.26.10",
-    "@babel/preset-env": "^7.26.9",
-    "@babel/preset-typescript": "^7.27.0",
-    "@testcontainers/mongodb": "^10.24.2",
+    "@babel/core": "^7.27.1",
+    "@babel/preset-env": "^7.27.1",
+    "@babel/preset-typescript": "^7.27.1",
+    "@testcontainers/mongodb": "^10.25.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.15.3",
     "@typescript-eslint/eslint-plugin": "^8.31.1",
