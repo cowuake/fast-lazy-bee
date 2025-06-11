@@ -36,7 +36,7 @@
     "@babel/core": "^7.27.4",
     "@babel/preset-env": "^7.27.2",
     "@babel/preset-typescript": "^7.27.1",
-    "@testcontainers/mongodb": "^11.0.2",
+    "@testcontainers/mongodb": "^11.0.3",
     "@types/jest": "^29.5.14",
     "@types/node": "^24.0.0",
     "@typescript-eslint/eslint-plugin": "^8.34.0",
@@ -55,7 +55,7 @@
     "rimraf": "^6.0.1",
     "ts-jest": "^29.3.4",
     "ts-node": "^10.9.2",
-    "tsx": "^4.19.4",
+    "tsx": "^4.20.0",
     "typescript": "^5.8.3"
   }
 }
