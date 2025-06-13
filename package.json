@@ -29,8 +29,8 @@
     "@fastify/mongodb": "^9.0.2",
     "@fastify/swagger": "^9.5.1",
     "@fastify/swagger-ui": "^5.2.3",
-    "@sinclair/typebox": "^0.34.33",
-    "fastify": "^5.3.3"
+    "@sinclair/typebox": "^0.34.35",
+    "fastify": "^5.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.27.4",
@@ -55,7 +55,7 @@
     "rimraf": "^6.0.1",
     "ts-jest": "^29.4.0",
     "ts-node": "^10.9.2",
-    "tsx": "^4.20.1",
+    "tsx": "^4.20.2",
     "typescript": "^5.8.3"
   }
 }
