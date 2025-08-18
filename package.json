@@ -29,7 +29,7 @@
     "@fastify/mongodb": "^9.0.2",
     "@fastify/swagger": "^9.5.1",
     "@fastify/swagger-ui": "^5.2.3",
-    "@sinclair/typebox": "^0.34.39",
+    "@sinclair/typebox": "^0.34.40",
     "fastify": "^5.5.0"
   },
   "devDependencies": {
@@ -38,7 +38,7 @@
     "@babel/preset-typescript": "^7.27.1",
     "@testcontainers/mongodb": "^11.5.1",
     "@types/jest": "^30.0.0",
-    "@types/node": "^24.2.1",
+    "@types/node": "^24.3.0",
     "@typescript-eslint/eslint-plugin": "^8.39.1",
     "@typescript-eslint/parser": "^8.39.0",
     "babel-jest": "^30.0.5",
