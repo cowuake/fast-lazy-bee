@@ -27,10 +27,10 @@
     "@fastify/etag": "^6.1.0",
     "@fastify/jwt": "^10.0.0",
     "@fastify/mongodb": "^9.0.2",
-    "@fastify/swagger": "^9.5.2",
+    "@fastify/swagger": "^9.6.0",
     "@fastify/swagger-ui": "^5.2.3",
     "@sinclair/typebox": "^0.34.41",
-    "fastify": "^5.6.1"
+    "fastify": "^5.6.2"
   },
   "devDependencies": {
     "@babel/core": "^7.28.5",
