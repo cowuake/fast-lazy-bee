@@ -26,11 +26,11 @@
     "@fastify/env": "^5.0.3",
     "@fastify/etag": "^6.1.0",
     "@fastify/jwt": "^10.0.0",
-    "@fastify/mongodb": "^9.0.2",
+    "@fastify/mongodb": "^10.0.0",
     "@fastify/swagger": "^9.6.1",
     "@fastify/swagger-ui": "^5.2.4",
     "@sinclair/typebox": "^0.34.48",
-    "fastify": "^5.7.1"
+    "fastify": "^5.7.2"
   },
   "devDependencies": {
     "@babel/core": "^7.28.6",
@@ -39,8 +39,8 @@
     "@testcontainers/mongodb": "^11.11.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.0.10",
-    "@typescript-eslint/eslint-plugin": "^8.53.1",
-    "@typescript-eslint/parser": "^8.42.0",
+    "@typescript-eslint/eslint-plugin": "^8.54.0",
+    "@typescript-eslint/parser": "^8.54.0",
     "babel-jest": "^30.2.0",
     "eslint": "^9.39.2",
     "eslint-config-love": "^147.0.0",
